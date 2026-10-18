@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary": "#ffffff", "on-surface": "#1a1c1b", "on-primary-container": "#496e00", "surface-container-low": "#f4f4f1", "text-secondary": "#737771", "on-tertiary-fixed": "#0c2000", "tertiary-container": "#a0f856", "secondary-fixed": "#a5f944", "exercise-mint": "#43D69C", "divider": "#E8EAE5", "secondary-container": "#a2f641", "on-tertiary-fixed-variant": "#285000", "on-secondary-container": "#406e00", "secondary-fixed-dim": "#8adc25", "surface": "#FFFFFF", "primary-fixed": "#b9f55b", "on-secondary-fixed-variant": "#2d5000", "inverse-primary": "#9ed841", "primary-container": "#b8f45a", "surface-tertiary": "#EEF0EB", "text-tertiary": "#A0A49E", "error": "#ba1a1a", "outline": "#737a65", "water-blue": "#42BFEF", "surface-container": "#eeeeec", "on-error-container": "#93000a", "weight-amber": "#F6A54B", "chart-secondary": "#D9DDD5", "on-secondary": "#ffffff", "exercise-soft": "#DFF8EE", "on-secondary-fixed": "#0f2000", "on-error": "#ffffff", "tertiary-fixed-dim": "#87dc3c", "surface-secondary": "#F4F5F2", "on-tertiary-container": "#3a7000", "heart-red": "#FF626C", "water-soft": "#E4F7FE", "canvas-bg": "#F8F8F6", "tertiary": "#376b00", "surface-container-lowest": "#ffffff", "surface-tint": "#456800", "on-surface-variant": "#434937", "calories-orange": "#FF9D42", "chart-hatch": "#E5E8E2", "on-background": "#1a1c1b", "surface-container-highest": "#e2e3e0", "surface-bright": "#f9f9f7", "background": "#f9f9f7", "tertiary-fixed": "#a2f957", "primary": "#456800", "calories-soft": "#FFF0DF", "on-primary-fixed": "#121f00", "heart-soft": "#FFE4E6", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-primary-fixed-variant": "#334f00", "chart-track": "#EEF0EB", "primary-fixed-dim": "#9ed841", "secondary": "#3d6a00", "surface-container-high": "#e8e8e6", "inverse-on-surface": "#f1f1ee", "brand-soft": "#E5FBC5", "outline-variant": "#c3c9b2", "inverse-surface": "#2f3130", "surface-dim": "#dadad8", "surface-variant": "#e2e3e0", "border-subtle": "#ECEDE9" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-3xl": "2rem", "gutter": "0.75rem", "space-lg": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin-mobile-sm": "0.875rem", "margin": "1rem", "space-xl": "1.25rem", "space-2xl": "1.5rem", "gutter-compact": "0.5rem", "space-md": "0.75rem" }, fontFamily: { "headline-lg": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "display-xl": ["Inter"], "number-lg": ["Inter"], "display-xl-mobile": ["Inter"], "body-sm": ["Inter"], "display-mobile": ["Inter"], "display": ["Inter"], "number-xl": ["Inter"], "body-lg": ["Inter"], "number-md": ["Inter"], "headline-md": ["Inter"], "label-sm": ["Inter"] }, fontSize: { "headline-lg": ["28px", { lineHeight: "32px", fontWeight: "700" }], "headline-sm": ["18px", { lineHeight: "23px", fontWeight: "600" }], "body-md": ["15px", { lineHeight: "20px", fontWeight: "500" }], "display-xl": ["40px", { lineHeight: "44px", fontWeight: "700" }], "number-lg": ["32px", { lineHeight: "35px", fontWeight: "700" }], "display-xl-mobile": ["32px", { lineHeight: "36px", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "17px", fontWeight: "500" }], "display-mobile": ["28px", { lineHeight: "32px", fontWeight: "700" }], "display": ["34px", { lineHeight: "38px", fontWeight: "700" }], "number-xl": ["40px", { lineHeight: "42px", fontWeight: "700" }], "body-lg": ["16px", { lineHeight: "21px", fontWeight: "500" }], "number-md": ["24px", { lineHeight: "28px", fontWeight: "700" }], "headline-md": ["22px", { lineHeight: "27px", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;background-color:#F8F8F6;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-canvas-bg font-body-md text-on-surface flex flex-col min-h-screen antialiased"><header class="fixed top-0 w-full z-50 bg-canvas-bg/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(20,25,20,0.03)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="FitFlow App Icon" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XktT4Gy7iLqaccTaB6uOH0Bf9uvJA4CKjPjMkUXpg386orjc2vkUAYiPYh040SjpbkZBkm6kSJEZKBYtwE8l4igVRNrkIMwM085x2btshKZQxipS1sjKCfcyFdIaGE8FnHm3HFda1Us45J2puC8R_7WI2gJEeBw_mVX_diKyqg_Q4hSzpkyXcKx_IkKihcrrlJnLwy0tAmZo-WBfGFx0auWv46tD2I6k3AJGCzrrYh"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">FitFlow</span></div><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface line-clamp-1">Rewards</span></div><div class="flex items-center justify-end"><button class="w-11 h-11 flex items-center justify-center rounded-full active:scale-95 transition-transform" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpUZuxXOTbYGUp1QXtUJi78k7KahIDvDvmwM3iPyIzoey-B_xb3kLyKXpJsEXXjHoOi4N5NS1deAxcwPVIdRHdbk-zBkgWOfetwXH-rtO6p61GDGDVd8zdUnHiSwqyot77tutpnW59h034Ii-G4JOndiAvr-ChO5fonr-R-B-tMfygsxAb5Rv5act2Su5HKTHF_NqPw3U4X0ug2c9aM5k2FsFL189WvIAzc9Hjy9U"></button></div></div></header><main class="flex-1 w-full max-w-[640px] mx-auto px-margin pt-16 pb-28 bg-canvas-bg"><div class="flex flex-col w-full gap-space-lg">
+<!-- Title & Context Row -->
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex flex-col">
+<span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Rewards &amp; Streaks</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Keep the momentum going, Alex</span>
+</div>
+<button aria-label="Streak and Rewards Info" class="w-10 h-10 flex items-center justify-center rounded-full bg-surface shadow-[0_2px_12px_rgba(20,25,20,0.045)] text-text-secondary transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none" type="button">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</button>
+</div>
+<!-- Streak Hero Card -->
+<div class="w-full rounded-[24px] p-[20px] shadow-[0_2px_12px_rgba(20,25,20,0.045)] relative overflow-hidden flex flex-col gap-space-lg bg-primary-container select-none transition-all duration-200">
+<!-- Ambient Sparkle Icon Overlay -->
+<div class="absolute -right-3 -top-3 w-28 h-28 rounded-full bg-primary-container/30 blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="flex flex-col gap-1">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface/80 backdrop-blur-sm self-start shadow-sm transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="material-symbols-outlined text-calories-orange text-[16px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">Active Streak</span>
+</div>
+<span class="font-display text-display text-on-surface tracking-tight mt-1">6 Day Streak</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-[250px]">
+          Only 1 day left to beat your all-time personal best!
+        </p>
+</div>
+<div class="w-14 h-14 rounded-2xl bg-surface flex items-center justify-center shadow-sm relative group transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="material-symbols-outlined text-calories-orange text-[32px]" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-primary"></span>
+</span>
+</div>
+</div>
+<!-- 7-Day Circular Indicator Tracker with soft touch animation -->
+<div class="bg-surface/85 backdrop-blur-md rounded-2xl p-space-md shadow-sm relative z-10 flex items-center justify-between gap-1">
+<!-- Mon Completed -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-text-secondary">M</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</div>
+<!-- Tue Completed -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-text-secondary">T</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</div>
+<!-- Wed Completed -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-text-secondary">W</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</div>
+<!-- Thu Completed -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-text-secondary">T</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</div>
+<!-- Fri Completed -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-text-secondary">F</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</div>
+<!-- Sat Completed -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-text-secondary">S</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-surface flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[18px] font-bold">check</span>
+</div>
+</div>
+<!-- Sun Pending Flame -->
+<div class="flex flex-col items-center gap-1.5 flex-1 min-w-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<span class="font-label-sm text-label-sm text-primary font-bold">S</span>
+<div class="w-8 h-8 rounded-full bg-surface-secondary text-primary flex items-center justify-center shadow-inner relative">
+<svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 32 32">
+<circle cx="16" cy="16" fill="none" r="14" stroke="#FACC15" stroke-dasharray="4 3" stroke-width="2.2"></circle>
+</svg>
+<span class="material-symbols-outlined text-calories-orange text-[17px] animate-pulse" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Level & Points Summary Card with tactile touch interaction -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex flex-col gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container/40 flex items-center justify-center text-on-secondary-container shrink-0">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Level 14 Wellness Champion</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Tier: Master Explorer</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">2,450 XP</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">350 XP to Next</span>
+</div>
+</div>
+<!-- Smooth Progress Bar to Level 15 -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm text-text-secondary">Level 14</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">82% Completed</span>
+<span class="font-label-sm text-label-sm text-text-secondary">Level 15</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-secondary overflow-hidden p-0.5">
+<div class="h-full rounded-full bg-primary-container transition-all duration-700 ease-out" style="width: 82%;"></div>
+</div>
+</div>
+</div>
+<!-- Achievements Section -->
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface">Achievements</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">3 Unlocked Today</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- 1. 7-Day Walker (Earned) -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-brand-soft flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">7-Day Walker</span>
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-secondary line-clamp-1">Maintained daily walking goal for 7 consecutive days</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-brand-soft text-on-primary-container font-label-sm text-label-sm font-bold">100% Earned</span>
+</div>
+</div>
+<!-- 2. Hydration Hero (Unlocked) -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-water-soft flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-water-blue text-[26px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Hydration Hero</span>
+<span class="font-body-sm text-body-sm text-text-secondary line-clamp-1">12/12 glasses completed 5 days in a row</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-secondary text-water-blue font-label-sm text-label-sm font-bold">Unlocked</span>
+</div>
+</div>
+<!-- 3. Early Starter (Unlocked) -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-calories-soft flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-calories-orange text-[26px]" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Early Starter</span>
+<span class="font-body-sm text-body-sm text-text-secondary line-clamp-1">Logged nutritious breakfast before 8:30 AM</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-secondary text-calories-orange font-label-sm text-label-sm font-bold">Unlocked</span>
+</div>
+</div>
+<!-- 4. 10K Step Day (In Progress) -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex flex-col gap-space-sm transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-exercise-soft flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-exercise-mint text-[26px]">directions_run</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">10K Step Day</span>
+<span class="font-body-sm text-body-sm text-text-secondary">5,500 / 10,000 steps</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-exercise-mint font-bold px-2 py-0.5 rounded-full bg-surface-secondary">55%</span>
+</div>
+<!-- Steps In-Progress Track -->
+<div class="w-full h-2 rounded-full bg-surface-secondary overflow-hidden">
+<div class="h-full rounded-full bg-exercise-mint" style="width: 55%;"></div>
+</div>
+</div>
+<!-- 5. Weekend Warrior (Locked) -->
+<div class="w-full bg-surface-container-low rounded-[20px] p-space-lg opacity-75 flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center shrink-0 text-text-tertiary">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-body-lg text-body-lg text-text-secondary font-semibold truncate">Weekend Warrior</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-tertiary line-clamp-1">Complete 90 mins active exercise over Saturday &amp; Sunday</span>
+</div>
+</div>
+<div class="flex flex-col items-end shrink-0">
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-text-secondary font-label-sm text-label-sm font-semibold">Locked</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Redeemable Wellness Perks Section -->
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Redeemable Perks</span>
+<span class="font-body-sm text-body-sm text-text-secondary">Spend your earned fitness points</span>
+</div>
+<button class="font-label-sm text-label-sm text-primary font-bold transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none" type="button">View All</button>
+</div>
+<!-- Perks Bento Tiles -->
+<div class="grid grid-cols-1 gap-space-md">
+<!-- Perk 1: Partner Discount -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-14 h-14 rounded-2xl bg-surface-secondary overflow-hidden shrink-0 flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="A curated, healthy cold-pressed organic juice bottle in a sleek glass container surrounded by crisp green apples and mint leaves, bathed in warm bright natural morning light with fresh droplets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbv1mf1WTlNEkzzC3XtTxpq14h8c5LQ3aKAuZEt1iu2D5qRlMbwpZxykk2tLbPPau_NsjYI5wdYWQnTk2vyTNGMz-qlLvZPpNnTCJn9zRrVX0Xbnk7_bkphJRNT3r3HM-kF6HPNiWlz17-LodV30XIFBnYaiiifRL0q_QAp38R-QAeOFB4Qt4n9tIe_OKFfQ4pHhGR-N0ntxajqb7H8JRl9xToovof9XC5Nx8O0_0">
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Partner Discount</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">25% Off GreenLife Market</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Valid for organic produce &amp; supplements</span>
+</div>
+</div>
+<button class="h-10 px-3.5 rounded-[14px] bg-primary-container text-on-surface font-label-sm text-label-sm font-bold shrink-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none flex items-center gap-1 shadow-sm" type="button">
+<span class="">800 XP</span>
+</button>
+</div>
+<!-- Perk 2: Custom App Icons -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-14 h-14 rounded-2xl bg-surface-secondary overflow-hidden shrink-0 flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Sleek collection of glowing neon lime and obsidian fitness app icons rendered on a premium ceramic surface, clean minimalist iOS aesthetic, soft studio shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvAPWjbP-fw_TUKlfFosXMBgoMp9DcwlLvRunLmAP8MXlhO64cDHfCeiYjxt1CRdowOEpb_hAMWdhrLdzKgBN4EV-EwTtvqO_8rd4I4CT9H6pRTKcca9iCHvCcQpVUEupJvgZin2VQouZOpVKIG4u_i6_xuKm5Qozf_uUoe0IqNOUinkiIrl_kXqwAVvjK65IJp9tLiJGMc_qWMcXIT4RM4i8CJpw6u42fKUte2Sk">
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-calories-orange font-bold uppercase tracking-wider">Custom Style</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Neon Obsidian App Icon</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Unlock sleek dark-gold homescreen badge</span>
+</div>
+</div>
+<button class="h-10 px-3.5 rounded-[14px] bg-surface-secondary text-on-surface font-label-sm text-label-sm font-bold shrink-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none flex items-center gap-1" type="button">
+<span class="">1,200 XP</span>
+</button>
+</div>
+<!-- Perk 3: Pro Community Badge -->
+<div class="w-full bg-surface rounded-[20px] p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="flex items-center gap-space-md min-w-0">
+<div class="w-14 h-14 rounded-2xl bg-surface-secondary overflow-hidden shrink-0 flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="An elegant metallic champion crest badge with emerald leaves and high-clarity polished silver bevels, displayed on an organic linen background, elegant macro photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC49IEASYsgHtw5bXMY9ZOAUyyq-1lAHyJ1hYPRB_ddQCfT56nOoZE2DljCOhP9y7DVDwChpMy3IwraMFZ-CqX0YDzj-Ksgz7Q23OAOQyn0BFbOb-BKcqWhrILcfLUaVtanuSNmBk-yM2zTderDwjWroeVnoFami3Xk0ocJKhP43R5k5n6jDBqyiYi6_WoKuZCxnUzHjw_jcxIEJDj6Q9DC9wg1OaVE5nwHwDcoNs4">
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-water-blue font-bold uppercase tracking-wider">Social Status</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold truncate">Gold Tier Community Aura</span>
+<span class="font-body-sm text-body-sm text-text-secondary truncate">Exclusive avatar rim &amp; feed flair</span>
+</div>
+</div>
+<button class="h-10 px-3.5 rounded-[14px] bg-surface-secondary text-on-surface font-label-sm text-label-sm font-bold shrink-0 transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none flex items-center gap-1" type="button">
+<span class="">1,500 XP</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Motivational Footer Callout -->
+<div class="w-full rounded-[20px] bg-surface p-space-lg shadow-[0_2px_12px_rgba(20,25,20,0.045)] flex items-center gap-space-md transition-all duration-200 ease-out active:scale-[0.97] active:opacity-90 cursor-pointer select-none">
+<div class="w-10 h-10 rounded-full bg-brand-soft flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Streak Shield Active</span>
+<span class="font-body-sm text-body-sm text-text-secondary">You have 1 auto-freeze remaining for missed days.</span>
+</div>
+</div>
+</div></main><div class="fixed bottom-5 inset-x-0 mx-auto z-50 px-4 flex justify-center pointer-events-auto">
+    <nav class="backdrop-blur-xl bg-[#13151b]/80 border border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.22)] rounded-full px-3 py-2.5 mx-auto max-w-[360px] w-full flex items-center justify-between gap-1 transition-all duration-300">
+      <a aria-label="Home" class="text-zinc-400 hover:text-white p-2.5 rounded-full transition-all duration-200 active:scale-95 flex items-center justify-center" href="#">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+      </a>
+      <a aria-label="Progress" class="text-zinc-400 hover:text-white p-2.5 rounded-full transition-all duration-200 active:scale-95 flex items-center justify-center" href="#">
+        <span class="material-symbols-outlined text-[20px]">bar_chart</span>
+      </a>
+      <a aria-current="page" aria-label="Rewards" class="bg-white text-zinc-900 font-semibold px-4 py-2 rounded-full shadow-sm flex items-center gap-2 text-sm transition-all duration-200 active:scale-95" href="#">
+        <span class="material-symbols-outlined text-[18px] text-zinc-900" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+        <span class="">Rewards</span>
+      </a>
+      <a aria-label="Menu" class="text-zinc-400 hover:text-white p-2.5 rounded-full transition-all duration-200 active:scale-95 flex items-center justify-center" href="#">
+        <span class="material-symbols-outlined text-[20px]">grid_view</span>
+      </a>
+    </nav>
+  </div>
+
+
+
+
+
+
+
+<script src="nav-bridge.js"></script>
+</body></html>

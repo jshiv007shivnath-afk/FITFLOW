@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_stack" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary": "#ffffff", "on-surface": "#1a1c1b", "on-primary-container": "#496e00", "surface-container-low": "#f4f4f1", "text-secondary": "#737771", "on-tertiary-fixed": "#0c2000", "tertiary-container": "#a0f856", "secondary-fixed": "#a5f944", "exercise-mint": "#43D69C", "divider": "#E8EAE5", "secondary-container": "#a2f641", "on-tertiary-fixed-variant": "#285000", "on-secondary-container": "#406e00", "secondary-fixed-dim": "#8adc25", "surface": "#FFFFFF", "primary-fixed": "#b9f55b", "on-secondary-fixed-variant": "#2d5000", "inverse-primary": "#9ed841", "primary-container": "#b8f45a", "surface-tertiary": "#EEF0EB", "text-tertiary": "#A0A49E", "error": "#ba1a1a", "outline": "#737a65", "water-blue": "#42BFEF", "surface-container": "#eeeeec", "on-error-container": "#93000a", "weight-amber": "#F6A54B", "chart-secondary": "#D9DDD5", "on-secondary": "#ffffff", "exercise-soft": "#DFF8EE", "on-secondary-fixed": "#0f2000", "on-error": "#ffffff", "tertiary-fixed-dim": "#87dc3c", "surface-secondary": "#F4F5F2", "on-tertiary-container": "#3a7000", "heart-red": "#FF626C", "water-soft": "#E4F7FE", "canvas-bg": "#F8F8F6", "tertiary": "#376b00", "surface-container-lowest": "#ffffff", "surface-tint": "#456800", "on-surface-variant": "#434937", "calories-orange": "#FF9D42", "chart-hatch": "#E5E8E2", "on-background": "#1a1c1b", "surface-container-highest": "#e2e3e0", "surface-bright": "#f9f9f7", "background": "#f9f9f7", "tertiary-fixed": "#a2f957", "primary": "#456800", "calories-soft": "#FFF0DF", "on-primary-fixed": "#121f00", "heart-soft": "#FFE4E6", "error-container": "#ffdad6", "on-primary": "#ffffff", "on-primary-fixed-variant": "#334f00", "chart-track": "#EEF0EB", "primary-fixed-dim": "#9ed841", "secondary": "#3d6a00", "surface-container-high": "#e8e8e6", "inverse-on-surface": "#f1f1ee", "brand-soft": "#E5FBC5", "outline-variant": "#c3c9b2", "inverse-surface": "#2f3130", "surface-dim": "#dadad8", "surface-variant": "#e2e3e0", "border-subtle": "#ECEDE9" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-3xl": "2rem", "gutter": "0.75rem", "space-lg": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin-mobile-sm": "0.875rem", "margin": "1rem", "space-xl": "1.25rem", "space-2xl": "1.5rem", "gutter-compact": "0.5rem", "space-md": "0.75rem" }, fontFamily: { "headline-lg": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "display-xl": ["Inter"], "number-lg": ["Inter"], "display-xl-mobile": ["Inter"], "body-sm": ["Inter"], "display-mobile": ["Inter"], "display": ["Inter"], "number-xl": ["Inter"], "body-lg": ["Inter"], "number-md": ["Inter"], "headline-md": ["Inter"], "label-sm": ["Inter"] }, fontSize: { "headline-lg": ["28px", { lineHeight: "32px", fontWeight: "700" }], "headline-sm": ["18px", { lineHeight: "23px", fontWeight: "600" }], "body-md": ["15px", { lineHeight: "20px", fontWeight: "500" }], "display-xl": ["40px", { lineHeight: "44px", fontWeight: "700" }], "number-lg": ["32px", { lineHeight: "35px", fontWeight: "700" }], "display-xl-mobile": ["32px", { lineHeight: "36px", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "17px", fontWeight: "500" }], "display-mobile": ["28px", { lineHeight: "32px", fontWeight: "700" }], "display": ["34px", { lineHeight: "38px", fontWeight: "700" }], "number-xl": ["40px", { lineHeight: "42px", fontWeight: "700" }], "body-lg": ["16px", { lineHeight: "21px", fontWeight: "500" }], "number-md": ["24px", { lineHeight: "28px", fontWeight: "700" }], "headline-md": ["22px", { lineHeight: "27px", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "600" }] } } } };</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior:none;background-color:#F8F8F6;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-canvas-bg font-body-md text-on-surface flex flex-col min-h-screen antialiased"><header class="fixed top-0 w-full z-50 bg-canvas-bg/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(20,25,20,0.03)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-xs"><button class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface active:scale-95 transition-transform" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span></button><h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight ml-space-xs">Log Activity</h1></div><div class="flex items-center justify-end"><button class="w-11 h-11 flex items-center justify-center rounded-full active:scale-95 transition-transform" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpUZuxXOTbYGUp1QXtUJi78k7KahIDvDvmwM3iPyIzoey-B_xb3kLyKXpJsEXXjHoOi4N5NS1deAxcwPVIdRHdbk-zBkgWOfetwXH-rtO6p61GDGDVd8zdUnHiSwqyot77tutpnW59h034Ii-G4JOndiAvr-ChO5fonr-R-B-tMfygsxAb5Rv5act2Su5HKTHF_NqPw3U4X0ug2c9aM5k2FsFL189WvIAzc9Hjy9U"></button></div></div></header><main class="flex-1 w-full max-w-[640px] mx-auto px-margin pt-16 pb-safe bg-canvas-bg"><div class="flex flex-col w-full pb-24">
+<!-- Interactive Modal Bottom Sheet Container -->
+<div class="w-full bg-surface rounded-t-[28px] rounded-b-3xl shadow-[0_18px_50px_rgba(20,25,20,0.12)] flex flex-col overflow-hidden">
+<!-- Drag Handle & Modal Header -->
+<div class="w-full pt-3 px-space-xl pb-space-md flex flex-col items-center">
+<div class="w-10 h-1.5 bg-surface-variant rounded-full mb-3 cursor-grab active:scale-95 transition-transform"></div>
+<div class="w-full flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Quick Log</span>
+</div>
+<button aria-label="Close Quick Log" class="w-9 h-9 rounded-full bg-surface-secondary flex items-center justify-center text-text-secondary transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" onclick="history.back()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<p class="w-full font-body-sm text-body-sm text-text-secondary mt-1">Capture your daily wellness metrics in seconds</p>
+</div>
+<!-- Main Logging Hub: 5 Rich Action Cards -->
+<div class="p-space-lg flex flex-col gap-space-md">
+<!-- 1. Add Meal Hero Card -->
+<div class="w-full bg-surface-secondary/70 rounded-2xl p-space-lg flex flex-col gap-space-md active:scale-[0.99] transition-transform">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-calories-orange to-weight-amber flex items-center justify-center text-on-tertiary shadow-[0_4px_12px_rgba(255,157,66,0.25)]">
+<span class="material-symbols-outlined text-[26px]">restaurant</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Add Meal</h2>
+<p class="font-body-sm text-body-sm text-text-secondary">Breakfast, lunch, dinner or snack</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-calories-soft text-calories-orange font-label-sm text-label-sm">
+            Target 2,100 kcal
+          </span>
+</div>
+<!-- Meal Preset Pills -->
+<div class="grid grid-cols-4 gap-space-xs pt-1"><button class="py-2 px-1 rounded-xl bg-surface text-center flex flex-col items-center justify-center shadow-[0_1px_4px_rgba(20,25,20,0.04)] transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px] text-calories-orange mb-0.5">bakery_dining</span><span class="font-label-sm text-label-sm text-on-surface">Breakfast</span></button><button class="py-2 px-1 rounded-xl bg-surface text-center flex flex-col items-center justify-center shadow-[0_1px_4px_rgba(20,25,20,0.04)] transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px] text-calories-orange mb-0.5">lunch_dining</span><span class="font-label-sm text-label-sm text-on-surface">Lunch</span></button><button class="py-2 px-1 rounded-xl bg-surface text-center flex flex-col items-center justify-center shadow-[0_1px_4px_rgba(20,25,20,0.04)] transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px] text-calories-orange mb-0.5">dinner_dining</span><span class="font-label-sm text-label-sm text-on-surface">Dinner</span></button><button class="py-2 px-1 rounded-xl bg-surface text-center flex flex-col items-center justify-center shadow-[0_1px_4px_rgba(20,25,20,0.04)] transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px] text-calories-orange mb-0.5">cookie</span><span class="font-label-sm text-label-sm text-on-surface">Snack</span></button></div>
+</div>
+<!-- 2. Log Water Card (Interactive Glass Tracker & Counter) -->
+<div class="w-full bg-water-soft/60 rounded-2xl p-space-lg flex flex-col gap-space-md" id="waterCard">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-2xl bg-water-soft flex items-center justify-center text-water-blue shadow-[0_2px_8px_rgba(66,191,239,0.18)]">
+<span class="material-symbols-outlined text-[26px]" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Log Water</h2>
+<span class="text-water-blue font-label-sm text-label-sm bg-surface px-2 py-0.5 rounded-full">Hydration</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Goal: 2,500 ml / day</p>
+</div>
+</div>
+<!-- Current Reading -->
+<div class="text-right">
+<span class="font-number-md text-number-md text-on-surface" id="waterValue">1,750</span>
+<span class="font-label-sm text-label-sm text-text-secondary">ml</span>
+</div>
+</div>
+<!-- Glass Visualizer & Quick Stepper -->
+<div class="flex items-center justify-between bg-surface rounded-xl p-space-md shadow-[0_1px_6px_rgba(20,25,20,0.03)]">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-water-blue text-[20px]" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+<span class="material-symbols-outlined text-water-blue text-[20px]" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+<span class="material-symbols-outlined text-water-blue text-[20px]" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+<span class="material-symbols-outlined text-water-blue text-[20px]" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+<span class="material-symbols-outlined text-chart-secondary text-[20px]">local_drink</span>
+<span class="material-symbols-outlined text-chart-secondary text-[20px]">local_drink</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Decrease water" class="w-9 h-9 rounded-xl bg-surface-secondary text-on-surface flex items-center justify-center font-headline-sm text-headline-sm transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" id="waterMinus" type="button">−</button>
+<span class="font-body-sm text-body-sm font-semibold px-2 text-on-surface">250 ml</span>
+<button aria-label="Increase water" class="w-9 h-9 rounded-xl bg-primary-container text-on-surface flex items-center justify-center font-headline-sm text-headline-sm shadow-sm transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" id="waterPlus" type="button">+</button>
+</div>
+</div>
+</div>
+<!-- 2-Column Responsive Metric Pair: Exercise & Weight -->
+<div class="grid grid-cols-2 gap-gutter">
+<!-- 3. Add Exercise -->
+<div class="bg-exercise-soft/60 rounded-2xl p-space-lg flex flex-col justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="w-11 h-11 rounded-2xl bg-exercise-soft flex items-center justify-center text-exercise-mint shadow-[0_2px_8px_rgba(67,214,156,0.2)]">
+<span class="material-symbols-outlined text-[24px]">directions_run</span>
+</div>
+<span class="w-6 h-6 rounded-full bg-surface flex items-center justify-center text-exercise-mint">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Add Exercise</h3>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5 line-clamp-1">Workout, run, gym</p>
+</div>
+<div class="pt-1 flex items-center gap-1 text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-exercise-mint">bolt</span>
+<span class="">420 kcal burned today</span>
+</div>
+</div>
+<!-- 4. Add Weight -->
+<div class="bg-calories-soft/60 rounded-2xl p-space-lg flex flex-col justify-between gap-space-md transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer">
+<div class="flex items-start justify-between">
+<div class="w-11 h-11 rounded-2xl bg-calories-soft flex items-center justify-center text-weight-amber shadow-[0_2px_8px_rgba(246,165,75,0.2)]">
+<span class="material-symbols-outlined text-[24px]">scale</span>
+</div>
+<span class="w-6 h-6 rounded-full bg-surface flex items-center justify-center text-weight-amber">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Add Weight</h3>
+<p class="font-body-sm text-body-sm text-text-secondary mt-0.5">Current: 68.5 kg</p>
+</div>
+<div class="pt-1 flex items-center gap-1 text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-exercise-mint">trending_down</span>
+<span class="">-0.4 kg this week</span>
+</div>
+</div>
+</div>
+<!-- 5. Heart Rate Card -->
+<div class="w-full bg-heart-soft/50 rounded-2xl p-space-lg flex items-center justify-between transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-2xl bg-heart-soft flex items-center justify-center text-heart-red shadow-[0_2px_8px_rgba(255,98,108,0.2)]">
+<span class="material-symbols-outlined text-[26px] animate-pulse" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Heart Rate</h2>
+<span class="font-label-sm text-label-sm bg-surface px-2 py-0.5 rounded-full text-heart-red">Sync Active</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">Measure or sync Apple Health</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs bg-surface px-3 py-1.5 rounded-xl shadow-[0_1px_4px_rgba(20,25,20,0.03)]">
+<span class="font-number-md text-number-md text-on-surface">72</span>
+<span class="font-label-sm text-label-sm text-text-secondary">bpm</span>
+</div>
+</div>
+</div>
+<!-- Quick Action Scanner CTA Bar -->
+<div class="px-space-lg pb-space-lg">
+<button class="w-full h-13 py-3.5 px-space-xl bg-primary-container text-on-surface rounded-2xl flex items-center justify-center gap-space-sm font-body-lg text-body-lg font-semibold shadow-[0_4px_16px_rgba(184,244,90,0.35)] transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button">
+<span class="material-symbols-outlined text-[22px]">barcode_scanner</span>
+<span class="">Scan Food Barcode</span>
+</button>
+</div>
+<!-- Today's Recent Logs Section -->
+<div class="px-space-lg pb-space-2xl flex flex-col gap-space-sm"><div class="flex items-center justify-between pt-2"><h3 class="font-headline-sm text-headline-sm text-on-surface">Today's Quick Entries</h3><span class="font-label-sm text-label-sm text-text-secondary">3 logged items</span></div><div class="w-full bg-surface-secondary/70 rounded-xl p-space-md flex items-center justify-between group"><div class="flex items-center gap-space-md"><div class="w-9 h-9 rounded-lg bg-calories-soft flex items-center justify-center text-calories-orange"><span class="material-symbols-outlined text-[18px]">egg_alt</span></div><div><p class="font-body-md text-body-md text-on-surface font-semibold">Greek Yogurt &amp; Berry Bowl</p><p class="font-body-sm text-body-sm text-text-secondary">08:30 AM · 320 kcal</p></div></div><div class="flex items-center gap-space-xs"><button aria-label="Edit item" class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-on-surface transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button><button aria-label="Delete item" class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-heart-red transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">delete_outline</span></button></div></div><div class="w-full bg-surface-secondary/70 rounded-xl p-space-md flex items-center justify-between group"><div class="flex items-center gap-space-md"><div class="w-9 h-9 rounded-lg bg-water-soft flex items-center justify-center text-water-blue"><span class="material-symbols-outlined text-[18px]">local_drink</span></div><div><p class="font-body-md text-body-md text-on-surface font-semibold">Mineral Water (Bottle)</p><p class="font-body-sm text-body-sm text-text-secondary">10:15 AM · 500 ml</p></div></div><div class="flex items-center gap-space-xs"><button aria-label="Edit item" class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-on-surface transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button><button aria-label="Delete item" class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-heart-red transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">delete_outline</span></button></div></div><div class="w-full bg-surface-secondary/70 rounded-xl p-space-md flex items-center justify-between group"><div class="flex items-center gap-space-md"><div class="w-9 h-9 rounded-lg bg-exercise-soft flex items-center justify-center text-exercise-mint"><span class="material-symbols-outlined text-[18px]">directions_run</span></div><div><p class="font-body-md text-body-md text-on-surface font-semibold">Morning Outdoor Jog</p><p class="font-body-sm text-body-sm text-text-secondary">06:45 AM · 4.2 km · 310 kcal</p></div></div><div class="flex items-center gap-space-xs"><button aria-label="Edit item" class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-on-surface transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">edit</span></button><button aria-label="Delete item" class="w-8 h-8 rounded-lg flex items-center justify-center text-text-tertiary hover:text-heart-red transition-all duration-200 ease-out active:scale-[0.96] active:opacity-90 hover:brightness-[0.98] select-none cursor-pointer" type="button"><span class="material-symbols-outlined text-[18px]">delete_outline</span></button></div></div></div>
+</div>
+<!-- Micro-interaction script for immediate hydration increment feedback -->
+<script>
+    (function initWaterCounter() {
+      let currentWater = 1750;
+      const step = 250;
+      const valDisplay = document.getElementById('waterValue');
+      const minusBtn = document.getElementById('waterMinus');
+      const plusBtn = document.getElementById('waterPlus');
+
+      if (!valDisplay || !minusBtn || !plusBtn) return;
+
+      plusBtn.addEventListener('click', () => {
+        currentWater += step;
+        valDisplay.textContent = currentWater.toLocaleString();
+      });
+
+      minusBtn.addEventListener('click', () => {
+        if (currentWater >= step) {
+          currentWater -= step;
+          valDisplay.textContent = currentWater.toLocaleString();
+        }
+      });
+    })();
+  </script>
+</div></main>
+
+<script src="nav-bridge.js"></script>
+</body></html>
