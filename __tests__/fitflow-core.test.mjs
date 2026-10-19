@@ -16,19 +16,76 @@ async function importTypeScriptModule(path) {
 
 const dateUtils = await importTypeScriptModule('utils/dateUtils.ts');
 
-// Helper mirror matching FitFlowContext logic
-function computeLevelProgress(currentTotalXp) {
-  const safeXp = Math.max(0, currentTotalXp);
-  const level = Math.floor(safeXp / 500) + 1;
-  const xpInLevel = safeXp % 500;
-  return {
-    level,
-    xp: xpInLevel,
-    xpToNextLevel: 500,
-  };
+function calculateDeduplicatedSteps(samples) {
+  if (!samples || samples.length === 0) return 0;
+  const valid = samples.filter((s) => s && typeof s.value === 'number' && s.value > 0);
+  if (valid.length === 0) return 0;
+
+  const sourceGroups = new Map();
+  for (const s of valid) {
+    const src = s.sourceId || s.sourceName || 'device';
+    if (!sourceGroups.has(src)) {
+      sourceGroups.set(src, []);
+    }
+    sourceGroups.get(src).push(s);
+  }
+
+  if (sourceGroups.size === 1) {
+    const list = Array.from(sourceGroups.values())[0];
+    return Math.round(list.reduce((acc, curr) => acc + curr.value, 0));
+  }
+
+  let primarySource = '';
+  let highestVolume = -1;
+  sourceGroups.forEach((list, src) => {
+    const vol = list.reduce((acc, c) => acc + c.value, 0);
+    if (vol > highestVolume) {
+      highestVolume = vol;
+      primarySource = src;
+    }
+  });
+
+  const sorted = [...valid].sort(
+    (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+  );
+
+  let totalSteps = 0;
+  let currentCoveredEnd = 0;
+
+  for (const sample of sorted) {
+    const start = new Date(sample.startDate).getTime();
+    const end = new Date(sample.endDate).getTime();
+    const isPrimary = (sample.sourceId || sample.sourceName) === primarySource;
+
+    if (start >= currentCoveredEnd) {
+      totalSteps += sample.value;
+      currentCoveredEnd = Math.max(currentCoveredEnd, end);
+    } else {
+      if (isPrimary && end > currentCoveredEnd) {
+        const fullDuration = Math.max(1, end - start);
+        const uncoveredDuration = end - currentCoveredEnd;
+        const ratio = Math.min(1, Math.max(0, uncoveredDuration / fullDuration));
+        totalSteps += Math.round(sample.value * ratio);
+        currentCoveredEnd = end;
+      }
+    }
+  }
+
+  return Math.round(totalSteps);
 }
 
 describe('FitFlow Core Engine - XP and Level Progression', () => {
+  function computeLevelProgress(currentTotalXp) {
+    const safeXp = Math.max(0, currentTotalXp);
+    const level = Math.floor(safeXp / 500) + 1;
+    const xpInLevel = safeXp % 500;
+    return {
+      level,
+      xp: xpInLevel,
+      xpToNextLevel: 500,
+    };
+  }
+
   it('initializes Level 1 with 0 XP', () => {
     const res = computeLevelProgress(0);
     assert.equal(res.level, 1);
@@ -129,7 +186,10 @@ describe('FitFlow Core Engine - Workout Planner & Symmetric Rollback', () => {
       currentTotalXp = Math.max(0, currentTotalXp - 120);
     }
 
-    const progress = computeLevelProgress(currentTotalXp);
+    const safeXp = Math.max(0, currentTotalXp);
+    const level = Math.floor(safeXp / 500) + 1;
+    const xpInLevel = safeXp % 500;
+
     const completedCount = nextDays.filter((d) => d.completed).length;
     const newStreak = completedCount > 0 || updatedWorkouts.length > 0 ? Math.max(1, state.user.streakDays || 1) : 0;
 
@@ -145,9 +205,9 @@ describe('FitFlow Core Engine - Workout Planner & Symmetric Rollback', () => {
       user: {
         ...state.user,
         streakDays: newStreak,
-        level: progress.level,
-        xp: progress.xp,
-        xpToNextLevel: progress.xpToNextLevel,
+        level,
+        xp: xpInLevel,
+        xpToNextLevel: 500,
       },
     };
   }
@@ -218,6 +278,30 @@ describe('FitFlow Core Engine - Division by Zero & Metric Safeguards', () => {
     assert.equal(waterPercent, 20); // 500 / 2500
     assert.equal(caloriePercent, 31); // 200 / 650
     assert.equal(stepPercent, 0);
+  });
+});
+
+describe('FitFlow Core Engine - Step Deduplication Service', () => {
+  it('returns 0 steps for empty or null samples array', () => {
+    assert.equal(calculateDeduplicatedSteps([]), 0);
+    assert.equal(calculateDeduplicatedSteps(null), 0);
+  });
+
+  it('correctly sums non-overlapping samples from a single source', () => {
+    const samples = [
+      { value: 120, startDate: '2026-10-18T08:00:00Z', endDate: '2026-10-18T08:15:00Z', sourceId: 'sensor-1' },
+      { value: 230, startDate: '2026-10-18T08:15:00Z', endDate: '2026-10-18T08:30:00Z', sourceId: 'sensor-1' },
+    ];
+    assert.equal(calculateDeduplicatedSteps(samples), 350);
+  });
+
+  it('deduplicates overlapping samples across multiple data sources', () => {
+    const samples = [
+      { value: 500, startDate: '2026-10-18T08:00:00Z', endDate: '2026-10-18T09:00:00Z', sourceId: 'watch' },
+      { value: 450, startDate: '2026-10-18T08:00:00Z', endDate: '2026-10-18T09:00:00Z', sourceId: 'phone' },
+    ];
+    // Should select primary source 'watch' with 500 steps and ignore duplicate window from 'phone'
+    assert.equal(calculateDeduplicatedSteps(samples), 500);
   });
 });
 
@@ -293,29 +377,17 @@ describe('FitFlow Core Engine - Storage Hydration Resilience & Schema Defense', 
 });
 
 describe('FitFlow Core Engine - Date Calculations & ISO Week Numbering', () => {
-  function getIsoWeekNumber(date) {
-    const target = new Date(date.valueOf());
-    const dayNr = (date.getDay() + 6) % 7;
-    target.setDate(target.getDate() - dayNr + 3);
-    const firstThursday = target.valueOf();
-    target.setMonth(0, 1);
-    if (target.getDay() !== 4) {
-      target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
-    }
-    return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
-  }
-
   it('correctly calculates mid-year ISO week numbers', () => {
     // 2026-10-18 is in Week 42 of 2026
     const oct18 = new Date(2026, 9, 18);
-    const weekNr = getIsoWeekNumber(oct18);
+    const weekNr = dateUtils.getIsoWeekNumber(oct18);
     assert.equal(weekNr, 42);
   });
 
   it('calculates first week of year accurately', () => {
     // 2026-01-08 is in Week 2 of 2026
     const jan8 = new Date(2026, 0, 8);
-    const weekNr = getIsoWeekNumber(jan8);
+    const weekNr = dateUtils.getIsoWeekNumber(jan8);
     assert.equal(weekNr, 2);
   });
 
