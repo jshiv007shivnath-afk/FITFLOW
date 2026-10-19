@@ -29,9 +29,12 @@ export async function checkStepAvailability(): Promise<{
 }> {
   const isNative = Capacitor.isNativePlatform();
   if (!isNative) {
+    const hasDeviceMotion = typeof window !== 'undefined' && 'DeviceMotionEvent' in window;
     return {
-      available: false,
-      reason: 'Physical step counter requires running on a native Android device with Health Connect.',
+      available: hasDeviceMotion,
+      reason: hasDeviceMotion
+        ? 'Real-time Web Motion Sensor step tracking available.'
+        : 'Browser motion sensors unavailable.',
       isNative: false,
     };
   }
@@ -60,7 +63,8 @@ export async function checkStepAuthorization(): Promise<{
   denied: boolean;
 }> {
   if (!Capacitor.isNativePlatform()) {
-    return { authorized: false, denied: false };
+    const hasDeviceMotion = typeof window !== 'undefined' && 'DeviceMotionEvent' in window;
+    return { authorized: hasDeviceMotion, denied: false };
   }
 
   try {
@@ -77,7 +81,7 @@ export async function checkStepAuthorization(): Promise<{
 }
 
 /**
- * Requests user authorization to read step count data from Health Connect / HealthKit.
+ * Requests user authorization to read step count data from Health Connect / HealthKit or Motion Sensors.
  */
 export async function requestStepAuthorization(): Promise<{
   granted: boolean;
@@ -86,12 +90,29 @@ export async function requestStepAuthorization(): Promise<{
   errorMessage?: string;
 }> {
   if (!Capacitor.isNativePlatform()) {
-    return {
-      granted: false,
-      denied: false,
-      status: 'unavailable',
-      errorMessage: 'Device health sensors are unavailable on web browser. Run on native Android phone.',
-    };
+    if (typeof window !== 'undefined' && typeof (DeviceMotionEvent as any)?.requestPermission === 'function') {
+      try {
+        const response = await (DeviceMotionEvent as any).requestPermission();
+        if (response === 'granted') {
+          return { granted: true, denied: false, status: 'available' };
+        } else {
+          return {
+            granted: false,
+            denied: true,
+            status: 'denied',
+            errorMessage: 'Motion sensor permission denied in browser.',
+          };
+        }
+      } catch (err: any) {
+        return {
+          granted: false,
+          denied: false,
+          status: 'error',
+          errorMessage: err?.message || 'Error requesting Motion sensor permission.',
+        };
+      }
+    }
+    return { granted: true, denied: false, status: 'available' };
   }
 
   try {
@@ -148,7 +169,6 @@ export function calculateDeduplicatedSteps(samples: HealthSample[]): number {
   const valid = samples.filter((s) => s && typeof s.value === 'number' && s.value > 0);
   if (valid.length === 0) return 0;
 
-  // Group by data source
   const sourceGroups = new Map<string, HealthSample[]>();
   for (const s of valid) {
     const src = s.sourceId || s.sourceName || 'device';
@@ -158,14 +178,11 @@ export function calculateDeduplicatedSteps(samples: HealthSample[]): number {
     sourceGroups.get(src)!.push(s);
   }
 
-  // If only a single data source produced step records, sum its non-overlapping samples
   if (sourceGroups.size === 1) {
     const list = Array.from(sourceGroups.values())[0];
     return Math.round(list.reduce((acc: number, curr: HealthSample) => acc + curr.value, 0));
   }
 
-  // If multiple data sources produced records (e.g., phone sensor + smartwatch + third-party app),
-  // select the highest-volume primary source and deduplicate overlapping intervals.
   let primarySource = '';
   let highestVolume = -1;
   sourceGroups.forEach((list: HealthSample[], src: string) => {
@@ -176,7 +193,6 @@ export function calculateDeduplicatedSteps(samples: HealthSample[]): number {
     }
   });
 
-  // Sort samples chronologically by start timestamp
   const sorted = [...valid].sort(
     (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
   );
@@ -190,12 +206,9 @@ export function calculateDeduplicatedSteps(samples: HealthSample[]): number {
     const isPrimary = (sample.sourceId || sample.sourceName) === primarySource;
 
     if (start >= currentCoveredEnd) {
-      // Disjoint non-overlapping window: count full sample
       totalSteps += sample.value;
       currentCoveredEnd = Math.max(currentCoveredEnd, end);
     } else {
-      // Overlaps with an already counted time window
-      // Only extend if it belongs to primary source and reaches beyond current window
       if (isPrimary && end > currentCoveredEnd) {
         const fullDuration = Math.max(1, end - start);
         const uncoveredDuration = end - currentCoveredEnd;
@@ -203,7 +216,6 @@ export function calculateDeduplicatedSteps(samples: HealthSample[]): number {
         totalSteps += Math.round(sample.value * ratio);
         currentCoveredEnd = end;
       }
-      // Overlapping secondary source samples are discarded to prevent double-counting
     }
   }
 
@@ -212,8 +224,6 @@ export function calculateDeduplicatedSteps(samples: HealthSample[]): number {
 
 /**
  * Reads real device step count for the current calendar day (midnight to now).
- * Uses system-level aggregation first (Health Connect deduplication engine),
- * with sample-level interval deduplication fallback.
  */
 export async function getTodayStepCount(): Promise<{
   steps: number | null;
@@ -223,13 +233,11 @@ export async function getTodayStepCount(): Promise<{
   if (!Capacitor.isNativePlatform()) {
     return {
       steps: null,
-      status: 'unavailable',
-      errorMessage: 'Device sensors unavailable in browser. Run on native Android phone.',
+      status: 'available',
     };
   }
 
   try {
-    // 1. Verify SDK availability
     const avail = await Health.isAvailable();
     if (!avail.available) {
       return {
@@ -239,7 +247,6 @@ export async function getTodayStepCount(): Promise<{
       };
     }
 
-    // 2. Check authorization
     const auth = await Health.checkAuthorization({ read: ['steps'] });
     if (!auth.readAuthorized.includes('steps')) {
       if (auth.readDenied.includes('steps')) {
@@ -256,14 +263,12 @@ export async function getTodayStepCount(): Promise<{
       };
     }
 
-    // 3. Define today's time range: start of today (midnight) to now
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
     const startDateIso = startOfDay.toISOString();
     const endDateIso = now.toISOString();
 
-    // 4. Primary: Try system-level aggregated query (Health Connect's built-in deduplication engine)
     try {
       const aggResult = await Health.queryAggregated({
         dataType: 'steps',
@@ -280,11 +285,10 @@ export async function getTodayStepCount(): Promise<{
           status: 'available',
         };
       }
-    } catch (aggErr) {
-      console.warn('queryAggregated failed, falling back to readSamples:', aggErr);
+    } catch {
+      // ignore, fall back to readSamples
     }
 
-    // 5. Fallback: Query raw step samples and calculate with custom interval deduplication
     const samplesResult = await Health.readSamples({
       dataType: 'steps',
       startDate: startDateIso,
@@ -314,14 +318,48 @@ export async function getTodayStepCount(): Promise<{
 }
 
 /**
+ * Registers real-time Web Accelerometer / DeviceMotion step counter for PWA/Web view.
+ */
+export function setupWebMotionStepTracker(onStep: () => void): () => void {
+  if (typeof window === 'undefined' || !('DeviceMotionEvent' in window)) {
+    return () => {};
+  }
+
+  let lastAcceleration = 0;
+  let lastStepTime = 0;
+  const THRESHOLD = 11.5; // M/s^2 acceleration threshold for step detection
+  const COOLDOWN_MS = 280; // Minimum time between consecutive physical steps
+
+  const handleMotion = (event: DeviceMotionEvent) => {
+    const acc = event.accelerationIncludingGravity;
+    if (!acc || acc.x === null || acc.y === null || acc.z === null) return;
+
+    const magnitude = Math.sqrt(acc.x * acc.x + acc.y * acc.y + acc.z * acc.z);
+    const delta = Math.abs(magnitude - lastAcceleration);
+    lastAcceleration = magnitude;
+
+    const now = Date.now();
+    if (delta > THRESHOLD && now - lastStepTime > COOLDOWN_MS) {
+      lastStepTime = now;
+      onStep();
+    }
+  };
+
+  window.addEventListener('devicemotion', handleMotion, true);
+  return () => {
+    window.removeEventListener('devicemotion', handleMotion, true);
+  };
+}
+
+/**
  * Opens Health Connect settings on Android.
  */
 export async function openHealthSettings(): Promise<void> {
   if (Capacitor.isNativePlatform()) {
     try {
       await Health.openHealthConnectSettings();
-    } catch (e) {
-      console.error('Failed to open Health Connect settings:', e);
+    } catch {
+      // ignore
     }
   }
 }
@@ -349,7 +387,6 @@ export function setupStepForegroundListener(onForeground: () => void): () => voi
     });
   }
 
-  // Also support document visibility changes for hybrid/webview
   const handleVisibilityChange = () => {
     if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
       onForeground();

@@ -7,6 +7,7 @@ import {
   checkStepAuthorization,
   requestStepAuthorization,
   getTodayStepCount,
+  setupWebMotionStepTracker,
   openHealthSettings as openNativeHealthSettings,
   setupStepForegroundListener,
 } from '@/services/stepTrackingService';
@@ -1253,23 +1254,25 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
           ...prev,
           stepTracking: {
             count: prev.stepTracking.count ?? 0,
-          status: auth.denied ? 'denied' : 'unauthorized',
-            isNative: true,
+            status: auth.denied ? 'denied' : 'unauthorized',
+            isNative: avail.isNative,
           },
         }));
         return;
       }
       const result = await getTodayStepCount();
-      setState(prev => ({
-        ...prev,
-        today: { ...prev.today, steps: result.steps ?? 0 },
-        stepTracking: {
-          count: result.steps ?? 0,
-          status: result.status,
-          isNative: true,
-          errorMessage: result.errorMessage,
-        },
-      }));
+      if (result.steps !== null) {
+        setState(prev => ({
+          ...prev,
+          today: { ...prev.today, steps: result.steps ?? 0 },
+          stepTracking: {
+            count: result.steps ?? 0,
+            status: result.status,
+            isNative: avail.isNative,
+            errorMessage: result.errorMessage,
+          },
+        }));
+      }
     } catch {
       // ignore
     }
@@ -1288,12 +1291,34 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     await openNativeHealthSettings();
   }, []);
 
+  // Web Motion / Accelerometer real-time step increments for browser/PWA view
   useEffect(() => {
-    const cleanup = setupStepForegroundListener(() => {
+    const cleanupMotion = setupWebMotionStepTracker(() => {
+      setState(prev => {
+        const currentSteps = prev.today.steps ?? 0;
+        const newSteps = currentSteps + 1;
+        return {
+          ...prev,
+          today: {
+            ...prev.today,
+            steps: newSteps,
+          },
+          stepTracking: {
+            ...prev.stepTracking,
+            count: newSteps,
+            status: 'available',
+          },
+        };
+      });
+    });
+
+    const cleanupForeground = setupStepForegroundListener(() => {
       refreshStepCount();
     });
+
     return () => {
-      cleanup();
+      cleanupMotion();
+      cleanupForeground();
     };
   }, [refreshStepCount]);
 
