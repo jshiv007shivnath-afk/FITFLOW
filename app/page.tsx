@@ -20,6 +20,7 @@ import { WeeklyPlannerView } from '@/components/screens/WeeklyPlannerView';
 import { DisclaimerView } from '@/components/screens/DisclaimerView';
 import { AccessibilityStatementView } from '@/components/screens/AccessibilityStatementView';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { DashboardSkeleton } from '@/components/ui/Skeleton';
 
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -37,11 +38,15 @@ export default function App() {
     showHelpCenter,
     showDisclaimer,
     showAccessibilityStatement,
+    isHydrated,
     toastMessage,
     dismissToast,
   } = useFitFlow();
 
   const renderActiveScreen = () => {
+    if (!isHydrated) {
+      return <DashboardSkeleton />;
+    }
     if (showLogin) {
       return <LoginView />;
     }

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useFitFlow } from '@/context/FitFlowContext';
-import { Eye, EyeSlash } from 'reicon-react';
+import { signIn } from '@/lib/auth-client';
 
 export function LoginView() {
   const { setShowPrivacyPolicy, setShowTerms, showToast, requestOtpLogin } = useFitFlow();
@@ -12,12 +12,10 @@ export function LoginView() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
 
@@ -28,20 +26,46 @@ export function LoginView() {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
+    const fullName = firstName ? `${firstName.trim()} ${lastName.trim()}`.trim() : (trimmedEmail ? trimmedEmail.split('@')[0] : 'Athlete');
+
+    try {
+      // Send 6-digit OTP to user email
+      const otpRes = await fetch('/api/auth/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmedEmail }),
+      });
+      const otpData = await otpRes.json().catch(() => ({}));
+
+      if (!otpRes.ok && otpRes.status === 429) {
+        showToast(otpData.error || 'Please wait before requesting another code');
+      }
+
       setIsSubmitting(false);
-      const fullName = firstName ? `${firstName.trim()} ${lastName.trim()}`.trim() : (trimmedEmail ? trimmedEmail.split('@')[0] : 'Athlete');
       requestOtpLogin(trimmedEmail, fullName);
-    }, 320);
+    } catch (err: any) {
+      setIsSubmitting(false);
+      showToast(err?.message || 'Verification code sent to email');
+      requestOtpLogin(trimmedEmail, fullName);
+    }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     showToast('Connecting with Google...');
-    setTimeout(() => {
+    try {
+      const { error } = await signIn.social({
+        provider: 'google',
+        callbackURL: '/',
+      });
+      if (error) {
+        showToast(error.message || 'Google Sign-in failed. Please use email verification.');
+        setIsGoogleLoading(false);
+      }
+    } catch (err: any) {
       setIsGoogleLoading(false);
-      requestOtpLogin('athlete@gmail.com', 'Google Athlete');
-    }, 600);
+      showToast('Google OAuth is not configured in local dev. Using email login.');
+    }
   };
 
   return (
@@ -84,12 +108,12 @@ export function LoginView() {
             <p className="text-xs text-[#525650] max-w-xs leading-normal">
               {mode === 'signup'
                 ? 'Enter your details to begin your fitness & wellness journey'
-                : 'Enter your email and password to access your account'}
+                : 'Enter your email to receive a secure login code'}
             </p>
           </div>
 
           {/* Form Inputs */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-2">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 mt-2">
             {mode === 'signup' && (
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex flex-col gap-1">
@@ -131,42 +155,6 @@ export function LoginView() {
                 className="w-full h-11 px-4 rounded-xl bg-[#F4F5F7] border border-[#E9EAEC] text-sm text-[#111312] placeholder-[#9CA3AF] focus:bg-white focus:border-[#111312] focus:ring-1 focus:ring-[#111312] outline-none transition"
                 required
               />
-            </div>
-
-            {/* Password input with toggle */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="password-input" className="text-xs font-semibold text-[#111312]">Password</label>
-              <div className="relative">
-                <input
-                  id="password-input"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-11 pl-4 pr-10 rounded-xl bg-[#F4F5F7] border border-[#E9EAEC] text-sm text-[#111312] placeholder-[#9CA3AF] focus:bg-white focus:border-[#111312] focus:ring-1 focus:ring-[#111312] outline-none transition"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#111312] p-1 cursor-pointer"
-                >
-                  {showPassword ? <EyeSlash size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Forgot Password Row */}
-            <div className="flex items-center justify-end mt-0.5 px-0.5">
-              <button
-                type="button"
-                onClick={() => showToast('Password reset link sent to your email.')}
-                className="text-xs text-[#525650] hover:text-[#111312] font-semibold hover:underline cursor-pointer"
-              >
-                Forgot Password
-              </button>
             </div>
 
             {/* Solid Black Primary Action Button */}

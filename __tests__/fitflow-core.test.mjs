@@ -15,6 +15,7 @@ async function importTypeScriptModule(path) {
 }
 
 const dateUtils = await importTypeScriptModule('utils/dateUtils.ts');
+const avatarUtils = await importTypeScriptModule('utils/avatarUtils.ts');
 
 function calculateDeduplicatedSteps(samples) {
   if (!samples || samples.length === 0) return 0;
@@ -399,3 +400,24 @@ describe('FitFlow Core Engine - Date Calculations & ISO Week Numbering', () => {
     assert.equal(dateUtils.getIsoWeekYear(mondayBefore2026), 2026);
   });
 });
+
+describe('FitFlow Core Engine - Email-Derived Profile Picture Utility', () => {
+  it('returns an empty string when email is missing or empty', () => {
+    assert.equal(avatarUtils.getEmailAvatar(''), '');
+    assert.equal(avatarUtils.getEmailAvatar(null), '');
+    assert.equal(avatarUtils.getEmailAvatar(undefined), '');
+  });
+
+  it('generates an unavatar URL containing the encoded email', () => {
+    const avatar = avatarUtils.getEmailAvatar('athlete.pro@gmail.com');
+    assert.ok(avatar.startsWith('https://unavatar.io/athlete.pro%40gmail.com'));
+    assert.ok(avatar.includes('fallback='));
+  });
+
+  it('embeds brand colors (#111312 and #B8F45A) into the avatar fallback', () => {
+    const avatar = avatarUtils.getEmailAvatar('athlete@fitflow.app', 'Alex Rivers');
+    assert.ok(avatar.includes('111312'), 'Must include dark background token');
+    assert.ok(avatar.includes('B8F45A'), 'Must include lime brand token');
+  });
+});
+

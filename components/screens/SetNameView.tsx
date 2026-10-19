@@ -56,13 +56,37 @@ export function SetNameView() {
         <form onSubmit={handleContinue} className="flex flex-col flex-1 justify-between">
           <div className="flex flex-col">
             {/* Editorial Headline & Context (PROFILE SETUP removed) */}
-            <div className="flex flex-col gap-1.5 mb-7 text-left">
+            <div className="flex flex-col gap-1.5 mb-5 text-left">
               <h1 className="text-[26px] sm:text-[28px] font-black text-[#111312] tracking-tight leading-tight">
                 What should we call you?
               </h1>
               <p className="text-xs text-[#525650] leading-relaxed mt-1">
                 Enter your preferred name to personalize your daily training targets, hydration goals, and weekly streak.
               </p>
+            </div>
+
+            {/* User Email Avatar Preview Badge */}
+            <div className="flex items-center gap-3 mb-5 p-3 rounded-2xl bg-white border border-[#ECECE9] shadow-2xs">
+              {user.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="Email Avatar"
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-[#B8F45A] shadow-xs shrink-0"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-[#111312] text-[#B8F45A] font-extrabold flex items-center justify-center text-lg ring-2 ring-[#B8F45A] shrink-0">
+                  {user.name ? user.name.charAt(0).toUpperCase() : 'A'}
+                </div>
+              )}
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-[#111312] truncate">
+                  {user.email || 'Athlete Account'}
+                </span>
+                <span className="text-xs font-semibold text-[#15803D] flex items-center gap-1 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#15803D]" />
+                  Profile picture linked to email
+                </span>
+              </div>
             </div>
 
             {/* Input Field Section */}

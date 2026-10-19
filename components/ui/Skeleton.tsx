@@ -1,17 +1,24 @@
+'use client';
+
 import React from 'react';
 
 interface SkeletonProps {
   className?: string;
   rounded?: 'rounded-md' | 'rounded-xl' | 'rounded-2xl' | 'rounded-full';
+  shimmer?: boolean;
 }
 
-export function Skeleton({ className = '', rounded = 'rounded-xl' }: SkeletonProps) {
+export function Skeleton({ className = '', rounded = 'rounded-xl', shimmer = true }: SkeletonProps) {
   return (
     <div
       role="status"
       aria-label="Loading..."
-      className={`animate-pulse bg-[#E6E8E2] dark:bg-[#252824] ${rounded} ${className}`}
-    />
+      className={`relative overflow-hidden bg-[#ECECE9] dark:bg-[#252824] ${rounded} ${className}`}
+    >
+      {shimmer && (
+        <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent" />
+      )}
+    </div>
   );
 }
 
