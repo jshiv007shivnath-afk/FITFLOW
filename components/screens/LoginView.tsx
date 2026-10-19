@@ -42,7 +42,7 @@ export function LoginView() {
       }
 
       setIsSubmitting(false);
-      requestOtpLogin(trimmedEmail, fullName, otpData?.devOtp);
+      requestOtpLogin(trimmedEmail, fullName);
     } catch (err: any) {
       setIsSubmitting(false);
       showToast(err?.message || 'Verification code sent to email');

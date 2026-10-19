@@ -108,7 +108,7 @@ describe('Better Auth & Security Suite - OTP Rate-Limiting & Brute-Force Lockout
     assert.ok(typeof check2.retryAfterSec === 'number' && check2.retryAfterSec > 0);
   });
 
-  it('locks out verification after 5 consecutive incorrect attempts', async () => {
+  it('locks out verification after 4 consecutive incorrect attempts', async () => {
     const bruteForceEmail = `brute_${Date.now()}@fitflow.test`;
     const correctCode = '123456';
     await storeOtp(bruteForceEmail, correctCode);

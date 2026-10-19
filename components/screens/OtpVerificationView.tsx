@@ -11,7 +11,6 @@ import { SuccessTickAnimation } from '@/components/ui/SuccessTickAnimation';
 export function OtpVerificationView() {
   const {
     pendingOtpEmail,
-    pendingDevOtp,
     setShowLogin,
     setShowOtp,
     completeOtpLogin,
@@ -20,17 +19,10 @@ export function OtpVerificationView() {
 
   const emailDisplay = pendingOtpEmail || 'athlete@example.com';
   const [code, setCode] = useState('');
-  const [devOtp, setDevOtp] = useState<string | undefined>(pendingDevOtp);
   const [status, setStatus] = useState<'idle' | 'error' | 'success'>('idle');
   const [isVerifying, setIsVerifying] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
   const [showSuccessTick, setShowSuccessTick] = useState(false);
-
-  useEffect(() => {
-    if (pendingDevOtp) {
-      setDevOtp(pendingDevOtp);
-    }
-  }, [pendingDevOtp]);
 
   // Resend countdown timer (60s strict rate limit)
   useEffect(() => {
@@ -79,6 +71,8 @@ export function OtpVerificationView() {
       setStatus('error');
       if (res.status === 423) {
         showToast(data.error || 'Account locked for 15 minutes due to too many failed attempts.');
+      } else if (typeof data.remainingAttempts === 'number') {
+        showToast(`Invalid code. ${data.remainingAttempts} attempt(s) remaining.`);
       } else {
         showToast(data.error || 'Invalid verification code. Please try again.');
       }
@@ -121,12 +115,7 @@ export function OtpVerificationView() {
         return;
       }
 
-      if (data.devOtp) {
-        setDevOtp(data.devOtp);
-        showToast(`New code sent! (Code: ${data.devOtp})`);
-      } else {
-        showToast(`New verification code sent to ${emailDisplay}`);
-      }
+      showToast(`New verification code sent to ${emailDisplay}`);
     } catch {
       showToast(`Verification code sent to ${emailDisplay}`);
     }
@@ -173,39 +162,6 @@ export function OtpVerificationView() {
               </button>
             </p>
           </div>
-
-          {/* Local Development OTP Banner & Mailpit Shortcut */}
-          {devOtp && (
-            <div className="w-full mb-3 px-3.5 py-2.5 rounded-2xl bg-[#F2FBF0] border border-[#B8F45A]/50 flex items-center justify-between gap-2 shadow-2xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse shrink-0" />
-                <div className="flex flex-col text-left">
-                  <span className="text-[10px] font-bold text-[#525650] uppercase tracking-wider">
-                    Dev Code (Click to paste)
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleCodeChange(devOtp);
-                      showToast(`Filled code: ${devOtp}`);
-                    }}
-                    title="Click to auto-fill code"
-                    className="text-sm font-black font-mono tracking-widest text-[#15803D] hover:underline cursor-pointer text-left"
-                  >
-                    {devOtp}
-                  </button>
-                </div>
-              </div>
-              <a
-                href="http://localhost:54324"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[11px] font-bold text-[#15803D] bg-white px-2.5 py-1.5 rounded-xl border border-[#B8F45A]/40 hover:bg-[#E8F8E4] transition shadow-2xs shrink-0"
-              >
-                Mailpit Inbox ↗
-              </a>
-            </div>
-          )}
 
           {/* React Bits Physics-Animated CodeSlots Component */}
           <div className="w-full flex flex-col items-center gap-4 py-2">

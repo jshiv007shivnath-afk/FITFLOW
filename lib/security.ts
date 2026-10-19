@@ -6,7 +6,7 @@ import { query } from './db';
 // ------------------------------------------------------------------------------
 export const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 export const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 60 seconds
-export const MAX_ATTEMPTS = 5; // 5 attempts max
+export const MAX_ATTEMPTS = 4; // 4 attempts max
 export const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes lockout
 
 // In-memory fallback tracking for rate-limits and active OTPs
