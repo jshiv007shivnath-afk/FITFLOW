@@ -344,7 +344,7 @@ export function HomeDashboard() {
                 logMeal('Healthy Breakfast Bowl', 'Breakfast', 380);
                 showToast('+380 kcal Breakfast logged!');
               }}
-              className="mt-3 text-xs font-semibold text-white bg-[#111312] hover:bg-black px-4 py-2 rounded-xl transition-colors cursor-pointer shadow-xs"
+              className="mt-3 h-10 px-4 rounded-xl bg-[#111312] text-white text-xs font-semibold hover:bg-black transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
             >
               + Quick Log Breakfast
             </motion.button>
@@ -406,7 +406,7 @@ export function HomeDashboard() {
                   toggleDayCompletion(todayKey);
                   showToast(`Completed ${todayPlan.workoutTitle}! Streak updated.`);
                 }}
-                className="px-3 py-1.5 rounded-xl bg-[#15803D] text-white text-xs font-bold hover:bg-[#166534] transition shadow-xs cursor-pointer flex items-center gap-1"
+                className="h-8 px-3 rounded-xl bg-[#15803D] text-white text-xs font-bold hover:bg-[#166534] transition shadow-xs cursor-pointer flex items-center justify-center gap-1"
                 type="button"
               >
                 <CheckCircle size={14} />
@@ -415,7 +415,7 @@ export function HomeDashboard() {
               <motion.button
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setActiveTab('planner')}
-                className="px-2.5 py-1.5 rounded-xl bg-[#F4F5F2] text-[#111312] text-xs font-semibold hover:bg-[#ECECE9] transition cursor-pointer"
+                className="h-8 px-3 rounded-xl bg-[#F4F5F2] text-[#111312] text-xs font-semibold hover:bg-[#ECECE9] transition cursor-pointer flex items-center justify-center"
                 type="button"
               >
                 Planner

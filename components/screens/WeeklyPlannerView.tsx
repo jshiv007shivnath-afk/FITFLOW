@@ -400,7 +400,7 @@ export function WeeklyPlannerView() {
 
                 {/* Day Abbreviation */}
                 <span
-                  className={`relative z-10 text-[11px] font-bold tracking-tight uppercase select-none ${
+                  className={`relative z-10 text-xs font-bold tracking-tight uppercase select-none ${
                     isSelected ? 'text-[#B8F45A]' : 'text-[#525650]'
                   }`}
                 >
@@ -518,7 +518,7 @@ export function WeeklyPlannerView() {
 
               {/* Quick Workout Template Suggestions */}
               <div className="w-full mb-4">
-                <span className="text-[11px] font-bold text-[#525650] uppercase tracking-wider block mb-2 text-center">
+                <span className="text-xs font-bold text-[#525650] uppercase tracking-wider block mb-2 text-center">
                   Quick workout templates
                 </span>
                 <div className="flex items-center gap-1.5 flex-wrap justify-center">
@@ -527,7 +527,7 @@ export function WeeklyPlannerView() {
                       key={p.title}
                       type="button"
                       onClick={() => handleQuickSwapPreset(p)}
-                      className="px-2.5 py-1.5 rounded-xl bg-white border border-[#ECECE9] hover:bg-[#F4F5F2] text-[11px] font-semibold text-[#111312] transition shadow-xs cursor-pointer active:scale-95"
+                      className="h-8 px-3 rounded-xl bg-white border border-[#ECECE9] hover:bg-[#F4F5F2] text-xs font-semibold text-[#111312] transition shadow-xs cursor-pointer active:scale-95"
                     >
                       + {p.title.split('&')[0].trim()} ({p.est}m)
                     </button>
@@ -614,7 +614,7 @@ export function WeeklyPlannerView() {
                     Exercise Routine
                   </span>
                   {selectedDay.exercises.length > 0 && (
-                    <span className="text-[11px] font-semibold text-[#15803D]">
+                    <span className="text-xs font-semibold text-[#15803D]">
                       {currentDayCheckedCount} of {selectedDay.exercises.length} checked
                     </span>
                   )}
