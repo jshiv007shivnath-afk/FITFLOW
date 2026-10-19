@@ -27,7 +27,9 @@ const {
   recordOtpSent,
   storeOtp,
   verifyOtp,
+  checkAccountLockout,
   MAX_ATTEMPTS,
+  LOCKOUT_DURATION_MS,
 } = require('../lib/security.ts');
 
 const { renderOtpEmailHtml } = require('../lib/email.ts');
@@ -108,12 +110,13 @@ describe('Better Auth & Security Suite - OTP Rate-Limiting & Brute-Force Lockout
     assert.ok(typeof check2.retryAfterSec === 'number' && check2.retryAfterSec > 0);
   });
 
-  it('locks out verification after 4 consecutive incorrect attempts', async () => {
+  it('locks out verification after 4 consecutive incorrect attempts for 24 hours (Try again next day)', async () => {
+    assert.equal(LOCKOUT_DURATION_MS, 24 * 60 * 60 * 1000);
     const bruteForceEmail = `brute_${Date.now()}@fitflow.test`;
     const correctCode = '123456';
     await storeOtp(bruteForceEmail, correctCode);
 
-    // Make 4 incorrect attempts
+    // Make 3 incorrect attempts
     for (let i = 1; i < MAX_ATTEMPTS; i++) {
       const res = await verifyOtp(bruteForceEmail, '000000');
       assert.equal(res.success, false);
@@ -121,17 +124,31 @@ describe('Better Auth & Security Suite - OTP Rate-Limiting & Brute-Force Lockout
       assert.equal(res.remainingAttempts, MAX_ATTEMPTS - i);
     }
 
-    // 5th attempt must trigger lockout
+    // 4th attempt must trigger 24-hour lockout
     const lockRes = await verifyOtp(bruteForceEmail, '000000');
     assert.equal(lockRes.success, false);
     assert.equal(lockRes.status, 'locked');
     assert.equal(lockRes.remainingAttempts, 0);
-    assert.ok(lockRes.error?.includes('15 minutes') || lockRes.error?.includes('locked'));
+    assert.equal(lockRes.error, 'Try again next day');
 
     // Further attempts while locked must return locked status even with correct code
     const lockedTry = await verifyOtp(bruteForceEmail, correctCode);
     assert.equal(lockedTry.success, false);
     assert.equal(lockedTry.status, 'locked');
+    assert.equal(lockedTry.error, 'Try again next day');
+
+    // Account lockout check must report locked
+    const lockoutCheck = await checkAccountLockout(bruteForceEmail);
+    assert.equal(lockoutCheck.isLocked, true);
+    assert.equal(lockoutCheck.error, 'Try again next day');
+
+    // Attempting to send or store a new OTP must throw 'Try again next day'
+    await assert.rejects(
+      async () => {
+        await storeOtp(bruteForceEmail, '999999');
+      },
+      { message: 'Try again next day' }
+    );
   });
 
   it('succeeds on first valid OTP and invalidates code for single-use', async () => {

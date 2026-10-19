@@ -21,6 +21,7 @@ export function OtpVerificationView() {
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<'idle' | 'error' | 'success'>('idle');
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
   const [showSuccessTick, setShowSuccessTick] = useState(false);
 
@@ -70,7 +71,8 @@ export function OtpVerificationView() {
 
       setStatus('error');
       if (res.status === 423) {
-        showToast(data.error || 'Account locked for 15 minutes due to too many failed attempts.');
+        setIsLocked(true);
+        showToast(data.error || 'Try again next day');
       } else if (typeof data.remainingAttempts === 'number') {
         showToast(`Invalid code. ${data.remainingAttempts} attempt(s) remaining.`);
       } else {
@@ -108,6 +110,12 @@ export function OtpVerificationView() {
         body: JSON.stringify({ email: emailDisplay }),
       });
       const data = await res.json().catch(() => ({}));
+
+      if (res.status === 423) {
+        setIsLocked(true);
+        showToast(data.error || 'Try again next day');
+        return;
+      }
 
       if (res.status === 429) {
         setResendTimer(data.retryAfterSec || 60);
@@ -162,6 +170,15 @@ export function OtpVerificationView() {
               </button>
             </p>
           </div>
+
+          {/* Account Lockout Banner */}
+          {isLocked && (
+            <div className="w-full p-4 rounded-2xl bg-red-50 border border-red-200 text-center flex flex-col items-center gap-1.5 mb-3 shadow-xs">
+              <span className="text-2xl">🔒</span>
+              <span className="text-xs font-bold text-red-600 uppercase tracking-wider">Account Blocked for 24 Hours</span>
+              <span className="text-base font-black text-red-700">Try again next day</span>
+            </div>
+          )}
 
           {/* React Bits Physics-Animated CodeSlots Component */}
           <div className="w-full flex flex-col items-center gap-4 py-2">
@@ -223,7 +240,7 @@ export function OtpVerificationView() {
               handleColor="#FFFFFF"
               successColor="#15803D"
               dangerColor="#EF4444"
-              disabled={code.length < 6 || isVerifying}
+              disabled={code.length < 6 || isVerifying || isLocked}
               onConfirm={handleVerifyCommit}
               onDone={() => {
                 setShowSuccessTick(true);
@@ -231,11 +248,15 @@ export function OtpVerificationView() {
             />
           </div>
 
-          {code.length < 6 && (
+          {isLocked ? (
+            <span className="text-xs font-bold text-red-600 text-center">
+              Try again next day
+            </span>
+          ) : code.length < 6 ? (
             <span className="text-xs text-[#525650] text-center">
               Enter 6 digits to enable slide
             </span>
-          )}
+          ) : null}
         </div>
       </div>
 

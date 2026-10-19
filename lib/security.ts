@@ -7,7 +7,7 @@ import { query } from './db';
 export const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 export const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 60 seconds
 export const MAX_ATTEMPTS = 4; // 4 attempts max
-export const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes lockout
+export const LOCKOUT_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours (1 full day) lockout
 
 // In-memory fallback tracking for rate-limits and active OTPs
 interface RateLimitEntry {
@@ -123,9 +123,70 @@ export function recordOtpSent(identifier: string): void {
 }
 
 // ------------------------------------------------------------------------------
-// 4. BRUTE-FORCE LOCKOUT & VERIFICATION (Max 5 attempts, 15m lockout)
+// 4. BRUTE-FORCE LOCKOUT & VERIFICATION (Max 4 attempts, 24h / 1 day lockout)
 // ------------------------------------------------------------------------------
+export async function checkAccountLockout(identifier: string): Promise<{
+  isLocked: boolean;
+  lockedUntil?: Date;
+  error?: string;
+}> {
+  const now = new Date();
+  const nowMs = now.getTime();
+
+  // 1. Check in-memory store
+  const memEntry = memoryOtpStore.get(identifier);
+  if (memEntry?.lockedUntil && memEntry.lockedUntil > nowMs) {
+    const lockedUntilDate = new Date(memEntry.lockedUntil);
+    return {
+      isLocked: true,
+      lockedUntil: lockedUntilDate,
+      error: 'Try again next day',
+    };
+  }
+
+  // 2. Check Database record
+  try {
+    const res = await query(
+      `SELECT "lockedUntil"
+       FROM "verification"
+       WHERE "identifier" = $1 AND "lockedUntil" > $2
+       ORDER BY "lockedUntil" DESC
+       LIMIT 1`,
+      [identifier, now]
+    );
+
+    if (res.rows.length > 0 && res.rows[0].lockedUntil) {
+      const lockedUntilDate = new Date(res.rows[0].lockedUntil);
+      if (memEntry) {
+        memEntry.lockedUntil = lockedUntilDate.getTime();
+      } else {
+        memoryOtpStore.set(identifier, {
+          value: '',
+          expiresAt: 0,
+          attempts: MAX_ATTEMPTS,
+          lockedUntil: lockedUntilDate.getTime(),
+        });
+      }
+      return {
+        isLocked: true,
+        lockedUntil: lockedUntilDate,
+        error: 'Try again next day',
+      };
+    }
+  } catch (err) {
+    console.warn('[Security] DB lockout check fallback to memory:', err);
+  }
+
+  return { isLocked: false };
+}
+
 export async function storeOtp(identifier: string, code: string): Promise<void> {
+  // Enforce lockout: blocked accounts cannot request OTP
+  const lockout = await checkAccountLockout(identifier);
+  if (lockout.isLocked) {
+    throw new Error('Try again next day');
+  }
+
   const now = new Date();
   const expiresAt = new Date(now.getTime() + OTP_TTL_MS);
   const id = `otp_${randomUUID()}`;
@@ -138,8 +199,12 @@ export async function storeOtp(identifier: string, code: string): Promise<void> 
   });
 
   try {
-    // Clean up previous verification entries for this identifier
-    await query(`DELETE FROM "verification" WHERE "identifier" = $1`, [identifier]);
+    // Clean up previous un-locked verification entries for this identifier
+    await query(
+      `DELETE FROM "verification"
+       WHERE "identifier" = $1 AND ("lockedUntil" IS NULL OR "lockedUntil" <= NOW())`,
+      [identifier]
+    );
 
     // Insert new verification record with 0 attempts
     await query(
@@ -174,7 +239,7 @@ export async function verifyOtp(
       status: 'locked',
       lockedUntil: lockedUntilDate,
       remainingAttempts: 0,
-      error: `Too many failed attempts. Verification locked until ${lockedUntilDate.toLocaleTimeString()}.`,
+      error: 'Try again next day',
     };
   }
 
@@ -196,6 +261,21 @@ export async function verifyOtp(
     // DB offline/busy, fall back to memEntry below
   }
 
+  // Check DB lockout if present
+  if (dbRow?.lockedUntil && new Date(dbRow.lockedUntil).getTime() > nowMs) {
+    const lockedUntilDate = new Date(dbRow.lockedUntil);
+    if (memEntry) {
+      memEntry.lockedUntil = lockedUntilDate.getTime();
+    }
+    return {
+      success: false,
+      status: 'locked',
+      lockedUntil: lockedUntilDate,
+      remainingAttempts: 0,
+      error: 'Try again next day',
+    };
+  }
+
   const activeValue = dbRow ? dbRow.value : memEntry?.value;
   const activeExpiresAt = dbRow ? new Date(dbRow.expiresAt).getTime() : memEntry?.expiresAt;
   const activeAttempts = dbRow ? (dbRow.attempts || 0) : (memEntry?.attempts || 0);
@@ -208,19 +288,7 @@ export async function verifyOtp(
     };
   }
 
-  // 3. Check DB lockout
-  if (dbRow?.lockedUntil && new Date(dbRow.lockedUntil).getTime() > nowMs) {
-    const lockedUntilDate = new Date(dbRow.lockedUntil);
-    return {
-      success: false,
-      status: 'locked',
-      lockedUntil: lockedUntilDate,
-      remainingAttempts: 0,
-      error: `Verification locked due to too many failed attempts. Try again at ${lockedUntilDate.toLocaleTimeString()}.`,
-    };
-  }
-
-  // 4. Check expiration (10 min TTL)
+  // 3. Check expiration (10 min TTL)
   if (activeExpiresAt < nowMs) {
     return {
       success: false,
@@ -229,7 +297,7 @@ export async function verifyOtp(
     };
   }
 
-  // 5. Check code match
+  // 4. Check code match
   const isMatch = activeValue === enteredCode.trim();
 
   if (isMatch) {
@@ -245,7 +313,7 @@ export async function verifyOtp(
     return { success: true, status: 'valid' };
   }
 
-  // 6. Handle Failed Attempt
+  // 5. Handle Failed Attempt
   const newAttempts = activeAttempts + 1;
   const remainingAttempts = Math.max(0, MAX_ATTEMPTS - newAttempts);
 
@@ -281,7 +349,7 @@ export async function verifyOtp(
       status: 'locked',
       lockedUntil: lockUntilDate,
       remainingAttempts: 0,
-      error: `Account locked for 15 minutes due to 5 incorrect attempts. Please try again after 15 minutes.`,
+      error: 'Try again next day',
     };
   }
 

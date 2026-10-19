@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   sanitizeEmail,
+  checkAccountLockout,
   checkOtpRateLimit,
   generateCryptographicOtp,
   storeOtp,
@@ -20,7 +21,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Enforce Rate Limiting (1 request per 60 seconds)
+    // 1. Enforce 24-Hour Account Lockout (Defense against brute-force & restarts)
+    const lockout = await checkAccountLockout(email);
+    if (lockout.isLocked) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Try again next day',
+          isLocked: true,
+          lockedUntil: lockout.lockedUntil,
+        },
+        { status: 423 }
+      );
+    }
+
+    // 2. Enforce Rate Limiting (1 request per 60 seconds)
     const rateLimit = await checkOtpRateLimit(email);
     if (!rateLimit.allowed) {
       return NextResponse.json(

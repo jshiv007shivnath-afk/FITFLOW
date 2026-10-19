@@ -14,11 +14,13 @@ export function LoginView() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [lockoutMessage, setLockoutMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
 
+    setLockoutMessage(null);
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
       showToast('Please enter a valid email address');
@@ -39,6 +41,16 @@ export function LoginView() {
 
       if (!otpRes.ok && otpRes.status === 429) {
         showToast(otpData.error || 'Please wait before requesting another code');
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!otpRes.ok && otpRes.status === 423) {
+        setIsSubmitting(false);
+        const lockMsg = otpData.error || 'Try again next day';
+        setLockoutMessage(lockMsg);
+        showToast(lockMsg);
+        return;
       }
 
       setIsSubmitting(false);
@@ -156,6 +168,23 @@ export function LoginView() {
                 required
               />
             </div>
+
+            {/* Lockout Warning Card */}
+            {lockoutMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full p-3 rounded-xl bg-red-50 border border-red-200 text-center flex flex-col items-center gap-1 my-1"
+              >
+                <div className="flex items-center gap-1.5 text-xs font-bold text-red-600 uppercase tracking-wider">
+                  <span>🔒</span>
+                  <span>Account Blocked</span>
+                </div>
+                <span className="text-sm font-black text-red-700">
+                  {lockoutMessage}
+                </span>
+              </motion.div>
+            )}
 
             {/* Solid Black Primary Action Button */}
             <motion.button
