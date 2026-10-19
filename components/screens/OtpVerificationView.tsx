@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFitFlow } from '@/context/FitFlowContext';
 import { Refresh } from 'reicon-react';
 import { BrandMark } from '@/components/ui/BrandMark';
@@ -134,6 +134,11 @@ export function OtpVerificationView() {
     setShowLogin(true);
   };
 
+  const handleTickComplete = useCallback(() => {
+    setShowSuccessTick(false);
+    completeOtpLogin();
+  }, [completeOtpLogin]);
+
   return (
     <div className="relative w-full min-h-full flex flex-col bg-[#FBFBFA] text-[#111312] selection:bg-[#B8F45A] selection:text-[#111312] overflow-y-auto no-scrollbar font-sans">
       {/* 1. Clean Top Header: Original Favicon & Brand (Back button removed as requested) */}
@@ -263,11 +268,8 @@ export function OtpVerificationView() {
       {/* Payment-Style Success Tick Animation */}
       <SuccessTickAnimation
         show={showSuccessTick}
-        durationMs={1400}
-        onComplete={() => {
-          setShowSuccessTick(false);
-          completeOtpLogin();
-        }}
+        durationMs={850}
+        onComplete={handleTickComplete}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface SuccessTickAnimationProps {
@@ -18,20 +18,21 @@ interface SuccessTickAnimationProps {
 export function SuccessTickAnimation({
   show,
   onComplete,
-  durationMs = 1500,
+  durationMs = 900,
   size = 96,
 }: SuccessTickAnimationProps) {
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
   useEffect(() => {
     if (!show) return;
 
     const timer = setTimeout(() => {
-      if (onComplete) {
-        onComplete();
-      }
+      onCompleteRef.current?.();
     }, durationMs);
 
     return () => clearTimeout(timer);
-  }, [show, onComplete, durationMs]);
+  }, [show, durationMs]);
 
   return (
     <AnimatePresence>
