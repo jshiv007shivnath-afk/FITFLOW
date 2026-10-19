@@ -47,10 +47,17 @@ export async function POST(req: NextRequest) {
     // 4. Send via Nodemailer (Local SMTP on 54325 or configured SMTP)
     const sendResult = await sendOtpEmail(email, otp);
 
+    const isDev =
+      process.env.NODE_ENV !== 'production' ||
+      !process.env.SMTP_USER ||
+      process.env.SMTP_HOST === '127.0.0.1';
+
     return NextResponse.json({
       success: true,
       message: 'Verification code sent to your email.',
       email,
+      devOtp: isDev ? otp : undefined,
+      inboxUrl: isDev ? 'http://localhost:54324' : undefined,
       warning: sendResult.error ? 'Email logged in dev mode' : undefined,
     });
   } catch (error: any) {

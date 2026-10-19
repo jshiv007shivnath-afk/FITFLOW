@@ -91,6 +91,7 @@ export interface FitFlowState {
   showOtp: boolean;
   pendingOtpEmail?: string;
   pendingOtpName?: string;
+  pendingDevOtp?: string;
   showSetName: boolean;
   showWelcome: boolean;
   showNotifications: boolean;
@@ -144,7 +145,10 @@ interface FitFlowContextType extends FitFlowState {
   setShowSetName: (show: boolean) => void;
   setShowWelcome: (show: boolean) => void;
   setUserName: (name: string) => void;
-  requestOtpLogin: (email: string, name?: string) => void;
+  pendingOtpEmail?: string;
+  pendingOtpName?: string;
+  pendingDevOtp?: string;
+  requestOtpLogin: (email: string, name?: string, devOtp?: string) => void;
   completeOtpLogin: () => void;
   setShowNotifications: (show: boolean) => void;
   setShowPrivacyPolicy: (show: boolean) => void;
@@ -1021,7 +1025,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     showToast('Reset app data to defaults');
   };
 
-  const requestOtpLogin = (email: string, name?: string) => {
+  const requestOtpLogin = (email: string, name?: string, devOtp?: string) => {
     const trimmedEmail = email.trim() || 'athlete@example.com';
     const trimmedName = name?.trim() || '';
     setState(prev => ({
@@ -1030,6 +1034,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
       showOtp: true,
       pendingOtpEmail: trimmedEmail,
       pendingOtpName: trimmedName,
+      pendingDevOtp: devOtp,
     }));
     showToast(`Verification code sent to ${trimmedEmail}`);
   };
