@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: result.error || 'Invalid verification code.',
+        error: result.error || 'Wrong OTP. Please try again.',
         remainingAttempts: result.remainingAttempts,
       },
       { status: 400 }

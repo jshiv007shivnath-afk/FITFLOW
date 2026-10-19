@@ -374,6 +374,6 @@ export async function verifyOtp(
     success: false,
     status: 'invalid_code',
     remainingAttempts,
-    error: `Incorrect verification code. ${remainingAttempts} attempt(s) remaining.`,
+    error: `Wrong OTP. ${remainingAttempts} attempt(s) remaining.`,
   };
 }

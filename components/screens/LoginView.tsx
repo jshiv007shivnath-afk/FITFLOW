@@ -22,8 +22,9 @@ export function LoginView() {
 
     setLockoutMessage(null);
     const trimmedEmail = email.trim();
-    if (!trimmedEmail) {
-      showToast('Please enter a valid email address');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!trimmedEmail || !emailRegex.test(trimmedEmail)) {
+      showToast('Wrong Email. Please enter a valid email address.');
       return;
     }
 

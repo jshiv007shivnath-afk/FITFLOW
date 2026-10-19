@@ -74,22 +74,22 @@ export function OtpVerificationView() {
         setIsLocked(true);
         showToast(data.error || 'Try again next day');
       } else if (typeof data.remainingAttempts === 'number') {
-        showToast(`Invalid code. ${data.remainingAttempts} attempt(s) remaining.`);
+        showToast(`Wrong OTP. ${data.remainingAttempts} attempt(s) remaining.`);
       } else {
-        showToast(data.error || 'Invalid verification code. Please try again.');
+        showToast(data.error || 'Wrong OTP. Please try again.');
       }
-      throw new Error(data.error || 'Verification failed');
+      throw new Error(data.error || 'Wrong OTP');
     } catch (err: any) {
       setIsVerifying(false);
       // In local dev/fallback when offline, allow test code if not rejected
-      if (err?.message === 'Verification failed' || err?.message?.includes('locked') || err?.message?.includes('Invalid')) {
+      if (err?.message === 'Wrong OTP' || err?.message === 'Verification failed' || err?.message?.includes('locked') || err?.message?.includes('Wrong') || err?.message?.includes('Invalid')) {
         throw err;
       }
       // If network unreachable, check simulated fallback
       if (code === '000000') {
         setStatus('error');
-        showToast('Invalid verification code. Please try again.');
-        throw new Error('Invalid code');
+        showToast('Wrong OTP. Please try again.');
+        throw new Error('Wrong OTP');
       }
       setStatus('success');
       showToast('Verification successful!');
@@ -237,7 +237,7 @@ export function OtpVerificationView() {
             <SlideCommit
               label="Slide to continue"
               doneLabel="Continue"
-              errorLabel="Invalid code"
+              errorLabel="Wrong OTP"
               width={310}
               height={54}
               radius={27}
