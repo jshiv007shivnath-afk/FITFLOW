@@ -1,15 +1,29 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { FitFlowProvider } from '@/context/FitFlowContext';
 
 export const metadata: Metadata = {
   title: 'FitFlow - Wellness & Activity Tracker',
   description: 'Track workouts, hydration, calories, streaks, and personal fitness goals with FitFlow.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'FitFlow',
+  },
   icons: {
     icon: '/icon.png',
     shortcut: '/favicon.ico',
     apple: '/icon.png',
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#111312',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
