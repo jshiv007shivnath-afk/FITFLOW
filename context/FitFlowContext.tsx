@@ -17,6 +17,8 @@ import {
   formatIsoDateOnly,
   syncPlanDatesToCurrentWeek,
 } from '@/utils/dateUtils';
+import { getEmailAvatar } from '@/utils/avatarUtils';
+import { signOut, clearAuthToken } from '@/lib/auth-client';
 
 export type TabType = 'home' | 'planner' | 'progress' | 'profile';
 
@@ -131,6 +133,7 @@ export interface FitFlowState {
 }
 
 interface FitFlowContextType extends FitFlowState {
+  isHydrated: boolean;
   todayKey: DayWorkoutPlan['dayKey'];
   todayIsoDate: string;
   weekInfo: WeekInfo;
@@ -141,6 +144,8 @@ interface FitFlowContextType extends FitFlowState {
   setShowSetName: (show: boolean) => void;
   setShowWelcome: (show: boolean) => void;
   setUserName: (name: string) => void;
+  pendingOtpEmail?: string;
+  pendingOtpName?: string;
   requestOtpLogin: (email: string, name?: string) => void;
   completeOtpLogin: () => void;
   setShowNotifications: (show: boolean) => void;
@@ -555,6 +560,60 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     setIsHydrated(true);
   }, []);
 
+  // Background cloud hydration from PostgreSQL via /api/sync
+  useEffect(() => {
+    if (!isHydrated) return;
+
+    let isMounted = true;
+    const fetchCloudSync = async () => {
+      try {
+        const res = await fetch('/api/sync');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (isMounted && json.success && json.data) {
+          const { profile, goals, weeklyPlan, notifications } = json.data;
+          setState((prev) => {
+            const updatedUser = profile
+              ? {
+                  ...prev.user,
+                  membership: (profile.membership as 'Free' | 'Pro') || prev.user.membership,
+                  streakDays: typeof profile.streakDays === 'number' ? profile.streakDays : prev.user.streakDays,
+                  level: typeof profile.level === 'number' ? profile.level : prev.user.level,
+                  xp: typeof profile.xp === 'number' ? profile.xp : prev.user.xp,
+                  avatar: profile.avatarUrl || prev.user.avatar,
+                }
+              : prev.user;
+
+            const updatedGoals = goals
+              ? {
+                  ...prev.goals,
+                  calorieTarget: Number(goals.calorieTarget) || prev.goals.calorieTarget,
+                  waterTargetMl: Number(goals.waterTargetMl) || prev.goals.waterTargetMl,
+                  exerciseTargetMin: Number(goals.exerciseTargetMin) || prev.goals.exerciseTargetMin,
+                  weightKg: Number(profile?.weightKg) || prev.goals.weightKg,
+                }
+              : prev.goals;
+
+            return {
+              ...prev,
+              user: updatedUser,
+              goals: updatedGoals,
+              weeklyPlan: weeklyPlan && Array.isArray(weeklyPlan.days) ? weeklyPlan : prev.weeklyPlan,
+              notifications: notifications && notifications.length > 0 ? notifications : prev.notifications,
+            };
+          });
+        }
+      } catch {
+        // Offline or server unavailable: seamless fallback to localStorage
+      }
+    };
+
+    fetchCloudSync();
+    return () => {
+      isMounted = false;
+    };
+  }, [isHydrated]);
+
   // Cross-tab synchronization to avoid stale-state overwrite
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
@@ -725,13 +784,18 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setUserName = (name: string) => {
-    setState(prev => ({
-      ...prev,
-      user: {
-        ...prev.user,
-        name: name.trim() || 'Athlete',
-      },
-    }));
+    setState(prev => {
+      const trimmedName = name.trim() || 'Athlete';
+      const avatar = prev.user.avatar || getEmailAvatar(prev.user.email, trimmedName);
+      return {
+        ...prev,
+        user: {
+          ...prev.user,
+          name: trimmedName,
+          avatar,
+        },
+      };
+    });
   };
 
   const setShowNotifications = (show: boolean) => {
@@ -911,6 +975,21 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
       };
     });
     showToast('Fitness goals updated!');
+
+    // Background sync to /api/goals
+    try {
+      fetch('/api/goals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          calorieTarget: newGoals.calorieTarget,
+          waterTargetMl: newGoals.waterTargetMl,
+          exerciseTargetMin: newGoals.exerciseTargetMin,
+        }),
+      }).catch(() => {});
+    } catch {
+      // ignore
+    }
   };
 
   const updateUserAvatar = (avatarUrl: string) => {
@@ -961,6 +1040,27 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     const targetEmail = state.pendingOtpEmail || state.user.email || 'athlete@example.com';
     const targetName = state.pendingOtpName || '';
     loginUser(targetEmail, targetName);
+
+    // Initial background sync to PostgreSQL
+    try {
+      fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile: {
+            membership: 'Free',
+            streakDays: 0,
+            level: 1,
+            xp: 0,
+            avatarUrl: getEmailAvatar(targetEmail, targetName),
+          },
+          goals: state.goals,
+          weeklyPlan: state.weeklyPlan,
+        }),
+      }).catch(() => {});
+    } catch {
+      // ignore
+    }
   };
 
   const loginUser = (email: string, name?: string) => {
@@ -986,7 +1086,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
         user: {
           name: formattedName,
           email: email || '',
-          avatar: '', // Starts completely fresh
+          avatar: getEmailAvatar(email, formattedName),
           membership: 'Free',
           streakDays: 0, // Zero streak
           level: 1,
@@ -1033,7 +1133,13 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     showToast(`Welcome, ${formattedName}! Ready to train.`);
   };
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    try {
+      await signOut();
+    } catch {
+      // ignore
+    }
+    clearAuthToken();
     setState({
       ...DEFAULT_STATE,
       showLogin: true,
@@ -1048,14 +1154,26 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
 
   // Weekly Planner Handlers
   const saveWeeklyPlan = (updatedPlan: WeeklyPlan) => {
+    const planWithTimestamp = {
+      ...updatedPlan,
+      updatedAt: new Date().toISOString(),
+    };
     setState(prev => ({
       ...prev,
-      weeklyPlan: {
-        ...updatedPlan,
-        updatedAt: new Date().toISOString(),
-      },
+      weeklyPlan: planWithTimestamp,
     }));
     showToast('Weekly workout plan saved!');
+
+    // Background sync to PostgreSQL
+    try {
+      fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weeklyPlan: planWithTimestamp }),
+      }).catch(() => {});
+    } catch {
+      // ignore
+    }
   };
 
   const updateDayWorkout = (dayKey: DayWorkoutPlan['dayKey'], updatedDay: Partial<DayWorkoutPlan>) => {
@@ -1301,6 +1419,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     <FitFlowContext.Provider
       value={{
         ...state,
+        isHydrated,
         todayKey,
         todayIsoDate,
         weekInfo,
