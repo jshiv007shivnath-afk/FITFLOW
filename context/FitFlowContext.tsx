@@ -748,6 +748,16 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
       ...prev,
       notifications: prev.notifications.map(n => ({ ...n, unread: false })),
     }));
+
+    try {
+      fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAllRead: true }),
+      }).catch(() => {});
+    } catch {
+      // offline fallback
+    }
   };
 
   const clearAllNotifications = () => {
@@ -908,6 +918,22 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
         ],
       };
     });
+
+    try {
+      fetch('/api/workouts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          durationMin,
+          calories,
+          category,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }),
+      }).catch(() => {});
+    } catch {
+      // offline fallback
+    }
   };
 
   const logMeal = (name: string, mealType: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack', calories: number) => {
@@ -1005,17 +1031,25 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleMembership = () => {
-    setState(prev => {
-      const nextTier = prev.user.membership === 'Pro' ? 'Free' : 'Pro';
-      return {
-        ...prev,
-        user: {
-          ...prev.user,
-          membership: nextTier,
-        },
-      };
-    });
-    showToast(`Membership updated to FitFlow ${state.user.membership === 'Pro' ? 'Free' : 'Pro'}`);
+    const nextTier = state.user.membership === 'Pro' ? 'Free' : 'Pro';
+    setState(prev => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        membership: nextTier,
+      },
+    }));
+    showToast(`Membership updated to FitFlow ${nextTier}`);
+
+    try {
+      fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ membership: nextTier }),
+      }).catch(() => {});
+    } catch {
+      // offline fallback
+    }
   };
 
   const resetToDefaults = () => {
@@ -1289,6 +1323,29 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
       };
     });
     showToast('Workout status updated!');
+
+    // Background sync to PostgreSQL
+    try {
+      setTimeout(() => {
+        setState(latest => {
+          fetch('/api/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              weeklyPlan: latest.weeklyPlan,
+              profile: {
+                level: latest.user.level,
+                xp: latest.user.xp,
+                streakDays: latest.user.streakDays,
+              },
+            }),
+          }).catch(() => {});
+          return latest;
+        });
+      }, 100);
+    } catch {
+      // offline fallback
+    }
   };
 
   const repeatPreviousWeekPlan = () => {
