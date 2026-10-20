@@ -175,6 +175,7 @@ export function syncPlanDatesToCurrentWeek(
         ...existingDay,
         dayName: dayInfo.dayName,
         shortDate: dayInfo.shortDate,
+        exercises: Array.isArray(existingDay.exercises) ? existingDay.exercises : [],
       };
     }
 

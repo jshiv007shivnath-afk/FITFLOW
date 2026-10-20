@@ -600,7 +600,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
               ...prev,
               user: updatedUser,
               goals: updatedGoals,
-              weeklyPlan: weeklyPlan && Array.isArray(weeklyPlan.days) ? weeklyPlan : prev.weeklyPlan,
+              weeklyPlan: weeklyPlan && Array.isArray(weeklyPlan.days) ? syncPlanDatesToCurrentWeek(weeklyPlan, new Date()) : prev.weeklyPlan,
               notifications: notifications && notifications.length > 0 ? notifications : prev.notifications,
             };
           });

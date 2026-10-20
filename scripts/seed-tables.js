@@ -54,7 +54,11 @@ async function main() {
     VALUES 
       ('pday_mon', 'plan_seed_week43', 'mon', 'Monday', 'Oct 19', 'Full Body Strength & Core', false, 50, true, NOW(), NOW(), NOW()),
       ('pday_tue', 'plan_seed_week43', 'tue', 'Tuesday', 'Oct 20', 'HIIT Cardio & Mobility', false, 35, false, null, NOW(), NOW()),
-      ('pday_wed', 'plan_seed_week43', 'wed', 'Wednesday', 'Oct 21', 'Active Recovery & Stretching', true, 20, false, null, NOW(), NOW())
+      ('pday_wed', 'plan_seed_week43', 'wed', 'Wednesday', 'Oct 21', 'Active Recovery & Stretching', true, 20, false, null, NOW(), NOW()),
+      ('pday_thu', 'plan_seed_week43', 'thu', 'Thursday', 'Oct 22', 'Lower Body Hypertrophy', false, 45, false, null, NOW(), NOW()),
+      ('pday_fri', 'plan_seed_week43', 'fri', 'Friday', 'Oct 23', 'Upper Body Push & Pull', false, 40, false, null, NOW(), NOW()),
+      ('pday_sat', 'plan_seed_week43', 'sat', 'Saturday', 'Oct 24', 'Endurance Run & Core', false, 30, false, null, NOW(), NOW()),
+      ('pday_sun', 'plan_seed_week43', 'sun', 'Sunday', 'Oct 25', 'Rest & Rejuvenation', true, 0, false, null, NOW(), NOW())
     ON CONFLICT ("id") DO NOTHING;
 
     INSERT INTO plan_exercises ("id", "planDayId", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec", "orderIndex")
@@ -65,7 +69,12 @@ async function main() {
       ('ex_mon_4', 'pday_mon', 'Plank Hold', 'duration', 3, null, 60, null, 45, 3),
       ('ex_tue_1', 'pday_tue', 'Kettlebell Swings', 'reps', 4, 20, null, null, 45, 0),
       ('ex_tue_2', 'pday_tue', 'Burpees Over Bar', 'reps', 3, 15, null, null, 60, 1),
-      ('ex_tue_3', 'pday_tue', 'Box Jumps', 'reps', 3, 12, null, null, 45, 2)
+      ('ex_tue_3', 'pday_tue', 'Box Jumps', 'reps', 3, 12, null, null, 45, 2),
+      ('ex_thu_1', 'pday_thu', 'Goblet Squats', 'reps', 3, 12, null, null, 60, 0),
+      ('ex_thu_2', 'pday_thu', 'Walking Dumbbell Lunges', 'reps', 3, 20, null, null, 60, 1),
+      ('ex_fri_1', 'pday_fri', 'Push-ups to Failure', 'reps', 3, 15, null, null, 45, 0),
+      ('ex_fri_2', 'pday_fri', 'Dumbbell Rows', 'reps', 3, 12, null, null, 60, 1),
+      ('ex_sat_1', 'pday_sat', 'Tempo 5K Run', 'duration', 1, null, 1800, 5.0, 0, 0)
     ON CONFLICT ("id") DO NOTHING;
   `);
 

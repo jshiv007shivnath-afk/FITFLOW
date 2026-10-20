@@ -159,10 +159,23 @@ export function WeeklyPlannerView() {
   const progressPercent = totalPlannedDays > 0 ? Math.round((completedDays / totalPlannedDays) * 100) : 0;
 
   // Currently selected day object
-  const selectedDay = weeklyPlan.days.find((d) => d.dayKey === selectedDayKey) || weeklyPlan.days[0];
+  const rawSelectedDay = weeklyPlan?.days?.find((d) => d.dayKey === selectedDayKey) || weeklyPlan?.days?.[0];
+  const selectedDay: DayWorkoutPlan = rawSelectedDay ? {
+    ...rawSelectedDay,
+    exercises: Array.isArray(rawSelectedDay.exercises) ? rawSelectedDay.exercises : [],
+  } : {
+    dayKey: 'mon',
+    dayName: 'Monday',
+    shortDate: '',
+    workoutTitle: 'Rest Day',
+    isRestDay: true,
+    estimatedDurationMin: 0,
+    completed: false,
+    exercises: [],
+  };
 
   // Total sets in selected day
-  const selectedDayTotalSets = selectedDay.exercises.reduce((acc, ex) => acc + (ex.sets || 0), 0);
+  const selectedDayTotalSets = selectedDay.exercises.reduce((acc, ex) => acc + (ex?.sets || 0), 0);
 
   // Check how many exercises in the current day are marked done
   const currentDayCheckedCount = selectedDay.exercises.filter(
