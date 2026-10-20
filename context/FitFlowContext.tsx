@@ -20,6 +20,7 @@ import {
 } from '@/utils/dateUtils';
 import { getEmailAvatar } from '@/utils/avatarUtils';
 import { signOut, clearAuthToken } from '@/lib/auth-client';
+import { analytics } from '@/lib/analytics';
 
 export type TabType = 'home' | 'planner' | 'progress' | 'profile';
 
@@ -772,6 +773,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
 
   const setActiveTab = (tab: TabType) => {
     setState(prev => ({ ...prev, activeTab: tab }));
+    analytics.page(tab);
   };
 
   const setShowOnboarding = (show: boolean) => {
@@ -870,6 +872,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
         ],
       };
     });
+    analytics.track('water_logged', { amountMl });
   };
 
   const logWorkout = (title: string, durationMin: number, calories: number, category: string = 'Exercise') => {
@@ -934,6 +937,13 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // offline fallback
     }
+
+    analytics.track('workout_logged', {
+      title,
+      durationMin,
+      calories,
+      category,
+    });
   };
 
   const logMeal = (name: string, mealType: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack', calories: number) => {
@@ -1017,6 +1027,8 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
+
+    analytics.track('goals_updated', newGoals as Record<string, unknown>);
   };
 
   const updateUserAvatar = (avatarUrl: string) => {
@@ -1164,6 +1176,9 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
+
+    analytics.identify(email, { name: formattedName });
+    analytics.track('user_logged_in', { email, name: formattedName });
 
     showToast(`Welcome, ${formattedName}! Ready to train.`);
   };
