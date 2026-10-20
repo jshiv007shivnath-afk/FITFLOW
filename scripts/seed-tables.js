@@ -44,6 +44,29 @@ async function main() {
       ('wk_sample_4', 'user_default_athlete', 'Outdoor 5K Tempo Run', 28, 340, 'Running', '09:00 AM', NOW() - INTERVAL '30 minutes'),
       ('wk_sample_5', 'usr_david_kim', 'Chest & Triceps Hypertrophy', 50, 460, 'Strength', '10:00 AM', NOW() - INTERVAL '15 minutes')
     ON CONFLICT ("id") DO NOTHING;
+
+    INSERT INTO weekly_plans ("id", "userId", "weekId", "weekLabel", "weekNumber", "hasDecidedNewWeek", "createdAt", "updatedAt")
+    VALUES 
+      ('plan_seed_week43', 'user_default_athlete', '2026-W43', 'Oct 19 - Oct 25, 2026', 43, true, NOW(), NOW())
+    ON CONFLICT ("userId", "weekId") DO NOTHING;
+
+    INSERT INTO plan_days ("id", "weeklyPlanId", "dayKey", "dayName", "shortDate", "workoutTitle", "isRestDay", "estimatedDurationMin", "completed", "completedAt", "createdAt", "updatedAt")
+    VALUES 
+      ('pday_mon', 'plan_seed_week43', 'mon', 'Monday', 'Oct 19', 'Full Body Strength & Core', false, 50, true, NOW(), NOW(), NOW()),
+      ('pday_tue', 'plan_seed_week43', 'tue', 'Tuesday', 'Oct 20', 'HIIT Cardio & Mobility', false, 35, false, null, NOW(), NOW()),
+      ('pday_wed', 'plan_seed_week43', 'wed', 'Wednesday', 'Oct 21', 'Active Recovery & Stretching', true, 20, false, null, NOW(), NOW())
+    ON CONFLICT ("id") DO NOTHING;
+
+    INSERT INTO plan_exercises ("id", "planDayId", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec", "orderIndex")
+    VALUES 
+      ('ex_mon_1', 'pday_mon', 'Barbell Back Squats', 'reps', 4, 10, null, null, 90, 0),
+      ('ex_mon_2', 'pday_mon', 'Incline Dumbbell Press', 'reps', 3, 12, null, null, 60, 1),
+      ('ex_mon_3', 'pday_mon', 'Romanian Deadlifts', 'reps', 3, 10, null, null, 75, 2),
+      ('ex_mon_4', 'pday_mon', 'Plank Hold', 'duration', 3, null, 60, null, 45, 3),
+      ('ex_tue_1', 'pday_tue', 'Kettlebell Swings', 'reps', 4, 20, null, null, 45, 0),
+      ('ex_tue_2', 'pday_tue', 'Burpees Over Bar', 'reps', 3, 15, null, null, 60, 1),
+      ('ex_tue_3', 'pday_tue', 'Box Jumps', 'reps', 3, 12, null, null, 45, 2)
+    ON CONFLICT ("id") DO NOTHING;
   `);
 
   // Ensure account has a row for user_default_athlete

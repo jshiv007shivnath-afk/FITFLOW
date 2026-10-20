@@ -223,6 +223,32 @@ export async function POST(req: NextRequest) {
                 now,
               ]
             );
+
+            // Sync exercises for this day
+            await client.query(`DELETE FROM "plan_exercises" WHERE "planDayId" = $1`, [dayId]);
+
+            if (Array.isArray(day.exercises) && day.exercises.length > 0) {
+              for (let i = 0; i < day.exercises.length; i++) {
+                const ex = day.exercises[i];
+                const exId = ex.id || `ex_${dayId}_${i}`;
+                await client.query(
+                  `INSERT INTO "plan_exercises" ("id", "planDayId", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec", "orderIndex")
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+                  [
+                    exId,
+                    dayId,
+                    ex.name || 'Exercise',
+                    ex.targetType || 'reps',
+                    Number(ex.sets) || 3,
+                    typeof ex.reps === 'number' ? ex.reps : 10,
+                    typeof ex.durationSeconds === 'number' ? ex.durationSeconds : null,
+                    typeof ex.distanceKm === 'number' ? ex.distanceKm : null,
+                    Number(ex.restIntervalSec) || 60,
+                    i,
+                  ]
+                );
+              }
+            }
           }
         }
       }

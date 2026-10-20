@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Variants } from 'motion/react';
 import { useFitFlow } from '@/context/FitFlowContext';
@@ -348,26 +347,6 @@ export function ProfileView() {
         </motion.button>
 
 
-
-        {/* Admin Command Center */}
-        <Link
-          href="/admin"
-          className="w-full flex items-center justify-between py-3.5 px-3 rounded-2xl bg-[#B8F45A]/15 border border-[#B8F45A]/40 text-left transition-colors hover:bg-[#B8F45A]/25 cursor-pointer shadow-sm"
-        >
-          <div className="flex items-center gap-4">
-            <ShieldTick size={22} className="text-[#111111]" />
-            <div>
-              <span className="text-[15px] font-bold text-[#111111] flex items-center gap-1.5">
-                Admin Command Center
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#B8F45A] text-black">
-                  Live
-                </span>
-              </span>
-              <span className="text-xs text-neutral-600 block">Monitor athletes, metrics & export CSV</span>
-            </div>
-          </div>
-          <ArrowRight2 size={18} className="text-[#111111]" />
-        </Link>
 
         {/* 5. FAQ */}
         <motion.button
