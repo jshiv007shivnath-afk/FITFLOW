@@ -85,7 +85,20 @@ async function main() {
     ON CONFLICT DO NOTHING;
   `);
 
-  // Query counts for all 12 tables
+  // Sync all users to admin_panel
+  await pool.query(`
+    DO $$
+    DECLARE
+        r RECORD;
+    BEGIN
+        FOR r IN SELECT id FROM "user" LOOP
+            PERFORM refresh_admin_panel_for_user(r.id);
+        END LOOP;
+    END;
+    $$;
+  `);
+
+  // Query counts for all 13 tables
   const res = await pool.query(`
     SELECT 'user' as tbl, count(*) from public.user UNION ALL
     SELECT 'session', count(*) from public.session UNION ALL
@@ -98,7 +111,8 @@ async function main() {
     SELECT 'plan_exercises', count(*) from public.plan_exercises UNION ALL
     SELECT 'workout_logs', count(*) from public.workout_logs UNION ALL
     SELECT 'daily_metrics', count(*) from public.daily_metrics UNION ALL
-    SELECT 'notifications', count(*) from public.notifications;
+    SELECT 'notifications', count(*) from public.notifications UNION ALL
+    SELECT 'admin_panel', count(*) from public.admin_panel;
   `);
 
   console.table(res.rows);
