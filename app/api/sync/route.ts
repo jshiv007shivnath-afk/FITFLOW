@@ -1,18 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getAuthenticatedUserId } from '@/lib/auth-session';
 import { query, withTransaction } from '@/lib/db';
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Please sign in to sync.' },
-        { status: 401 }
-      );
-    }
-
-    const userId = session.user.id;
+    const userId = await getAuthenticatedUserId(req);
 
     // 1. Fetch Profile
     const profileRes = await query(
@@ -123,15 +115,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Please sign in to sync.' },
-        { status: 401 }
-      );
-    }
-
-    const userId = session.user.id;
+    const userId = await getAuthenticatedUserId(req);
     const body = await req.json().catch(() => ({}));
     const { profile, goals, weeklyPlan, newWorkouts, updatedNotifications } = body;
 
@@ -239,6 +223,32 @@ export async function POST(req: NextRequest) {
                 now,
               ]
             );
+
+            // Sync exercises for this day
+            await client.query(`DELETE FROM "plan_exercises" WHERE "planDayId" = $1`, [dayId]);
+
+            if (Array.isArray(day.exercises) && day.exercises.length > 0) {
+              for (let i = 0; i < day.exercises.length; i++) {
+                const ex = day.exercises[i];
+                const exId = ex.id || `ex_${dayId}_${i}`;
+                await client.query(
+                  `INSERT INTO "plan_exercises" ("id", "planDayId", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec", "orderIndex")
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+                  [
+                    exId,
+                    dayId,
+                    ex.name || 'Exercise',
+                    ex.targetType || 'reps',
+                    Number(ex.sets) || 3,
+                    typeof ex.reps === 'number' ? ex.reps : 10,
+                    typeof ex.durationSeconds === 'number' ? ex.durationSeconds : null,
+                    typeof ex.distanceKm === 'number' ? ex.distanceKm : null,
+                    Number(ex.restIntervalSec) || 60,
+                    i,
+                  ]
+                );
+              }
+            }
           }
         }
       }

@@ -1,19 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getAuthenticatedUserId } from '@/lib/auth-session';
 import { query, withTransaction } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Please log in.' },
-        { status: 401 }
-      );
-    }
-
-    const userId = session.user.id;
+    const userId = await getAuthenticatedUserId(req);
     const res = await query(
       `SELECT "id", "title", "durationMin", "calories", "category", "time", "loggedAt"
        FROM "workout_logs"
@@ -38,15 +30,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized. Please log in.' },
-        { status: 401 }
-      );
-    }
-
-    const userId = session.user.id;
+    const userId = await getAuthenticatedUserId(req);
     const body = await req.json().catch(() => ({}));
     const { title, durationMin, calories, category, time } = body;
 

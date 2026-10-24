@@ -388,13 +388,21 @@ export function HomeDashboard() {
                 <Flame size={20} />
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-bold text-[#111312] truncate">{todayPlan.workoutTitle}</h3>
-                  <span className="text-xs font-bold text-[#C2410C] bg-[#FFF0DF] px-2 py-0.5 rounded-full shrink-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <h3
+                    className="text-sm font-bold text-[#111312] leading-snug"
+                    title={todayPlan.workoutTitle}
+                  >
+                    {todayPlan.workoutTitle}
+                  </h3>
+                  <span className="text-[11px] font-bold text-[#C2410C] bg-[#FFF0DF] px-2 py-0.5 rounded-full shrink-0">
                     Planned Today
                   </span>
                 </div>
-                <p className="text-xs text-[#525650] mt-0.5 truncate">
+                <p
+                  className="text-xs text-[#525650] mt-0.5 leading-snug"
+                  title={`${todayPlan.estimatedDurationMin || 30} min · ${todayPlan.exercises.length} exercises · Ready to train`}
+                >
                   {todayPlan.estimatedDurationMin || 30} min · {todayPlan.exercises.length} exercises · Ready to train
                 </p>
               </div>
@@ -406,10 +414,11 @@ export function HomeDashboard() {
                   toggleDayCompletion(todayKey);
                   showToast(`Completed ${todayPlan.workoutTitle}! Streak updated.`);
                 }}
-                className="h-8 px-3 rounded-xl bg-[#15803D] text-white text-xs font-bold hover:bg-[#166534] transition shadow-xs cursor-pointer flex items-center justify-center gap-1"
+                className="h-8 px-3 rounded-xl bg-[#111312] text-white text-xs font-semibold hover:bg-black transition shadow-xs cursor-pointer flex items-center justify-center gap-1"
                 type="button"
+                aria-label={`Mark ${todayPlan.workoutTitle} as completed`}
               >
-                <CheckCircle size={14} />
+                <CheckCircle size={14} className="text-[#B8F45A]" />
                 <span>Done</span>
               </motion.button>
               <motion.button
@@ -417,6 +426,7 @@ export function HomeDashboard() {
                 onClick={() => setActiveTab('planner')}
                 className="h-8 px-3 rounded-xl bg-[#F4F5F2] text-[#111312] text-xs font-semibold hover:bg-[#ECECE9] transition cursor-pointer flex items-center justify-center"
                 type="button"
+                aria-label="Open Weekly Planner"
               >
                 Planner
               </motion.button>
@@ -436,7 +446,9 @@ export function HomeDashboard() {
                   <Activity size={20} />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-sm font-bold text-[#111312] truncate">{w.title}</h3>
+                  <h3 className="text-sm font-bold text-[#111312] leading-snug" title={w.title}>
+                    {w.title}
+                  </h3>
                   <p className="text-xs text-[#525650] mt-0.5">
                     {w.durationMin} min · {w.calories} kcal burned · {w.time}
                   </p>

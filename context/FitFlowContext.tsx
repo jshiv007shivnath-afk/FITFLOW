@@ -7,6 +7,7 @@ import {
   checkStepAuthorization,
   requestStepAuthorization,
   getTodayStepCount,
+  setupWebMotionStepTracker,
   openHealthSettings as openNativeHealthSettings,
   setupStepForegroundListener,
 } from '@/services/stepTrackingService';
@@ -19,6 +20,7 @@ import {
 } from '@/utils/dateUtils';
 import { getEmailAvatar } from '@/utils/avatarUtils';
 import { signOut, clearAuthToken } from '@/lib/auth-client';
+import { analytics } from '@/lib/analytics';
 
 export type TabType = 'home' | 'planner' | 'progress' | 'profile';
 
@@ -598,7 +600,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
               ...prev,
               user: updatedUser,
               goals: updatedGoals,
-              weeklyPlan: weeklyPlan && Array.isArray(weeklyPlan.days) ? weeklyPlan : prev.weeklyPlan,
+              weeklyPlan: weeklyPlan && Array.isArray(weeklyPlan.days) ? syncPlanDatesToCurrentWeek(weeklyPlan, new Date()) : prev.weeklyPlan,
               notifications: notifications && notifications.length > 0 ? notifications : prev.notifications,
             };
           });
@@ -747,6 +749,16 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
       ...prev,
       notifications: prev.notifications.map(n => ({ ...n, unread: false })),
     }));
+
+    try {
+      fetch('/api/notifications', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markAllRead: true }),
+      }).catch(() => {});
+    } catch {
+      // offline fallback
+    }
   };
 
   const clearAllNotifications = () => {
@@ -761,6 +773,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
 
   const setActiveTab = (tab: TabType) => {
     setState(prev => ({ ...prev, activeTab: tab }));
+    analytics.page(tab);
   };
 
   const setShowOnboarding = (show: boolean) => {
@@ -859,6 +872,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
         ],
       };
     });
+    analytics.track('water_logged', { amountMl });
   };
 
   const logWorkout = (title: string, durationMin: number, calories: number, category: string = 'Exercise') => {
@@ -906,6 +920,29 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
           ...prev.notifications,
         ],
       };
+    });
+
+    try {
+      fetch('/api/workouts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          durationMin,
+          calories,
+          category,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }),
+      }).catch(() => {});
+    } catch {
+      // offline fallback
+    }
+
+    analytics.track('workout_logged', {
+      title,
+      durationMin,
+      calories,
+      category,
     });
   };
 
@@ -990,6 +1027,8 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
+
+    analytics.track('goals_updated', newGoals as Record<string, unknown>);
   };
 
   const updateUserAvatar = (avatarUrl: string) => {
@@ -1004,17 +1043,25 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleMembership = () => {
-    setState(prev => {
-      const nextTier = prev.user.membership === 'Pro' ? 'Free' : 'Pro';
-      return {
-        ...prev,
-        user: {
-          ...prev.user,
-          membership: nextTier,
-        },
-      };
-    });
-    showToast(`Membership updated to FitFlow ${state.user.membership === 'Pro' ? 'Free' : 'Pro'}`);
+    const nextTier = state.user.membership === 'Pro' ? 'Free' : 'Pro';
+    setState(prev => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        membership: nextTier,
+      },
+    }));
+    showToast(`Membership updated to FitFlow ${nextTier}`);
+
+    try {
+      fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ membership: nextTier }),
+      }).catch(() => {});
+    } catch {
+      // offline fallback
+    }
   };
 
   const resetToDefaults = () => {
@@ -1129,6 +1176,9 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
+
+    analytics.identify(email, { name: formattedName });
+    analytics.track('user_logged_in', { email, name: formattedName });
 
     showToast(`Welcome, ${formattedName}! Ready to train.`);
   };
@@ -1288,6 +1338,29 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
       };
     });
     showToast('Workout status updated!');
+
+    // Background sync to PostgreSQL
+    try {
+      setTimeout(() => {
+        setState(latest => {
+          fetch('/api/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              weeklyPlan: latest.weeklyPlan,
+              profile: {
+                level: latest.user.level,
+                xp: latest.user.xp,
+                streakDays: latest.user.streakDays,
+              },
+            }),
+          }).catch(() => {});
+          return latest;
+        });
+      }, 100);
+    } catch {
+      // offline fallback
+    }
   };
 
   const repeatPreviousWeekPlan = () => {
@@ -1371,23 +1444,25 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
           ...prev,
           stepTracking: {
             count: prev.stepTracking.count ?? 0,
-          status: auth.denied ? 'denied' : 'unauthorized',
-            isNative: true,
+            status: auth.denied ? 'denied' : 'unauthorized',
+            isNative: avail.isNative,
           },
         }));
         return;
       }
       const result = await getTodayStepCount();
-      setState(prev => ({
-        ...prev,
-        today: { ...prev.today, steps: result.steps ?? 0 },
-        stepTracking: {
-          count: result.steps ?? 0,
-          status: result.status,
-          isNative: true,
-          errorMessage: result.errorMessage,
-        },
-      }));
+      if (result.steps !== null) {
+        setState(prev => ({
+          ...prev,
+          today: { ...prev.today, steps: result.steps ?? 0 },
+          stepTracking: {
+            count: result.steps ?? 0,
+            status: result.status,
+            isNative: avail.isNative,
+            errorMessage: result.errorMessage,
+          },
+        }));
+      }
     } catch {
       // ignore
     }
@@ -1406,12 +1481,34 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     await openNativeHealthSettings();
   }, []);
 
+  // Web Motion / Accelerometer real-time step increments for browser/PWA view
   useEffect(() => {
-    const cleanup = setupStepForegroundListener(() => {
+    const cleanupMotion = setupWebMotionStepTracker(() => {
+      setState(prev => {
+        const currentSteps = prev.today.steps ?? 0;
+        const newSteps = currentSteps + 1;
+        return {
+          ...prev,
+          today: {
+            ...prev.today,
+            steps: newSteps,
+          },
+          stepTracking: {
+            ...prev.stepTracking,
+            count: newSteps,
+            status: 'available',
+          },
+        };
+      });
+    });
+
+    const cleanupForeground = setupStepForegroundListener(() => {
       refreshStepCount();
     });
+
     return () => {
-      cleanup();
+      cleanupMotion();
+      cleanupForeground();
     };
   }, [refreshStepCount]);
 
