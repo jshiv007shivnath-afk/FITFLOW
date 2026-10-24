@@ -24,6 +24,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // 0. Enforce Deleted Account Check
+    try {
+      const delCheck = await query(
+        `SELECT "email" FROM "deleted_accounts" WHERE LOWER("email") = $1`,
+        [email.toLowerCase()]
+      );
+      if (delCheck.rows.length > 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            accountDeleted: true,
+            error: 'Your account is deleted',
+          },
+          { status: 403 }
+        );
+      }
+    } catch {
+      // offline/fallback
+    }
+
     // Run verification with 4-attempt brute-force protection & 24h lockout
     const result = await verifyOtp(email, rawCode);
 
@@ -42,35 +62,45 @@ export async function POST(req: NextRequest) {
            VALUES ($1, $2, $3, true, $4, $4)
            ON CONFLICT ("email")
            DO UPDATE SET "emailVerified" = true, "updatedAt" = $4
-           RETURNING "id"`,
+           RETURNING "id", "name"`,
           [finalUserId, defaultName, email, now]
         );
+        let actualName = defaultName;
         if (userRes.rows.length > 0) {
           finalUserId = userRes.rows[0].id;
+          actualName = userRes.rows[0].name || defaultName;
         }
 
         // 2. Create active session in "session" table
+        try {
+          await query(
+            `INSERT INTO "session" ("id", "token", "userId", "expiresAt", "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, $4, $5, $5)`,
+            [sessionId, token, finalUserId, expiresAt, now]
+          );
+        } catch {}
+
+        // 3. Record login in "account" table with user_name, user_email, entered_otp, sent_otp
         await query(
-          `INSERT INTO "session" ("id", "token", "userId", "expiresAt", "createdAt", "updatedAt")
-           VALUES ($1, $2, $3, $4, $5, $5)`,
-          [sessionId, token, finalUserId, expiresAt, now]
+          `INSERT INTO "account" ("id", "accountId", "providerId", "userId", "user_name", "user_email", "entered_otp", "sent_otp", "logged_in_at", "createdAt", "updatedAt")
+           VALUES ($1, $2, 'email', $3, $4, $2, $5, $5, $6, $6, $6)
+           ON CONFLICT ("id") DO UPDATE SET
+             "user_name" = EXCLUDED."user_name",
+             "user_email" = EXCLUDED."user_email",
+             "entered_otp" = EXCLUDED."entered_otp",
+             "sent_otp" = EXCLUDED."sent_otp",
+             "logged_in_at" = EXCLUDED."logged_in_at",
+             "updatedAt" = EXCLUDED."updatedAt"`,
+          [`acc_${finalUserId}`, email, finalUserId, actualName, rawCode.trim(), now]
         );
 
-        // 3. Ensure profile exists in "profiles" table
-        await query(
-          `INSERT INTO "profiles" ("id", "userId", "membership", "level", "xp", "streakDays", "weightKg", "createdAt", "updatedAt")
-           VALUES ($1, $2, 'Free', 1, 0, 1, 68.5, $3, $3)
-           ON CONFLICT ("userId") DO NOTHING`,
-          [`prof_${finalUserId}`, finalUserId, now]
-        );
-
-        // 4. Ensure account exists in "account" table
-        await query(
-          `INSERT INTO "account" ("id", "accountId", "providerId", "userId", "createdAt", "updatedAt")
-           VALUES ($1, $2, 'email', $3, $4, $4)
-           ON CONFLICT DO NOTHING`,
-          [`acc_${finalUserId}`, email, finalUserId, now]
-        );
+        // 4. Update verification status
+        try {
+          await query(
+            `UPDATE "verification" SET "status" = 'Verified', "updatedAt" = $1 WHERE "identifier" = $2`,
+            [now, email]
+          );
+        } catch {}
       } catch (dbErr) {
         console.warn('[API /auth/otp/verify] DB session creation error:', dbErr);
       }

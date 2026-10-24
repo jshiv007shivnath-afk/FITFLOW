@@ -7,6 +7,7 @@ import {
   storeOtp,
 } from '@/lib/security';
 import { sendOtpEmail } from '@/lib/email';
+import { query } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,6 +20,26 @@ export async function POST(req: NextRequest) {
         { success: false, error: 'Please provide a valid email address.' },
         { status: 400 }
       );
+    }
+
+    // 0. Enforce Deleted Account Check
+    try {
+      const delCheck = await query(
+        `SELECT "email" FROM "deleted_accounts" WHERE LOWER("email") = $1`,
+        [email.toLowerCase()]
+      );
+      if (delCheck.rows.length > 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            accountDeleted: true,
+            error: 'Your account is deleted',
+          },
+          { status: 403 }
+        );
+      }
+    } catch {
+      // offline/fallback
     }
 
     // 1. Enforce 24-Hour Account Lockout (Defense against brute-force & restarts)
@@ -58,6 +79,16 @@ export async function POST(req: NextRequest) {
 
     // 3. Store OTP in DB & in-memory rate-limiter
     await storeOtp(email, otp);
+
+    // Update verification table with readable email, sent_otp, and status
+    try {
+      await query(
+        `UPDATE "verification" 
+         SET "email" = $1, "sent_otp" = $2, "status" = 'Sent', "updatedAt" = NOW() 
+         WHERE "identifier" = $1`,
+        [email, otp]
+      );
+    } catch {}
 
     // 4. Send via Nodemailer (Local SMTP on 54325 or configured SMTP)
     const sendResult = await sendOtpEmail(email, otp);

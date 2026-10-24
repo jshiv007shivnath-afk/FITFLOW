@@ -18,8 +18,8 @@ export async function GET(req: NextRequest) {
     // 2. Fetch Goals
     const goalsRes = await query(
       `SELECT "calorieTarget", "waterTargetMl", "exerciseTargetMin"
-       FROM "user_goals"
-       WHERE "userId" = $1
+       FROM "user"
+       WHERE "id" = $1
        LIMIT 1`,
       [userId]
     );
@@ -153,21 +153,19 @@ export async function POST(req: NextRequest) {
       // 2. Sync Goals
       if (goals) {
         await client.query(
-          `INSERT INTO "user_goals" ("id", "userId", "calorieTarget", "waterTargetMl", "exerciseTargetMin", "createdAt", "updatedAt")
-           VALUES ($1, $2, $3, $4, $5, $6, $6)
-           ON CONFLICT ("userId")
-           DO UPDATE SET
-             "calorieTarget" = EXCLUDED."calorieTarget",
-             "waterTargetMl" = EXCLUDED."waterTargetMl",
-             "exerciseTargetMin" = EXCLUDED."exerciseTargetMin",
-             "updatedAt" = EXCLUDED."updatedAt"`,
+          `UPDATE "user"
+           SET
+             "calorieTarget" = $1,
+             "waterTargetMl" = $2,
+             "exerciseTargetMin" = $3,
+             "updatedAt" = $4
+           WHERE "id" = $5`,
           [
-            `goal_${userId}`,
-            userId,
             goals.calorieTarget || 650,
             goals.waterTargetMl || 2500,
             goals.exerciseTargetMin || 60,
             now,
+            userId,
           ]
         );
       }
