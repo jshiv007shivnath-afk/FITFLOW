@@ -93,8 +93,40 @@ export function renderOtpEmailHtml(otp: string): string {
 }
 
 export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ success: boolean; error?: string }> {
-  const transporter = createTransporter();
   const html = renderOtpEmailHtml(otp);
+
+  // 1. Production Delivery via Resend (if RESEND_API_KEY is configured in Vercel or .env)
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (resendApiKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: process.env.EMAIL_FROM || 'FitFlow <onboarding@resend.dev>',
+          to: [toEmail],
+          subject: `Your FitFlow Verification Code: ${otp}`,
+          text: `Your FitFlow verification code is ${otp}. It expires in 10 minutes.`,
+          html,
+        }),
+      });
+
+      const resendData = await res.json().catch(() => ({}));
+      if (res.ok && resendData.id) {
+        console.log(`[Resend] OTP delivered successfully to ${toEmail}. ID: ${resendData.id}`);
+        return { success: true };
+      }
+      console.warn('[Resend] Delivery warning:', resendData);
+    } catch (resendErr) {
+      console.error('[Resend] API connection error:', resendErr);
+    }
+  }
+
+  // 2. Local & Docker Delivery via Nodemailer (Supabase Mailpit port 54325)
+  const transporter = createTransporter();
 
   try {
     const info = await transporter.sendMail({
@@ -108,7 +140,6 @@ export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ succ
     return { success: true };
   } catch (err: any) {
     console.warn(`[Email] SMTP delivery failed to ${toEmail} (${err?.message || err}). Development fallback active.`);
-    // In local development, don't break the user flow if SMTP server is starting or unreachable
     console.log(`[Email DEV FALLBACK] To: ${toEmail} | OTP: ${otp}`);
     return { success: true, error: err?.message };
   }
