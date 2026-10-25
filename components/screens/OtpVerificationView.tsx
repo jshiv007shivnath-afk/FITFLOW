@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion } from 'motion/react';
 import { useFitFlow } from '@/context/FitFlowContext';
 import { Refresh } from 'reicon-react';
 import { BrandMark } from '@/components/ui/BrandMark';
@@ -20,6 +21,7 @@ export function OtpVerificationView() {
   const emailDisplay = pendingOtpEmail || 'athlete@example.com';
   const [code, setCode] = useState('');
   const [status, setStatus] = useState<'idle' | 'error' | 'success'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
@@ -39,15 +41,21 @@ export function OtpVerificationView() {
     if (status !== 'idle') {
       setStatus('idle');
     }
+    if (errorMessage) {
+      setErrorMessage(null);
+    }
   };
 
   const handleVerifyCommit = async (): Promise<boolean> => {
     if (code.length < 6) {
-      showToast('Please enter all 6 digits first.');
-      throw new Error('Code incomplete');
+      const msg = 'Please enter all 6 digits first.';
+      setErrorMessage(msg);
+      showToast(msg);
+      throw new Error(msg);
     }
 
     setIsVerifying(true);
+    setErrorMessage(null);
 
     try {
       const res = await fetch('/api/auth/otp/verify', {
@@ -65,35 +73,35 @@ export function OtpVerificationView() {
 
       if (res.ok && data.success) {
         setStatus('success');
+        setErrorMessage(null);
         showToast('Verification successful!');
         return true;
       }
 
       setStatus('error');
+      const errText =
+        data.error ||
+        (typeof data.remainingAttempts === 'number'
+          ? `Wrong OTP. ${data.remainingAttempts} attempt(s) remaining.`
+          : 'Wrong OTP. Please try again.');
+
+      setErrorMessage(errText);
+
       if (res.status === 423) {
         setIsLocked(true);
         showToast(data.error || 'Try again next day');
-      } else if (typeof data.remainingAttempts === 'number') {
-        showToast(`Wrong OTP. ${data.remainingAttempts} attempt(s) remaining.`);
       } else {
-        showToast(data.error || 'Wrong OTP. Please try again.');
+        showToast(errText);
       }
-      throw new Error(data.error || 'Wrong OTP');
+
+      throw new Error(errText);
     } catch (err: any) {
       setIsVerifying(false);
-      // In local dev/fallback when offline, allow test code if not rejected
-      if (err?.message === 'Wrong OTP' || err?.message === 'Verification failed' || err?.message?.includes('locked') || err?.message?.includes('Wrong') || err?.message?.includes('Invalid')) {
-        throw err;
-      }
-      // If network unreachable, check simulated fallback
-      if (code === '000000') {
-        setStatus('error');
-        showToast('Wrong OTP. Please try again.');
-        throw new Error('Wrong OTP');
-      }
-      setStatus('success');
-      showToast('Verification successful!');
-      return true;
+      setStatus('error');
+      const msg = err?.message || 'Wrong OTP. Please try again.';
+      setErrorMessage(msg);
+      showToast(msg);
+      throw err;
     }
   };
 
@@ -210,6 +218,18 @@ export function OtpVerificationView() {
               autoFocus={true}
             />
 
+            {/* Inline Error Message */}
+            {errorMessage && !isLocked && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="w-full max-w-[320px] py-2 px-3 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] text-[#DC2626] flex items-center justify-center gap-1.5 text-xs font-bold text-center shadow-xs"
+              >
+                <span className="text-sm">⚠️</span>
+                <span>{errorMessage}</span>
+              </motion.div>
+            )}
+
             {/* Resend Code Action */}
             <div className="flex items-center justify-center gap-1.5 text-xs text-[#525650] pt-2">
               <span>Didn&apos;t get the code?</span>
@@ -237,7 +257,7 @@ export function OtpVerificationView() {
             <SlideCommit
               label="Slide to continue"
               doneLabel="Continue"
-              errorLabel="Wrong OTP"
+              errorLabel={errorMessage || "Wrong OTP"}
               width={310}
               height={54}
               radius={27}
