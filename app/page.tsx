@@ -19,6 +19,7 @@ import { HelpCenterView } from '@/components/screens/HelpCenterView';
 import { WeeklyPlannerView } from '@/components/screens/WeeklyPlannerView';
 import { DisclaimerView } from '@/components/screens/DisclaimerView';
 import { AccessibilityStatementView } from '@/components/screens/AccessibilityStatementView';
+import { BannedAccountView } from '@/components/screens/BannedAccountView';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
 
@@ -41,11 +42,22 @@ export default function App() {
     isHydrated,
     toastMessage,
     dismissToast,
+    isAccountBanned,
+    dismissBannedAndLogout,
+    user,
   } = useFitFlow();
 
   const renderActiveScreen = () => {
     if (!isHydrated) {
       return <DashboardSkeleton />;
+    }
+    if (isAccountBanned) {
+      return (
+        <BannedAccountView
+          email={user.email}
+          onTryOtherEmail={dismissBannedAndLogout}
+        />
+      );
     }
     if (showLogin) {
       return <LoginView />;
@@ -95,8 +107,10 @@ export default function App() {
     }
   };
 
-  const hideNav = showLogin || showOtp || showSetName || showOnboarding || showWelcome || showNotifications || showPrivacyPolicy || showTerms || showHelpCenter || showDisclaimer || showAccessibilityStatement;
-  const currentScreenKey = showLogin
+  const hideNav = isAccountBanned || showLogin || showOtp || showSetName || showOnboarding || showWelcome || showNotifications || showPrivacyPolicy || showTerms || showHelpCenter || showDisclaimer || showAccessibilityStatement;
+  const currentScreenKey = isAccountBanned
+    ? 'banned'
+    : showLogin
     ? 'login'
     : showOtp
     ? 'otp'

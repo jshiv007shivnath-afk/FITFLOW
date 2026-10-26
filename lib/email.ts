@@ -84,7 +84,7 @@ export function renderOtpEmailHtml(otp: string): string {
               </div>
 
               <p style="font-size:13px; line-height:20px; color:#57606A; margin:0 0 16px 0;">
-                This code will expire in <strong>10 minutes</strong>. For your security, never share this code with anyone.
+                This code will expire in <strong>2 minutes</strong>. For your security, never share this code with anyone.
               </p>
 
               <p style="font-size:13px; line-height:20px; color:#57606A; margin:0 0 28px 0;">
@@ -134,7 +134,7 @@ export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ succ
           from: process.env.EMAIL_FROM || 'FitFlow <onboarding@resend.dev>',
           to: [toEmail],
           subject: `Your FitFlow Verification Code: ${otp}`,
-          text: `Your FitFlow verification code is ${otp}. It expires in 10 minutes.`,
+          text: `Your FitFlow verification code is ${otp}. It expires in 2 minutes.`,
           html,
         }),
       });
@@ -158,7 +158,7 @@ export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ succ
       from,
       to: toEmail,
       subject: `Your FitFlow Verification Code: ${otp}`,
-      text: `Your FitFlow verification code is ${otp}. It expires in 10 minutes.`,
+      text: `Your FitFlow verification code is ${otp}. It expires in 2 minutes.`,
       html,
     });
     console.log(`[Email] OTP sent to ${toEmail}. Message ID: ${info.messageId}`);

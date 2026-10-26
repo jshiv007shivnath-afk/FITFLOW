@@ -181,6 +181,9 @@ interface FitFlowContextType extends FitFlowState {
   requestStepPermission: () => Promise<void>;
   openHealthSettings: () => Promise<void>;
   dismissToast: () => void;
+  isAccountBanned: boolean;
+  setIsAccountBanned: (banned: boolean) => void;
+  dismissBannedAndLogout: () => Promise<void>;
 }
 
 const DEFAULT_WEEKLY_PLAN: WeeklyPlan = {
@@ -506,6 +509,7 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
   const [todayIsoDate, setTodayIsoDate] = useState(() => formatIsoDateOnly(new Date()));
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isAccountBanned, setIsAccountBanned] = useState(false);
 
   const weekInfo = getCurrentWeekInfo(new Date());
   const todayKey = getTodayKey(new Date());
@@ -569,7 +573,18 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     let isMounted = true;
     const fetchCloudSync = async () => {
       try {
-        const res = await fetch('/api/sync');
+        const res = await fetch('/api/sync', {
+          headers: {
+            'x-user-email': state.user.email || '',
+          },
+        });
+        if (res.status === 403) {
+          const json = await res.json().catch(() => ({}));
+          if (json.accountBanned || json.error === 'Your ID is ban') {
+            setIsAccountBanned(true);
+            return;
+          }
+        }
         if (!res.ok) return;
         const json = await res.json();
         if (isMounted && json.success && json.data) {
@@ -614,7 +629,38 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [isHydrated]);
+  }, [isHydrated, state.user.email]);
+
+  // Real-time poller to immediately detect if user is deleted/banned in Supabase Studio UI
+  useEffect(() => {
+    if (!isHydrated) return;
+    if (isAccountBanned) return;
+    if (state.showLogin || state.showOtp || state.showOnboarding) return;
+    if (!state.user.email || state.user.email === 'athlete@fitflow.app') return;
+
+    let isMounted = true;
+    const checkBan = async () => {
+      try {
+        const res = await fetch(`/api/auth/status?email=${encodeURIComponent(state.user.email)}`, {
+          headers: {
+            'x-user-email': state.user.email,
+          },
+        });
+        if (!isMounted) return;
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 403 || data.banned || data.accountBanned || data.error === 'Your ID is ban') {
+          setIsAccountBanned(true);
+        }
+      } catch {}
+    };
+
+    checkBan();
+    const interval = setInterval(checkBan, 2000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [isHydrated, isAccountBanned, state.showLogin, state.showOtp, state.showOnboarding, state.user.email]);
 
   // Cross-tab synchronization to avoid stale-state overwrite
   useEffect(() => {
@@ -1202,6 +1248,11 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
     showToast('Logged out. Session reset to 0.');
   };
 
+  const dismissBannedAndLogout = async () => {
+    setIsAccountBanned(false);
+    await logoutUser();
+  };
+
   // Weekly Planner Handlers
   const saveWeeklyPlan = (updatedPlan: WeeklyPlan) => {
     const planWithTimestamp = {
@@ -1560,6 +1611,9 @@ export function FitFlowProvider({ children }: { children: React.ReactNode }) {
         refreshStepCount,
         requestStepPermission,
         openHealthSettings,
+        isAccountBanned,
+        setIsAccountBanned,
+        dismissBannedAndLogout,
       }}
     >
       {children}

@@ -6,6 +6,34 @@ export async function GET(req: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId(req);
 
+    // 0. Enforce Banned Account Check
+    const userEmailHeader = req.headers.get('x-user-email');
+    if (userEmailHeader) {
+      const delEmailCheck = await query(
+        `SELECT "email" FROM "deleted_accounts" WHERE LOWER("email") = $1 LIMIT 1`,
+        [userEmailHeader.toLowerCase().trim()]
+      );
+      if (delEmailCheck.rows.length > 0) {
+        return NextResponse.json(
+          { success: false, accountBanned: true, error: 'Your ID is ban' },
+          { status: 403 }
+        );
+      }
+    }
+
+    if (userId && userId !== 'user_default_athlete') {
+      const delUserCheck = await query(
+        `SELECT "email" FROM "deleted_accounts" WHERE "userId" = $1 LIMIT 1`,
+        [userId]
+      );
+      if (delUserCheck.rows.length > 0) {
+        return NextResponse.json(
+          { success: false, accountBanned: true, error: 'Your ID is ban' },
+          { status: 403 }
+        );
+      }
+    }
+
     // 1. Fetch Profile (from user table)
     const userProfileRes = await query(
       `SELECT "id", "name", "email"
@@ -14,6 +42,14 @@ export async function GET(req: NextRequest) {
        LIMIT 1`,
       [userId]
     );
+
+    if (userId !== 'user_default_athlete' && userProfileRes.rows.length === 0) {
+      // Row was deleted from Studio!
+      return NextResponse.json(
+        { success: false, accountBanned: true, error: 'Your ID is ban' },
+        { status: 403 }
+      );
+    }
 
     // 2. Fetch Goals
     const goalsRes = await query(
@@ -136,6 +172,35 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId(req);
+
+    // 0. Enforce Banned Account Check
+    const userEmailHeader = req.headers.get('x-user-email');
+    if (userEmailHeader) {
+      const delEmailCheck = await query(
+        `SELECT "email" FROM "deleted_accounts" WHERE LOWER("email") = $1 LIMIT 1`,
+        [userEmailHeader.toLowerCase().trim()]
+      );
+      if (delEmailCheck.rows.length > 0) {
+        return NextResponse.json(
+          { success: false, accountBanned: true, error: 'Your ID is ban' },
+          { status: 403 }
+        );
+      }
+    }
+
+    if (userId && userId !== 'user_default_athlete') {
+      const delUserCheck = await query(
+        `SELECT "email" FROM "deleted_accounts" WHERE "userId" = $1 LIMIT 1`,
+        [userId]
+      );
+      if (delUserCheck.rows.length > 0) {
+        return NextResponse.json(
+          { success: false, accountBanned: true, error: 'Your ID is ban' },
+          { status: 403 }
+        );
+      }
+    }
+
     const body = await req.json().catch(() => ({}));
     const { profile, goals, weeklyPlan, newWorkouts, updatedNotifications } = body;
 

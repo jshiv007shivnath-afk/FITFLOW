@@ -172,7 +172,7 @@ describe('Better Auth & Security Suite - Responsive Email Template', () => {
     assert.ok(html.includes('FIT<span style="color:#B8F45A;">FLOW</span>'));
     assert.ok(html.includes('#111312'));
     assert.ok(html.includes('#B8F45A'));
-    assert.ok(html.includes('10 minutes'));
+    assert.ok(html.includes('2 minutes'));
     assert.ok(html.includes('7'));
     assert.ok(html.includes('3'));
     assert.ok(html.includes('9'));

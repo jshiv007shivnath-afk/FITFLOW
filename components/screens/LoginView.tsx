@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useFitFlow } from '@/context/FitFlowContext';
+import { BannedAccountView } from '@/components/screens/BannedAccountView';
 
 export function LoginView() {
   const { setShowPrivacyPolicy, setShowTerms, showToast, requestOtpLogin } = useFitFlow();
@@ -13,14 +14,14 @@ export function LoginView() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lockoutMessage, setLockoutMessage] = useState<string | null>(null);
-  const [isAccountDeleted, setIsAccountDeleted] = useState(false);
+  const [isAccountBanned, setIsAccountBanned] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
 
     setLockoutMessage(null);
-    setIsAccountDeleted(false);
+    setIsAccountBanned(false);
     const trimmedEmail = email.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!trimmedEmail || !emailRegex.test(trimmedEmail)) {
@@ -40,9 +41,15 @@ export function LoginView() {
       });
       const otpData = await otpRes.json().catch(() => ({}));
 
-      if (otpRes.status === 403 || otpData.accountDeleted || otpData.error === 'Your account is deleted') {
+      if (
+        otpRes.status === 403 ||
+        otpData.accountBanned ||
+        otpData.accountDeleted ||
+        otpData.error === 'Your ID is ban' ||
+        otpData.error === 'Your account is deleted'
+      ) {
         setIsSubmitting(false);
-        setIsAccountDeleted(true);
+        setIsAccountBanned(true);
         return;
       }
 
@@ -68,6 +75,21 @@ export function LoginView() {
       requestOtpLogin(trimmedEmail, fullName);
     }
   };
+
+  if (isAccountBanned) {
+    return (
+      <BannedAccountView
+        email={email.trim()}
+        onTryOtherEmail={() => {
+          setIsAccountBanned(false);
+          setEmail('');
+          setFirstName('');
+          setLastName('');
+          setLockoutMessage(null);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="relative w-full min-h-full flex flex-col justify-between bg-[#F8F8F6] text-[#111312] selection:bg-[#B8F45A] selection:text-[#111312] overflow-y-auto no-scrollbar font-sans">
@@ -104,38 +126,8 @@ export function LoginView() {
       {/* 2. White Sheet Form Container */}
       <div className="relative -mt-8 rounded-t-[32px] bg-white px-5 sm:px-6 pt-4 pb-3 flex-1 flex flex-col justify-between shadow-[0_-10px_32px_rgba(0,0,0,0.07)] z-10">
         <div className="w-full max-w-sm mx-auto flex flex-col">
-          {isAccountDeleted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="w-full flex flex-col items-center justify-center text-center py-8 px-4"
-            >
-              <div className="w-14 h-14 rounded-full bg-[#FFF1F2] border border-[#FFE4E6] text-[#E11D48] flex items-center justify-center text-2xl font-bold mb-4 shadow-xs">
-                ✕
-              </div>
-              <h2 className="text-lg font-bold text-[#111312] mb-6">
-                Your account is deleted
-              </h2>
-              <motion.button
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                type="button"
-                onClick={() => {
-                  setIsAccountDeleted(false);
-                  setEmail('');
-                  setFirstName('');
-                  setLastName('');
-                  setLockoutMessage(null);
-                }}
-                className="w-full h-11 rounded-xl bg-[#111312] hover:bg-black text-white text-sm font-semibold transition-colors shadow-xs cursor-pointer flex items-center justify-center"
-              >
-                Try with other email
-              </motion.button>
-            </motion.div>
-          ) : (
-            <>
-              {/* Editorial Subtitle */}
-              <div className="w-full flex flex-col items-center text-center pt-0.5 pb-1">
+          {/* Editorial Subtitle */}
+          <div className="w-full flex flex-col items-center text-center pt-0.5 pb-1">
                 <p className="text-xs text-[#525650] max-w-xs leading-normal">
                   {mode === 'signup'
                     ? 'Enter your details to begin your fitness & wellness journey'
@@ -249,8 +241,6 @@ export function LoginView() {
               </>
             )}
           </div>
-            </>
-          )}
         </div>
 
         {/* Footer Legal Links */}

@@ -16,6 +16,7 @@ export function OtpVerificationView() {
     setShowOtp,
     completeOtpLogin,
     showToast,
+    setIsAccountBanned,
   } = useFitFlow();
 
   const emailDisplay = pendingOtpEmail || 'athlete@example.com';
@@ -25,9 +26,21 @@ export function OtpVerificationView() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
+  const [otpExpirySeconds, setOtpExpirySeconds] = useState(120); // 2 minutes strict expiry
   const [showSuccessTick, setShowSuccessTick] = useState(false);
 
-  // Resend countdown timer (60s strict rate limit)
+  const isExpired = otpExpirySeconds <= 0;
+
+  // 2-minute OTP validity countdown timer
+  useEffect(() => {
+    if (otpExpirySeconds <= 0) return;
+    const interval = setInterval(() => {
+      setOtpExpirySeconds((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [otpExpirySeconds]);
+
+  // Resend cooldown timer (60s rate limit)
   useEffect(() => {
     if (resendTimer <= 0) return;
     const interval = setInterval(() => {
@@ -36,7 +49,14 @@ export function OtpVerificationView() {
     return () => clearInterval(interval);
   }, [resendTimer]);
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   const handleCodeChange = (newCode: string) => {
+    if (isExpired || isLocked) return;
     setCode(newCode);
     if (status !== 'idle') {
       setStatus('idle');
@@ -47,6 +67,13 @@ export function OtpVerificationView() {
   };
 
   const handleVerifyCommit = async (): Promise<boolean> => {
+    if (isExpired) {
+      const msg = 'Code expired (2 minutes elapsed). Please request a new code.';
+      setErrorMessage(msg);
+      showToast(msg);
+      throw new Error(msg);
+    }
+
     if (code.length < 6) {
       const msg = 'Please enter all 6 digits first.';
       setErrorMessage(msg);
@@ -70,6 +97,11 @@ export function OtpVerificationView() {
       const data = await res.json().catch(() => ({}));
 
       setIsVerifying(false);
+
+      if (res.status === 403 || data.accountBanned || data.error === 'Your ID is ban') {
+        setIsAccountBanned(true);
+        throw new Error('Your ID is ban');
+      }
 
       if (res.ok && data.success) {
         setStatus('success');
@@ -106,10 +138,12 @@ export function OtpVerificationView() {
   };
 
   const handleResend = async () => {
-    if (resendTimer > 0) return;
+    if (resendTimer > 0 && !isExpired) return;
     setResendTimer(60);
+    setOtpExpirySeconds(120); // Reset 2 minutes validity
     setCode('');
     setStatus('idle');
+    setErrorMessage(null);
 
     try {
       const res = await fetch('/api/auth/otp/send', {
@@ -118,6 +152,11 @@ export function OtpVerificationView() {
         body: JSON.stringify({ email: emailDisplay }),
       });
       const data = await res.json().catch(() => ({}));
+
+      if (res.status === 403 || data.accountBanned || data.error === 'Your ID is ban') {
+        setIsAccountBanned(true);
+        return;
+      }
 
       if (res.status === 423) {
         setIsLocked(true);
@@ -167,7 +206,7 @@ export function OtpVerificationView() {
       <div className="w-full max-w-sm mx-auto px-6 pt-3 pb-6 flex-1 flex flex-col justify-between">
         <div className="flex flex-col">
           {/* Editorial Headline & Context (Shifted upward, clean text) */}
-          <div className="flex flex-col gap-1.5 mb-5 text-left">
+          <div className="flex flex-col gap-1.5 mb-3 text-left">
             <h1 className="text-[26px] sm:text-[28px] font-black text-[#111312] tracking-tight leading-tight">
               Enter verification code
             </h1>
@@ -182,6 +221,30 @@ export function OtpVerificationView() {
                 Change
               </button>
             </p>
+
+            {/* 2-Minute Expiry Countdown Pill */}
+            <div className="flex items-center gap-2 mt-1">
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
+                  isExpired
+                    ? 'bg-red-50 text-red-600 border-red-200'
+                    : otpExpirySeconds < 30
+                    ? 'bg-amber-50 text-amber-700 border-amber-200'
+                    : 'bg-[#F2F4F1] text-[#111312] border-[#E1E4DF]'
+                }`}
+              >
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    isExpired ? 'bg-red-500' : 'bg-[#15803D] animate-pulse'
+                  }`}
+                />
+                <span>
+                  {isExpired
+                    ? 'Code expired (2 min)'
+                    : `Expires in ${formatTime(otpExpirySeconds)}`}
+                </span>
+              </span>
+            </div>
           </div>
 
           {/* Account Lockout Banner */}
@@ -193,12 +256,26 @@ export function OtpVerificationView() {
             </div>
           )}
 
+          {/* Code Expired Notice */}
+          {isExpired && !isLocked && (
+            <div className="w-full p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-center flex flex-col items-center gap-1 mb-2 shadow-xs">
+              <span className="text-xl">⌛</span>
+              <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
+                Code Expired (2 minutes elapsed)
+              </span>
+              <span className="text-xs text-amber-900 leading-relaxed">
+                You can no longer enter this code. Please tap &quot;Resend code&quot; to receive a new code.
+              </span>
+            </div>
+          )}
+
           {/* React Bits Physics-Animated CodeSlots Component */}
           <div className="w-full flex flex-col items-center gap-4 py-2">
             <CodeSlots
               length={6}
               value={code}
               status={status}
+              disabled={isExpired || isLocked}
               onChange={handleCodeChange}
               onComplete={() => {
                 // When 6 digits land, status stays ready for SlideCommit
@@ -232,20 +309,33 @@ export function OtpVerificationView() {
 
             {/* Resend Code Action */}
             <div className="flex items-center justify-center gap-1.5 text-xs text-[#525650] pt-2">
-              <span>Didn&apos;t get the code?</span>
-              {resendTimer > 0 ? (
-                <span className="font-semibold text-[#111312] tabular-nums">
-                  Resend in {resendTimer}s
-                </span>
-              ) : (
+              {isExpired ? (
                 <button
                   type="button"
                   onClick={handleResend}
-                  className="font-bold text-[#111312] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[#111312] hover:bg-black text-[#B8F45A] font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
                 >
                   <Refresh size={13} />
-                  <span>Resend code</span>
+                  <span>Resend code (2 min)</span>
                 </button>
+              ) : (
+                <>
+                  <span>Didn&apos;t get the code?</span>
+                  {resendTimer > 0 ? (
+                    <span className="font-semibold text-[#111312] tabular-nums">
+                      Resend in {resendTimer}s
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      className="font-bold text-[#111312] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      <Refresh size={13} />
+                      <span>Resend code</span>
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -265,7 +355,7 @@ export function OtpVerificationView() {
               handleColor="#FFFFFF"
               successColor="#15803D"
               dangerColor="#EF4444"
-              disabled={code.length < 6 || isVerifying || isLocked}
+              disabled={code.length < 6 || isVerifying || isLocked || isExpired}
               onConfirm={handleVerifyCommit}
               onDone={() => {
                 setShowSuccessTick(true);
@@ -276,6 +366,10 @@ export function OtpVerificationView() {
           {isLocked ? (
             <span className="text-xs font-bold text-red-600 text-center">
               Try again next day
+            </span>
+          ) : isExpired ? (
+            <span className="text-xs font-bold text-amber-700 text-center">
+              Code expired — Tap &quot;Resend code&quot; to receive a new code
             </span>
           ) : code.length < 6 ? (
             <span className="text-xs text-[#525650] text-center">

@@ -32,8 +32,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             success: false,
+            accountBanned: true,
             accountDeleted: true,
-            error: 'Your account is deleted',
+            error: 'Your ID is ban',
           },
           { status: 403 }
         );
