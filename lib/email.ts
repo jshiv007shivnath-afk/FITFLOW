@@ -21,10 +21,10 @@ export function createTransporter() {
 
 export function renderOtpEmailHtml(otp: string): string {
   const digits = otp.split('');
-  const digitBoxes = digits
+  const digitSpans = digits
     .map(
       (d) =>
-        `<span style="display:inline-block; width:44px; height:52px; line-height:52px; background:#1C1F1D; color:#B8F45A; font-size:28px; font-weight:800; font-family:'Inter',system-ui,sans-serif; text-align:center; border-radius:12px; margin:0 4px; border:1px solid rgba(184,244,90,0.3);">${d}</span>`
+        `<span style="display:inline-block; margin:0 2px; font-weight:700;">${d}</span>`
     )
     .join('');
 
@@ -36,53 +36,78 @@ export function renderOtpEmailHtml(otp: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your FitFlow Verification Code</title>
 </head>
-<body style="margin:0; padding:0; background-color:#0B0C0B; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#FFFFFF;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#0B0C0B; padding:40px 16px;">
+<body style="margin:0; padding:0; background-color:#F6F8FA; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#24292F; -webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F6F8FA; padding:40px 16px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" style="max-width:480px; background-color:#111312; border-radius:24px; border:1px solid rgba(255,255,255,0.08); overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.6);" cellspacing="0" cellpadding="0" border="0">
-          <!-- Header -->
+        <!-- Letter Sheet -->
+        <table role="presentation" width="100%" style="max-width:540px; background-color:#FFFFFF; border:1px solid #D0D7DE; border-radius:8px; box-shadow:0 1px 3px rgba(31,35,40,0.06); text-align:left;" cellspacing="0" cellpadding="0" border="0">
+          
+          <!-- Letterhead -->
           <tr>
-            <td style="padding:32px 32px 16px 32px; text-align:center;">
-              <div style="display:inline-flex; align-items:center; gap:8px;">
-                <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background-color:#B8F45A;"></span>
-                <span style="font-size:22px; font-weight:800; letter-spacing:-0.5px; color:#FFFFFF;">FIT<span style="color:#B8F45A;">FLOW</span></span>
-              </div>
+            <td style="padding:28px 36px 20px 36px; border-bottom:1px solid #EAECEF;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td>
+                    <div style="display:inline-flex; align-items:center; gap:8px;">
+                      <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:#B8F45A; border:2px solid #111312;"></span>
+                      <span style="font-size:18px; font-weight:800; letter-spacing:-0.3px; color:#111312; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+                        FIT<span style="color:#B8F45A;">FLOW</span>
+                      </span>
+                    </div>
+                  </td>
+                  <td align="right" style="font-size:12px; color:#57606A; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+                    Security Notification
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
-          <!-- Main Body -->
+          <!-- Letter Content -->
           <tr>
-            <td style="padding:16px 32px; text-align:center;">
-              <h1 style="font-size:22px; font-weight:700; color:#FFFFFF; margin:0 0 12px 0;">Verify Your Account</h1>
-              <p style="font-size:14px; line-height:22px; color:#A1A1AA; margin:0 0 28px 0;">
-                Use the 6-digit verification code below to complete your login or account setup.
+            <td style="padding:32px 36px 24px 36px;">
+              <p style="font-size:15px; line-height:24px; color:#24292F; margin:0 0 16px 0; font-weight:600;">
+                Hello,
+              </p>
+              <p style="font-size:14px; line-height:22px; color:#57606A; margin:0 0 24px 0;">
+                We received a request to authenticate your <strong>FitFlow</strong> account. Please use the following 6-digit verification code:
               </p>
 
-              <!-- OTP Digits Container -->
-              <div style="margin:24px 0; text-align:center;">
-                ${digitBoxes}
+              <!-- GitHub-Style Monospace Code Box -->
+              <div style="margin:24px 0 28px 0; text-align:center;">
+                <div style="display:inline-block; background-color:#F6F8FA; border:1px solid #D0D7DE; border-radius:6px; padding:16px 32px;">
+                  <span style="font-size:32px; font-weight:700; letter-spacing:6px; font-family:ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace; color:#111312;">
+                    ${digitSpans}
+                  </span>
+                </div>
               </div>
 
-              <div style="background-color:#181A19; border-radius:12px; padding:12px 16px; margin:24px 0; border:1px solid rgba(255,255,255,0.05);">
-                <p style="font-size:12px; color:#A1A1AA; margin:0;">
-                  ⏳ Code is valid for <strong style="color:#FFFFFF;">10 minutes</strong>. Do not share this code with anyone.
-                </p>
-              </div>
+              <p style="font-size:13px; line-height:20px; color:#57606A; margin:0 0 16px 0;">
+                This code will expire in <strong>10 minutes</strong>. For your security, never share this code with anyone.
+              </p>
+
+              <p style="font-size:13px; line-height:20px; color:#57606A; margin:0 0 28px 0;">
+                If you did not make this request, you can safely ignore this email. Someone may have entered your email address by mistake.
+              </p>
+
+              <p style="font-size:14px; line-height:22px; color:#24292F; margin:0;">
+                Thanks,<br />
+                <strong style="color:#111312;">The FitFlow Team</strong>
+              </p>
             </td>
           </tr>
 
-          <!-- Footer -->
+          <!-- Official Footer -->
           <tr>
-            <td style="padding:24px 32px; background-color:#0D0E0E; text-align:center; border-top:1px solid rgba(255,255,255,0.05);">
-              <p style="font-size:11px; color:#71717A; margin:0 0 6px 0;">
-                If you did not request this verification code, you can safely ignore this email.
-              </p>
-              <p style="font-size:11px; color:#52525B; margin:0;">
-                &copy; ${new Date().getFullYear()} FitFlow Athletics. All rights reserved.
+            <td style="padding:20px 36px; background-color:#F6F8FA; border-top:1px solid #EAECEF; border-bottom-left-radius:8px; border-bottom-right-radius:8px;">
+              <p style="font-size:11px; line-height:16px; color:#6E7781; margin:0;">
+                FitFlow Athletics · Automated Security Service<br />
+                This is a required security notification sent to authenticate your account.
               </p>
             </td>
           </tr>
+
         </table>
       </td>
     </tr>
