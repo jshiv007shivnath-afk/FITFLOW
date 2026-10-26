@@ -6,11 +6,11 @@ export async function GET(req: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId(req);
 
-    // 1. Fetch Profile
-    const profileRes = await query(
-      `SELECT "membership", "level", "xp", "streakDays", "weightKg", "avatarUrl"
-       FROM "profiles"
-       WHERE "userId" = $1
+    // 1. Fetch Profile (from user table)
+    const userProfileRes = await query(
+      `SELECT "id", "name", "email"
+       FROM "user"
+       WHERE "id" = $1
        LIMIT 1`,
       [userId]
     );
@@ -73,15 +73,21 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // 4. Fetch Workout Logs
-    const workoutsRes = await query(
-      `SELECT "id", "title", "durationMin", "calories", "category", "time", "loggedAt"
-       FROM "workout_logs"
-       WHERE "userId" = $1
-       ORDER BY "loggedAt" DESC
-       LIMIT 50`,
-      [userId]
-    );
+    // 4. Fetch Workout Logs (if table exists)
+    let workoutLogs: any[] = [];
+    try {
+      const workoutsRes = await query(
+        `SELECT "id", "title", "durationMin", "calories", "category", "time", "loggedAt"
+         FROM "workout_logs"
+         WHERE "userId" = $1
+         ORDER BY "loggedAt" DESC
+         LIMIT 50`,
+        [userId]
+      );
+      workoutLogs = workoutsRes.rows;
+    } catch {
+      workoutLogs = [];
+    }
 
     // 5. Fetch Notifications
     const notificationsRes = await query(
@@ -93,14 +99,28 @@ export async function GET(req: NextRequest) {
       [userId]
     );
 
+    const userRow = userProfileRes.rows[0];
+    const profileData = userRow
+      ? {
+          name: userRow.name,
+          email: userRow.email,
+          membership: 'Free',
+          level: 1,
+          xp: 0,
+          streakDays: 0,
+          weightKg: 68.5,
+          avatarUrl: null,
+        }
+      : null;
+
     return NextResponse.json({
       success: true,
       data: {
-        profile: profileRes.rows[0] || null,
+        profile: profileData,
         goals: goalsRes.rows[0] || null,
         weeklyPlan: currentWeeklyPlan,
         previousWeeklyPlan,
-        workoutLogs: workoutsRes.rows,
+        workoutLogs,
         notifications: notificationsRes.rows,
       },
     });
@@ -122,32 +142,16 @@ export async function POST(req: NextRequest) {
     const now = new Date();
 
     await withTransaction(async (client) => {
-      // 1. Sync Profile
-      if (profile) {
-        await client.query(
-          `INSERT INTO "profiles" ("id", "userId", "membership", "level", "xp", "streakDays", "weightKg", "avatarUrl", "createdAt", "updatedAt")
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9)
-           ON CONFLICT ("userId")
-           DO UPDATE SET
-             "membership" = COALESCE(EXCLUDED."membership", "profiles"."membership"),
-             "level" = COALESCE(EXCLUDED."level", "profiles"."level"),
-             "xp" = COALESCE(EXCLUDED."xp", "profiles"."xp"),
-             "streakDays" = COALESCE(EXCLUDED."streakDays", "profiles"."streakDays"),
-             "weightKg" = COALESCE(EXCLUDED."weightKg", "profiles"."weightKg"),
-             "avatarUrl" = COALESCE(EXCLUDED."avatarUrl", "profiles"."avatarUrl"),
-             "updatedAt" = EXCLUDED."updatedAt"`,
-          [
-            `prof_${userId}`,
-            userId,
-            profile.membership || 'Free',
-            profile.level || 1,
-            profile.xp || 0,
-            profile.streakDays || 0,
-            profile.weightKg || 68.5,
-            profile.avatarUrl || null,
-            now,
-          ]
-        );
+      // 1. Sync Profile (Safe update to user table)
+      if (profile && profile.name) {
+        try {
+          await client.query(
+            `UPDATE "user"
+             SET "name" = $1, "updatedAt" = $2
+             WHERE "id" = $3`,
+            [profile.name, now, userId]
+          );
+        } catch {}
       }
 
       // 2. Sync Goals
@@ -253,24 +257,26 @@ export async function POST(req: NextRequest) {
 
       // 4. Sync New Workouts
       if (Array.isArray(newWorkouts)) {
-        for (const w of newWorkouts) {
-          const workoutId = w.id || `w_${crypto.randomUUID()}`;
-          await client.query(
-            `INSERT INTO "workout_logs" ("id", "userId", "title", "durationMin", "calories", "category", "time", "loggedAt")
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-             ON CONFLICT ("id") DO NOTHING`,
-            [
-              workoutId,
-              userId,
-              w.title,
-              w.durationMin || 0,
-              w.calories || 0,
-              w.category || 'Exercise',
-              w.time || '12:00 PM',
-              now,
-            ]
-          );
-        }
+        try {
+          for (const w of newWorkouts) {
+            const workoutId = w.id || `w_${crypto.randomUUID()}`;
+            await client.query(
+              `INSERT INTO "workout_logs" ("id", "userId", "title", "durationMin", "calories", "category", "time", "loggedAt")
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+               ON CONFLICT ("id") DO NOTHING`,
+              [
+                workoutId,
+                userId,
+                w.title,
+                w.durationMin || 0,
+                w.calories || 0,
+                w.category || 'Exercise',
+                w.time || '12:00 PM',
+                now,
+              ]
+            );
+          }
+        } catch {}
       }
 
       // 5. Sync Notifications read status
