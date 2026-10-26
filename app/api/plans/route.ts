@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedUserId } from '@/lib/auth-session';
+import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 import { query, withTransaction } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
@@ -31,21 +31,24 @@ export async function GET(req: NextRequest) {
       [plan.id]
     );
 
-    const days = await Promise.all(
-      daysRes.rows.map(async (day: any) => {
-        const exercisesRes = await query(
-          `SELECT "id", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec"
-           FROM "plan_exercises"
-           WHERE "planDayId" = $1
-           ORDER BY "orderIndex" ASC`,
-          [day.id]
-        );
-        return {
-          ...day,
-          exercises: exercisesRes.rows,
-        };
-      })
-    );
+    // Batch query to eliminate N+1 database queries
+    const dayIds = daysRes.rows.map((d: any) => d.id);
+    let allExercises: any[] = [];
+    if (dayIds.length > 0) {
+      const exRes = await query(
+        `SELECT "id", "planDayId", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec"
+         FROM "plan_exercises"
+         WHERE "planDayId" = ANY($1::text[])
+         ORDER BY "orderIndex" ASC`,
+        [dayIds]
+      );
+      allExercises = exRes.rows;
+    }
+
+    const days = daysRes.rows.map((day: any) => ({
+      ...day,
+      exercises: allExercises.filter((e) => e.planDayId === day.id),
+    }));
 
     return NextResponse.json({
       success: true,
@@ -55,6 +58,9 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /plans GET] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to retrieve weekly plan.' },
@@ -147,6 +153,9 @@ export async function POST(req: NextRequest) {
       message: 'Weekly plan saved successfully.',
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /plans POST] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to save weekly plan.' },
@@ -154,3 +163,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

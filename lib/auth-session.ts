@@ -2,6 +2,13 @@ import { NextRequest } from 'next/server';
 import { auth } from './auth';
 import { query } from './db';
 
+export class UnauthorizedError extends Error {
+  constructor(message = 'Unauthorized: Invalid or missing session') {
+    super(message);
+    this.name = 'UnauthorizedError';
+  }
+}
+
 export async function getAuthenticatedUserId(req: NextRequest): Promise<string> {
   // 1. Check Better Auth standard cookie session
   try {
@@ -30,20 +37,39 @@ export async function getAuthenticatedUserId(req: NextRequest): Promise<string> 
     }
   }
 
-  // 3. Fallback for Local Development & Seamless Guest App Testing:
-  // Automatically ensure default athlete user exists in "user" table
-  // so any test (saving goals, logging workouts, weekly planner) successfully persists to PostgreSQL!
-  const defaultUserId = 'user_default_athlete';
-  try {
-    await query(
-      `INSERT INTO "user" ("id", "name", "email", "emailVerified", "createdAt", "updatedAt")
-       VALUES ($1, 'Athlete', 'athlete@fitflow.app', true, NOW(), NOW())
-       ON CONFLICT ("id") DO NOTHING`,
-      [defaultUserId]
-    );
-  } catch (err) {
-    console.warn('[AuthSession] Failed to ensure default user:', err);
+  // 3. Check better-auth.session_token cookie directly from database
+  const cookieToken = req.cookies.get('better-auth.session_token')?.value;
+  if (cookieToken) {
+    try {
+      const cookieRes = await query(
+        `SELECT "userId" FROM "session" WHERE "token" = $1 AND "expiresAt" > NOW() LIMIT 1`,
+        [cookieToken]
+      );
+      if (cookieRes.rows.length > 0 && cookieRes.rows[0].userId) {
+        return cookieRes.rows[0].userId;
+      }
+    } catch {
+      // ignore
+    }
   }
 
-  return defaultUserId;
+  // 4. In development mode ONLY: provide default athlete user for seamless local testing
+  if (process.env.NODE_ENV !== 'production') {
+    const defaultUserId = 'user_default_athlete';
+    try {
+      await query(
+        `INSERT INTO "user" ("id", "name", "email", "emailVerified", "createdAt", "updatedAt")
+         VALUES ($1, 'Athlete', 'athlete@fitflow.app', true, NOW(), NOW())
+         ON CONFLICT ("id") DO NOTHING`,
+        [defaultUserId]
+      );
+    } catch (err) {
+      console.warn('[AuthSession] Failed to ensure default user:', err);
+    }
+    return defaultUserId;
+  }
+
+  // 5. In production: unauthenticated access is strictly forbidden (Cross-User / IDOR defense)
+  throw new UnauthorizedError('Authentication required to access this resource.');
 }
+

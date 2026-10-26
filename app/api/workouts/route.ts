@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedUserId } from '@/lib/auth-session';
+import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 import { query, withTransaction } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
@@ -20,6 +20,9 @@ export async function GET(req: NextRequest) {
       workouts: res.rows,
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /workouts GET] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to retrieve workout logs.' },
@@ -102,6 +105,9 @@ export async function POST(req: NextRequest) {
       ...result,
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /workouts POST] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to record workout.' },
@@ -109,3 +115,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

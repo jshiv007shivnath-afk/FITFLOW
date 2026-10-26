@@ -117,6 +117,7 @@ export async function POST(req: NextRequest) {
       response.cookies.set('better-auth.session_token', token, {
         httpOnly: true,
         sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
         path: '/',
         expires: expiresAt,
       });

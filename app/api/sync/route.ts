@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedUserId } from '@/lib/auth-session';
+import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 import { query, withTransaction } from '@/lib/db';
 
 export async function GET(req: NextRequest) {
@@ -161,6 +161,9 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /sync GET] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to hydrate sync data.' },
@@ -363,6 +366,9 @@ export async function POST(req: NextRequest) {
       timestamp: now.toISOString(),
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /sync POST] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to sync offline changes.' },

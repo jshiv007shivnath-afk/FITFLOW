@@ -28,9 +28,11 @@ const {
   storeOtp,
   verifyOtp,
   checkAccountLockout,
+  constantTimeCompare,
   MAX_ATTEMPTS,
   LOCKOUT_DURATION_MS,
 } = require('../lib/security.ts');
+
 
 const { renderOtpEmailHtml } = require('../lib/email.ts');
 
@@ -181,3 +183,23 @@ describe('Better Auth & Security Suite - Responsive Email Template', () => {
     assert.ok(html.includes('2'));
   });
 });
+
+describe('Better Auth & Security Suite - Constant-Time Comparison', () => {
+  it('correctly matches identical codes', () => {
+    assert.equal(constantTimeCompare('123456', '123456'), true);
+    assert.equal(constantTimeCompare('secret-token-2026', 'secret-token-2026'), true);
+  });
+
+  it('correctly rejects mismatched codes of same length', () => {
+    assert.equal(constantTimeCompare('123456', '123457'), false);
+    assert.equal(constantTimeCompare('654321', '123456'), false);
+  });
+
+  it('safely handles strings of different lengths without throwing', () => {
+    assert.equal(constantTimeCompare('123456', '12345'), false);
+    assert.equal(constantTimeCompare('123456', '1234567'), false);
+    assert.equal(constantTimeCompare('', '123456'), false);
+  });
+});
+
+

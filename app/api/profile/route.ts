@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedUserId } from '@/lib/auth-session';
+import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 import { query } from '@/lib/db';
 
 export async function GET(req: NextRequest) {
@@ -34,6 +34,9 @@ export async function GET(req: NextRequest) {
       profile: res.rows[0],
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /profile GET] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to retrieve profile.' },
@@ -46,32 +49,35 @@ export async function PATCH(req: NextRequest) {
   try {
     const userId = await getAuthenticatedUserId(req);
     const body = await req.json().catch(() => ({}));
-    const { membership, level, xp, streakDays, weightKg, avatarUrl } = body;
+    const { weightKg, avatarUrl } = body;
+
+    // Defense against mass-assignment: membership and progression levels cannot be self-elevated
+    let sanitizedWeight: number | null = null;
+    if (typeof weightKg === 'number' && !isNaN(weightKg) && weightKg >= 20 && weightKg <= 400) {
+      sanitizedWeight = Math.round(weightKg * 10) / 10;
+    }
+
+    let sanitizedAvatar: string | null = null;
+    if (typeof avatarUrl === 'string' && avatarUrl.trim().length > 0 && avatarUrl.trim().length <= 1000) {
+      sanitizedAvatar = avatarUrl.trim();
+    }
 
     const now = new Date();
 
     const upsertRes = await query(
       `INSERT INTO "profiles" ("id", "userId", "membership", "level", "xp", "streakDays", "weightKg", "avatarUrl", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9)
+       VALUES ($1, $2, 'Free', 1, 0, 0, COALESCE($3, 68.5), $4, $5, $5)
        ON CONFLICT ("userId")
        DO UPDATE SET
-         "membership" = COALESCE(EXCLUDED."membership", "profiles"."membership"),
-         "level" = COALESCE(EXCLUDED."level", "profiles"."level"),
-         "xp" = COALESCE(EXCLUDED."xp", "profiles"."xp"),
-         "streakDays" = COALESCE(EXCLUDED."streakDays", "profiles"."streakDays"),
-         "weightKg" = COALESCE(EXCLUDED."weightKg", "profiles"."weightKg"),
-         "avatarUrl" = COALESCE(EXCLUDED."avatarUrl", "profiles"."avatarUrl"),
+         "weightKg" = COALESCE($3, "profiles"."weightKg"),
+         "avatarUrl" = COALESCE($4, "profiles"."avatarUrl"),
          "updatedAt" = EXCLUDED."updatedAt"
        RETURNING "membership", "level", "xp", "streakDays", "weightKg", "avatarUrl"`,
       [
         `prof_${userId}`,
         userId,
-        membership || 'Free',
-        typeof level === 'number' ? level : 1,
-        typeof xp === 'number' ? xp : 0,
-        typeof streakDays === 'number' ? streakDays : 0,
-        typeof weightKg === 'number' ? weightKg : 68.5,
-        avatarUrl || null,
+        sanitizedWeight,
+        sanitizedAvatar,
         now,
       ]
     );
@@ -82,6 +88,9 @@ export async function PATCH(req: NextRequest) {
       profile: upsertRes.rows[0],
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /profile PATCH] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to update profile.' },
@@ -89,3 +98,4 @@ export async function PATCH(req: NextRequest) {
     );
   }
 }
+
