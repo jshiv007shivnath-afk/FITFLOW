@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedUserId } from '@/lib/auth-session';
+import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 import { query } from '@/lib/db';
 import { randomUUID } from 'crypto';
 
@@ -20,6 +20,9 @@ export async function GET(req: NextRequest) {
       notifications: res.rows,
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /notifications GET] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to retrieve notifications.' },
@@ -51,6 +54,9 @@ export async function PATCH(req: NextRequest) {
       message: 'Notification status updated.',
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /notifications PATCH] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to update notification.' },
@@ -87,6 +93,9 @@ export async function POST(req: NextRequest) {
       notification: res.rows[0],
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /notifications POST] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to create notification.' },
@@ -94,3 +103,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

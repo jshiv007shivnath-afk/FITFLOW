@@ -1,4 +1,4 @@
-import { randomInt, randomUUID } from 'crypto';
+import { randomInt, randomUUID, timingSafeEqual } from 'crypto';
 import { query } from './db';
 
 // ------------------------------------------------------------------------------
@@ -8,6 +8,15 @@ export const OTP_TTL_MS = 2 * 60 * 1000; // 2 minutes
 export const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 60 seconds
 export const MAX_ATTEMPTS = 4; // 4 attempts max
 export const LOCKOUT_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours (1 full day) lockout
+
+export function constantTimeCompare(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) {
+    return false;
+  }
+  return timingSafeEqual(bufA, bufB);
+}
 
 // In-memory fallback tracking for rate-limits and active OTPs
 interface RateLimitEntry {
@@ -297,8 +306,8 @@ export async function verifyOtp(
     };
   }
 
-  // 4. Check code match
-  const isMatch = activeValue === enteredCode.trim();
+  // 4. Check code match using constant-time comparison to prevent side-channel timing attacks
+  const isMatch = constantTimeCompare(activeValue, enteredCode.trim());
 
   if (isMatch) {
     // Success: Delete verification record so OTP is single-use

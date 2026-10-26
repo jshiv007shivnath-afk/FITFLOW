@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthenticatedUserId } from '@/lib/auth-session';
+import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 import { query } from '@/lib/db';
 import { validateGoalsInput } from '@/lib/security';
 
@@ -31,6 +31,9 @@ export async function GET(req: NextRequest) {
       goals: res.rows[0],
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /goals GET] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to retrieve goals.' },
@@ -73,6 +76,9 @@ export async function POST(req: NextRequest) {
       goals: upsertRes.rows[0],
     });
   } catch (error: any) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 401 });
+    }
     console.error('[API /goals POST] Error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to update goals.' },
@@ -80,3 +86,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+

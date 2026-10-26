@@ -23,7 +23,7 @@ import {
   Flame,
   ArrowRight2,
 } from 'reicon-react';
-import { Dumbbell, Sparkles, ChevronRight, Plus, Minus, Zap } from 'lucide-react';
+import { Dumbbell, ChevronRight, Plus, Minus, Zap } from 'lucide-react';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -476,7 +476,7 @@ export function WeeklyPlannerView() {
                 transition={{ type: 'spring', stiffness: 500, damping: 25 }}
                 className="absolute top-4 right-4 z-30 bg-[#B8F45A] text-[#111312] font-black text-xs px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 select-none"
               >
-                <Sparkles size={13} className="text-[#15803D]" />
+                <Zap size={13} className="text-[#111312] fill-current" />
                 <span>+120 XP EARNED!</span>
               </motion.div>
             )}
