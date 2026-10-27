@@ -215,10 +215,10 @@ export async function storeOtp(identifier: string, code: string): Promise<void> 
       [identifier]
     );
 
-    // Insert new verification record with 0 attempts
+    // Insert new verification record with 0 attempts, setting email, sent_otp, and status atomically
     await query(
-      `INSERT INTO "verification" ("id", "identifier", "value", "expiresAt", "attempts", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, 0, $5, $5)`,
+      `INSERT INTO "verification" ("id", "identifier", "email", "value", "sent_otp", "status", "expiresAt", "attempts", "createdAt", "updatedAt")
+       VALUES ($1, $2, $2, $3, $3, 'Sent', $4, 0, $5, $5)`,
       [id, identifier, code, expiresAt, now]
     );
   } catch (err) {
@@ -297,7 +297,7 @@ export async function verifyOtp(
     };
   }
 
-  // 3. Check expiration (10 min TTL)
+  // 3. Check expiration (2 min TTL)
   if (activeExpiresAt < nowMs) {
     return {
       success: false,
