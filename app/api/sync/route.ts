@@ -83,21 +83,29 @@ export async function GET(req: NextRequest) {
         [planRow.id]
       );
 
-      const days = await Promise.all(
-        daysRes.rows.map(async (day: any) => {
-          const exercisesRes = await query(
-            `SELECT "id", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec"
-             FROM "plan_exercises"
-             WHERE "planDayId" = $1
-             ORDER BY "orderIndex" ASC`,
-            [day.id]
-          );
-          return {
-            ...day,
-            exercises: exercisesRes.rows,
-          };
-        })
-      );
+      const dayIds = daysRes.rows.map((d: any) => d.id);
+      let exercisesByDayId: Record<string, any[]> = {};
+
+      if (dayIds.length > 0) {
+        const exercisesRes = await query(
+          `SELECT "id", "planDayId", "name", "targetType", "sets", "reps", "durationSeconds", "distanceKm", "restIntervalSec"
+           FROM "plan_exercises"
+           WHERE "planDayId" = ANY($1::text[])
+           ORDER BY "orderIndex" ASC`,
+          [dayIds]
+        );
+
+        exercisesByDayId = exercisesRes.rows.reduce((acc: any, ex: any) => {
+          if (!acc[ex.planDayId]) acc[ex.planDayId] = [];
+          acc[ex.planDayId].push(ex);
+          return acc;
+        }, {});
+      }
+
+      const days = daysRes.rows.map((day: any) => ({
+        ...day,
+        exercises: exercisesByDayId[day.id] || [],
+      }));
 
       currentWeeklyPlan = {
         ...planRow,
