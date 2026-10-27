@@ -194,7 +194,7 @@ export function WeeklyPlannerView() {
   // Open editor for a day
   const handleStartEditDay = (day: DayWorkoutPlan) => {
     setEditingDayKey(day.dayKey);
-    setDraftDay(JSON.parse(JSON.stringify(day)));
+    setDraftDay(typeof structuredClone === 'function' ? structuredClone(day) : JSON.parse(JSON.stringify(day)));
   };
 
   // Add a new exercise to draft
