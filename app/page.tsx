@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFitFlow } from '@/context/FitFlowContext';
 import { PhoneSimulator } from '@/components/PhoneSimulator';
 import { BottomNav } from '@/components/BottomNav';
@@ -14,7 +14,6 @@ import { SetNameView } from '@/components/screens/SetNameView';
 import { WelcomeView } from '@/components/screens/WelcomeView';
 import { PrivacyPolicyView } from '@/components/screens/PrivacyPolicyView';
 import { TermsView } from '@/components/screens/TermsView';
-import { NotificationsView } from '@/components/screens/NotificationsView';
 import { HelpCenterView } from '@/components/screens/HelpCenterView';
 import { WeeklyPlannerView } from '@/components/screens/WeeklyPlannerView';
 import { DisclaimerView } from '@/components/screens/DisclaimerView';
@@ -22,10 +21,22 @@ import { AccessibilityStatementView } from '@/components/screens/AccessibilitySt
 import { BannedAccountView } from '@/components/screens/BannedAccountView';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
+import { RuangEditLandingPage } from '@/components/landing/RuangEditLandingPage';
 
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
+  const [viewMode, setViewMode] = useState<'landing' | 'app'>('landing');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('app') === 'true' || window.location.pathname.startsWith('/app')) {
+        setViewMode('app');
+      }
+    }
+  }, []);
+
   const {
     activeTab,
     showOnboarding,
@@ -46,6 +57,19 @@ export default function App() {
     dismissBannedAndLogout,
     user,
   } = useFitFlow();
+
+  if (viewMode === 'landing') {
+    return (
+      <RuangEditLandingPage
+        onLaunchApp={() => {
+          setViewMode('app');
+          if (typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+      />
+    );
+  }
 
   const renderActiveScreen = () => {
     if (!isHydrated) {
@@ -107,7 +131,20 @@ export default function App() {
     }
   };
 
-  const hideNav = isAccountBanned || showLogin || showOtp || showSetName || showOnboarding || showWelcome || showNotifications || showPrivacyPolicy || showTerms || showHelpCenter || showDisclaimer || showAccessibilityStatement;
+  const hideNav =
+    isAccountBanned ||
+    showLogin ||
+    showOtp ||
+    showSetName ||
+    showOnboarding ||
+    showWelcome ||
+    showNotifications ||
+    showPrivacyPolicy ||
+    showTerms ||
+    showHelpCenter ||
+    showDisclaimer ||
+    showAccessibilityStatement;
+
   const currentScreenKey = isAccountBanned
     ? 'banned'
     : showLogin
@@ -135,46 +172,116 @@ export default function App() {
     : activeTab;
 
   return (
-    <PhoneSimulator
-      bottomNav={!hideNav ? <BottomNav /> : null}
-      topToast={
-        <AnimatePresence>
-          {toastMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: -24, scale: 0.92 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -24, scale: 0.92 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-              onClick={dismissToast}
-              role="status"
-              aria-live="polite"
-              className="absolute top-3.5 left-1/2 -translate-x-1/2 z-50 bg-[#111312] text-white px-3.5 py-2 rounded-full text-xs font-semibold shadow-[0_16px_36px_rgba(0,0,0,0.45)] flex items-center gap-2.5 border border-white/20 cursor-pointer w-auto max-w-[calc(100%-48px)] select-none overflow-hidden"
-            >
-              {/* Handcrafted Vector Activity Rings */}
-              <div className="w-5 h-5 shrink-0 relative flex items-center justify-center" aria-hidden="true">
-                <svg viewBox="0 0 28 28" className="w-5 h-5 -rotate-90 transform">
-                  <circle cx="14" cy="14" r="11" fill="none" stroke="#371018" strokeWidth="2.5" />
-                  <circle cx="14" cy="14" r="11" fill="none" stroke="#FA114F" strokeWidth="2.5" strokeDasharray="69.1" strokeDashoffset="18" strokeLinecap="round" />
-                  <circle cx="14" cy="14" r="7.5" fill="none" stroke="#182E06" strokeWidth="2.5" />
-                  <circle cx="14" cy="14" r="7.5" fill="none" stroke="#B8F45A" strokeWidth="2.5" strokeDasharray="47.1" strokeDashoffset="12" strokeLinecap="round" />
-                  <circle cx="14" cy="14" r="4" fill="none" stroke="#062230" strokeWidth="2.2" />
-                  <circle cx="14" cy="14" r="4" fill="none" stroke="#00E5FF" strokeWidth="2.2" strokeDasharray="25.1" strokeDashoffset="7" strokeLinecap="round" />
-                </svg>
-              </div>
-              <span className="truncate min-w-0 flex-1 leading-tight">{toastMessage}</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      }
-    >
-      {/* Main Content View (Zero extra trailing space) */}
-      <div className="flex-1 w-full flex flex-col pb-0 relative">
-        <div key={currentScreenKey} className="flex-1 w-full flex flex-col">
-          <ErrorBoundary>
-            {renderActiveScreen()}
-          </ErrorBoundary>
-        </div>
+    <div className="relative min-h-screen bg-[#0f1011]">
+      {/* Sleek Floating Switch to Return to Landing Page */}
+      <div className="fixed top-4 left-4 z-50">
+        <button
+          onClick={() => setViewMode('landing')}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1c1b1f]/90 hover:bg-[#271138] text-white border border-white/20 shadow-xl text-xs font-semibold backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Back to Landing Page</span>
+        </button>
       </div>
-    </PhoneSimulator>
+
+      <PhoneSimulator
+        bottomNav={!hideNav ? <BottomNav /> : null}
+        topToast={
+          <AnimatePresence>
+            {toastMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -24, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -24, scale: 0.92 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                onClick={dismissToast}
+                role="status"
+                aria-live="polite"
+                className="absolute top-3.5 left-1/2 -translate-x-1/2 z-50 bg-[#111312] text-white px-3.5 py-2 rounded-full text-xs font-semibold shadow-[0_16px_36px_rgba(0,0,0,0.45)] flex items-center gap-2.5 border border-white/20 cursor-pointer w-auto max-w-[calc(100%-48px)] select-none overflow-hidden"
+              >
+                {/* Handcrafted Vector Activity Rings */}
+                <div
+                  className="w-5 h-5 shrink-0 relative flex items-center justify-center"
+                  aria-hidden="true"
+                >
+                  <svg
+                    viewBox="0 0 28 28"
+                    className="w-5 h-5 -rotate-90 transform"
+                  >
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="11"
+                      fill="none"
+                      stroke="#371018"
+                      strokeWidth="2.5"
+                    />
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="11"
+                      fill="none"
+                      stroke="#FA114F"
+                      strokeWidth="2.5"
+                      strokeDasharray="69.1"
+                      strokeDashoffset="18"
+                      strokeLinecap="round"
+                    />
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="7.5"
+                      fill="none"
+                      stroke="#182E06"
+                      strokeWidth="2.5"
+                    />
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="7.5"
+                      fill="none"
+                      stroke="#B8F45A"
+                      strokeWidth="2.5"
+                      strokeDasharray="47.1"
+                      strokeDashoffset="12"
+                      strokeLinecap="round"
+                    />
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="4"
+                      fill="none"
+                      stroke="#062230"
+                      strokeWidth="2.2"
+                    />
+                    <circle
+                      cx="14"
+                      cy="14"
+                      r="4"
+                      fill="none"
+                      stroke="#00E5FF"
+                      strokeWidth="2.2"
+                      strokeDasharray="25.1"
+                      strokeDashoffset="7"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+                <span className="truncate min-w-0 flex-1 leading-tight">
+                  {toastMessage}
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        }
+      >
+        {/* Main Content View (Zero extra trailing space) */}
+        <div className="flex-1 w-full flex flex-col pb-0 relative">
+          <div key={currentScreenKey} className="flex-1 w-full flex flex-col">
+            <ErrorBoundary>{renderActiveScreen()}</ErrorBoundary>
+          </div>
+        </div>
+      </PhoneSimulator>
+    </div>
   );
 }
