@@ -1,0 +1,42 @@
+name: FitFlow CI/CD Release Pipeline
+
+on:
+  push:
+    branches: [ main, master, "jules-*" ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    name: Build, Audit & Test
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+      BETTER_AUTH_SECRET: ci-testing-secret-key-32-chars-at-least
+      BETTER_AUTH_URL: http://localhost:3000
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify TypeScript Types
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Full Test Suite
+        run: npm test
+
+      - name: Production Next.js Build
+        run: npm run build

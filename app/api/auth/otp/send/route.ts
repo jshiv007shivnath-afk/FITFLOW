@@ -78,20 +78,10 @@ export async function POST(req: NextRequest) {
     // 2. Generate Cryptographic 6-digit numeric OTP with 10-minute TTL
     const otp = generateCryptographicOtp();
 
-    // 3. Store OTP in DB & in-memory rate-limiter
+    // 3. Store OTP in DB & in-memory rate-limiter (atomically sets email, sent_otp, status='Sent')
     await storeOtp(email, otp);
 
-    // Update verification table with readable email, sent_otp, and status
-    try {
-      await query(
-        `UPDATE "verification" 
-         SET "email" = $1, "sent_otp" = $2, "status" = 'Sent', "updatedAt" = NOW() 
-         WHERE "identifier" = $1`,
-        [email, otp]
-      );
-    } catch {}
-
-    // 4. Send via Nodemailer (Local SMTP on 54325 or configured SMTP)
+    // 4. Send via Nodemailer / Resend
     const sendResult = await sendOtpEmail(email, otp);
 
     return NextResponse.json({
