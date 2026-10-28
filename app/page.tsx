@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useFitFlow } from '@/context/FitFlowContext';
 import { PhoneSimulator } from '@/components/PhoneSimulator';
 import { BottomNav } from '@/components/BottomNav';
@@ -22,13 +22,10 @@ import { AccessibilityStatementView } from '@/components/screens/AccessibilitySt
 import { BannedAccountView } from '@/components/screens/BannedAccountView';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
-import { FitFlowLandingPage } from '@/components/landing/FitFlowLandingPage';
 
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<'landing' | 'app'>('landing');
-
   const {
     activeTab,
     showOnboarding,
@@ -49,16 +46,6 @@ export default function App() {
     dismissBannedAndLogout,
     user,
   } = useFitFlow();
-
-  // Check URL query param ?app=true on mount to support direct links to full app
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('app') === 'true') {
-        setViewMode('app');
-      }
-    }
-  }, []);
 
   const renderActiveScreen = () => {
     if (!isHydrated) {
@@ -120,20 +107,7 @@ export default function App() {
     }
   };
 
-  const hideNav =
-    isAccountBanned ||
-    showLogin ||
-    showOtp ||
-    showSetName ||
-    showOnboarding ||
-    showWelcome ||
-    showNotifications ||
-    showPrivacyPolicy ||
-    showTerms ||
-    showHelpCenter ||
-    showDisclaimer ||
-    showAccessibilityStatement;
-
+  const hideNav = isAccountBanned || showLogin || showOtp || showSetName || showOnboarding || showWelcome || showNotifications || showPrivacyPolicy || showTerms || showHelpCenter || showDisclaimer || showAccessibilityStatement;
   const currentScreenKey = isAccountBanned
     ? 'banned'
     : showLogin
@@ -160,11 +134,8 @@ export default function App() {
     ? 'accessibility'
     : activeTab;
 
-  const renderAppSimulator = (embedded: boolean) => (
+  return (
     <PhoneSimulator
-      embedded={embedded}
-      onExpand={() => setViewMode('app')}
-      onBackToLanding={() => setViewMode('landing')}
       bottomNav={!hideNav ? <BottomNav /> : null}
       topToast={
         <AnimatePresence>
@@ -196,7 +167,7 @@ export default function App() {
         </AnimatePresence>
       }
     >
-      {/* Main Content View */}
+      {/* Main Content View (Zero extra trailing space) */}
       <div className="flex-1 w-full flex flex-col pb-0 relative">
         <div key={currentScreenKey} className="flex-1 w-full flex flex-col">
           <ErrorBoundary>
@@ -205,17 +176,5 @@ export default function App() {
         </div>
       </div>
     </PhoneSimulator>
-  );
-
-  // Standalone App View
-  if (viewMode === 'app') {
-    return renderAppSimulator(false);
-  }
-
-  // Marketing Landing Page with Live Embedded App
-  return (
-    <FitFlowLandingPage onLaunchApp={() => setViewMode('app')}>
-      {renderAppSimulator(true)}
-    </FitFlowLandingPage>
   );
 }
