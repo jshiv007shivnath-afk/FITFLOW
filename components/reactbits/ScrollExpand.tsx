@@ -1,13 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import './ScrollExpand.css';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export interface ScrollExpandProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -16,260 +11,186 @@ export interface ScrollExpandProps extends React.HTMLAttributes<HTMLDivElement> 
   alt?: string;
   title?: string;
   scrollHint?: string;
-  startRadius?: number;
-  endRadius?: number;
-  mediaZoom?: number;
-  overlayScrim?: number;
+  startWidth?: number; // e.g. 42 (vw)
+  startHeight?: number; // e.g. 56 (vh)
+  startRadius?: number; // e.g. 28 (px)
+  endRadius?: number; // e.g. 0 (px)
+  mediaZoom?: number; // e.g. 1.2
+  overlayScrim?: number; // e.g. 0.4
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
 
-const ScrollExpand: React.FC<ScrollExpandProps> = ({
+export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   src = '/runner_hero.jpg',
   mediaType = 'image',
   poster = '',
   alt = 'FitFlow Athletic Runner',
   title = 'Track Every Motion',
-  scrollHint = 'Scroll',
+  scrollHint = 'SCROLL',
+  startWidth = 42,
+  startHeight = 56,
   startRadius = 28,
   endRadius = 0,
-  mediaZoom = 1.22,
-  overlayScrim = 0.52,
+  mediaZoom = 1.2,
+  overlayScrim = 0.4,
   children,
   className = '',
   style,
   ...rest
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
-  const mediaRef = useRef<HTMLElement | null>(null);
-  const scrimRef = useRef<HTMLDivElement>(null);
-  const titleWrapperRef = useRef<HTMLDivElement>(null);
-  const hintRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    const container = containerRef.current;
-    const stage = stageRef.current;
-    const frame = frameRef.current;
-    const media = mediaRef.current;
-    const scrim = scrimRef.current;
-    const titleWrapper = titleWrapperRef.current;
-    const hint = hintRef.current;
-    const overlay = overlayRef.current;
+  // 1. Track scroll progress (0 to 1) of the 300vh outer track container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  });
 
-    if (!container || !stage || !frame || !media) return;
+  // 2. Eliminate scroll wheel step-jumping via useSpring
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 25,
+    mass: 0.5,
+  });
 
-    const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
+  // 3. Map progress [0.05, 0.75] to video container dimensions (Centered Symmetrical Expansion)
+  const initialWidth = isMobile ? '88vw' : `${startWidth}vw`;
+  const width = useTransform(smoothProgress, [0.05, 0.75], [initialWidth, '100vw']);
+  const height = useTransform(smoothProgress, [0.05, 0.75], [`${startHeight}vh`, '100vh']);
+  const borderRadius = useTransform(smoothProgress, [0.05, 0.75], [`${startRadius}px`, `${endRadius}px`]);
 
-      // 1. Accessibility: Respect prefers-reduced-motion
-      mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.set(frame, { clipPath: `inset(0% 0% 0% 0% round ${endRadius}px)` });
-        gsap.set(media, { scale: 1 });
-        if (scrim) gsap.set(scrim, { opacity: overlayScrim });
-        if (titleWrapper) gsap.set(titleWrapper, { opacity: 0, display: 'none' });
-        if (overlay) gsap.set(overlay, { opacity: 1, y: 0 });
-      });
+  // Parallax subtle counter-zoom on media
+  const mediaScale = useTransform(smoothProgress, [0.05, 0.75], [mediaZoom, 1]);
 
-      // 2. Desktop: Centered card (~38vw × 56vh) expands to cinematic full screen
-      mm.add('(min-width: 769px) and (prefers-reduced-motion: no-preference)', () => {
-        const startClip = `inset(22% 31% 22% 31% round ${startRadius}px)`;
-        const endClip = `inset(0% 0% 0% 0% round ${endRadius}px)`;
+  // Contrast overlay (bg-black/30 - bg-black/40) fades in between [0.5, 0.75]
+  const scrimOpacity = useTransform(smoothProgress, [0.5, 0.75], [0, overlayScrim]);
 
-        // Initial setup
-        gsap.set(frame, { clipPath: startClip });
-        gsap.set(media, { scale: mediaZoom });
-        if (scrim) gsap.set(scrim, { opacity: 0.15 });
-        if (titleWrapper) gsap.set(titleWrapper, { opacity: 1, scale: 1, y: 0 });
-        if (hint) gsap.set(hint, { opacity: 1, y: 0 });
-        if (overlay) gsap.set(overlay, { opacity: 0, y: 32 });
+  // 4. Two-Stage Content Crossfade Choreography
+  // Stage 1 Overlay ("Track Every Motion" + "SCROLL ↓" badge): [0, 0.28]
+  const stage1Opacity = useTransform(smoothProgress, [0, 0.28], [1, 0]);
+  const stage1Scale = useTransform(smoothProgress, [0, 0.28], [1, 0.92]);
+  const stage1Y = useTransform(smoothProgress, [0, 0.28], [0, -20]);
+  const stage1PointerEvents = useTransform(smoothProgress, (p) => (p > 0.28 ? 'none' : 'auto'));
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: container,
-            start: 'top top',
-            end: '+=140%',
-            pin: true,
-            scrub: 0.8,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // Cue fades out quickly as scroll begins
-        if (hint) {
-          tl.to(hint, { opacity: 0, y: 14, duration: 0.14, ease: 'power1.out' }, 0);
-        }
-
-        // Title smoothly elevates, subtly scales and dissolves
-        if (titleWrapper) {
-          tl.to(
-            titleWrapper,
-            { opacity: 0, y: -28, scale: 1.05, duration: 0.35, ease: 'power1.out' },
-            0.05
-          );
-        }
-
-        // Frame expands smoothly from 28px rounded card to full bleed
-        tl.to(
-          frame,
-          { clipPath: endClip, duration: 0.75, ease: 'power1.inOut' },
-          0
-        );
-
-        // Counter-zoom on media for depth & cinematic parallax
-        tl.to(
-          media,
-          { scale: 1.0, duration: 0.75, ease: 'power1.out' },
-          0
-        );
-
-        // Scrim transition for legibility
-        if (scrim) {
-          tl.to(scrim, { opacity: overlayScrim, duration: 0.55, ease: 'power1.inOut' }, 0.2);
-        }
-
-        // Overlay content reveals softly over expanded visual
-        if (overlay) {
-          tl.to(
-            overlay,
-            { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
-            0.55
-          );
-        }
-
-        // Controlled hold buffer before smooth exit into next section
-        tl.to({}, { duration: 0.2 });
-      });
-
-      // 3. Tablet & Mobile: Proportional card (~80vw × 52vh)
-      mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
-        const mobileStartRadius = Math.min(startRadius, 24);
-        const startClip = `inset(24% 10% 24% 10% round ${mobileStartRadius}px)`;
-        const endClip = `inset(0% 0% 0% 0% round ${endRadius}px)`;
-
-        // Initial setup
-        gsap.set(frame, { clipPath: startClip });
-        gsap.set(media, { scale: Math.min(mediaZoom, 1.18) });
-        if (scrim) gsap.set(scrim, { opacity: 0.15 });
-        if (titleWrapper) gsap.set(titleWrapper, { opacity: 1, scale: 1, y: 0 });
-        if (hint) gsap.set(hint, { opacity: 1, y: 0 });
-        if (overlay) gsap.set(overlay, { opacity: 0, y: 24 });
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: container,
-            start: 'top top',
-            end: '+=120%',
-            pin: true,
-            scrub: 0.8,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        if (hint) {
-          tl.to(hint, { opacity: 0, y: 10, duration: 0.14, ease: 'power1.out' }, 0);
-        }
-
-        if (titleWrapper) {
-          tl.to(
-            titleWrapper,
-            { opacity: 0, y: -22, scale: 1.04, duration: 0.35, ease: 'power1.out' },
-            0.05
-          );
-        }
-
-        tl.to(
-          frame,
-          { clipPath: endClip, duration: 0.75, ease: 'power1.inOut' },
-          0
-        );
-
-        tl.to(
-          media,
-          { scale: 1.0, duration: 0.75, ease: 'power1.out' },
-          0
-        );
-
-        if (scrim) {
-          tl.to(scrim, { opacity: overlayScrim, duration: 0.55, ease: 'power1.inOut' }, 0.2);
-        }
-
-        if (overlay) {
-          tl.to(
-            overlay,
-            { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
-            0.55
-          );
-        }
-
-        tl.to({}, { duration: 0.2 });
-      });
-    }, container);
-
-    return () => ctx.revert();
-  }, [endRadius, mediaZoom, overlayScrim, startRadius]);
-
-  const mediaElement =
-    mediaType === 'video' ? (
-      <video
-        ref={(el) => {
-          mediaRef.current = el;
-        }}
-        className="scroll-expand-media"
-        src={src}
-        poster={poster}
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
-    ) : (
-      <img
-        ref={(el) => {
-          mediaRef.current = el;
-        }}
-        className="scroll-expand-media"
-        src={src}
-        alt={alt}
-        draggable={false}
-      />
-    );
+  // Stage 2 Overlay ("SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA): [0.65, 0.88]
+  // Holds fully expanded state from 0.88 to 1.0 before unpinning
+  const stage2Opacity = useTransform(smoothProgress, [0.65, 0.88], [0, 1]);
+  const stage2Y = useTransform(smoothProgress, [0.65, 0.88], [35, 0]);
+  const stage2Scale = useTransform(smoothProgress, [0.65, 0.88], [0.96, 1]);
+  const stage2PointerEvents = useTransform(smoothProgress, (p) => (p >= 0.65 ? 'auto' : 'none'));
 
   return (
     <div
       ref={containerRef}
-      className={`scroll-expand-container ${className}`.trim()}
+      className={`relative w-full h-[300vh] bg-black ${className}`.trim()}
       style={style}
       {...rest}
     >
-      <div ref={stageRef} className="scroll-expand-stage">
-        <div ref={frameRef} className="scroll-expand-frame">
-          {mediaElement}
-          <div ref={scrimRef} className="scroll-expand-scrim" />
-          {children && (
-            <div ref={overlayRef} className="scroll-expand-overlay">
-              {children}
-            </div>
+      {/* Viewport Wrapper: Sticky 100vh, perfectly centered */}
+      <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center overflow-hidden">
+        {/* Centered Expanding Video / Media Container */}
+        <motion.div
+          style={{
+            width,
+            height,
+            borderRadius,
+          }}
+          className="relative overflow-hidden flex items-center justify-center shadow-2xl bg-[#0b0c0b] will-change-[width,height,border-radius]"
+        >
+          {/* Inner Media Element */}
+          {mediaType === 'video' ? (
+            <motion.video
+              style={{ scale: mediaScale }}
+              className="w-full h-full object-cover will-change-transform select-none"
+              src={src}
+              poster={poster}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <motion.img
+              style={{ scale: mediaScale }}
+              className="w-full h-full object-cover object-[center_32%] will-change-transform select-none"
+              src={src}
+              alt={alt}
+              draggable={false}
+            />
           )}
-        </div>
 
-        {/* Centered responsive title and scroll cue */}
-        <div ref={titleWrapperRef} className="scroll-expand-title-wrapper">
-          {title && <h2 className="scroll-expand-title">{title}</h2>}
-          {scrollHint && (
-            <div ref={hintRef} className="scroll-expand-hint">
-              <span>{scrollHint}</span>
-              <span className="material-symbols-outlined text-[15px]">south</span>
-            </div>
-          )}
-        </div>
+          {/* Contrast Scrim Overlay (Fades in [0.5, 0.75]) */}
+          <motion.div
+            style={{ opacity: scrimOpacity }}
+            className="absolute inset-0 bg-black/40 pointer-events-none"
+          />
+
+          {/* Stage 1 Overlay: "Track Every Motion" + "SCROLL ↓" badge */}
+          <motion.div
+            style={{
+              opacity: stage1Opacity,
+              scale: stage1Scale,
+              y: stage1Y,
+              pointerEvents: stage1PointerEvents,
+            }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-4"
+          >
+            <h2 className="font-['Manrope'] text-[32px] sm:text-[48px] md:text-[62px] font-extrabold text-white tracking-tight leading-none drop-shadow-2xl max-w-2xl">
+              {title}
+            </h2>
+            {scrollHint && (
+              <div className="mt-5 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white/90 text-xs font-bold uppercase tracking-widest shadow-md flex items-center gap-1.5">
+                <span>{scrollHint}</span>
+                <span className="text-sm font-black">↓</span>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Stage 2 Overlay: "SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA */}
+          <motion.div
+            style={{
+              opacity: stage2Opacity,
+              y: stage2Y,
+              scale: stage2Scale,
+              pointerEvents: stage2PointerEvents,
+            }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
+          >
+            {children ? (
+              children
+            ) : (
+              <div className="max-w-xl text-white px-4 flex flex-col items-center">
+                <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
+                  Smart Fitness Engine
+                </span>
+                <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3">
+                  Every Rep, Every Milestone
+                </h2>
+                <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
+                  FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
+                </p>
+                <button
+                  type="button"
+                  className="px-7 py-3 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-[14px] hover:scale-105 active:scale-95 transition-transform shadow-lg cursor-pointer"
+                >
+                  Explore Services & Tracks ↗
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

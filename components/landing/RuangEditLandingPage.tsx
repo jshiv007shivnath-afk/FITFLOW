@@ -344,24 +344,26 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               </div>
 
               {/* ========================================================= */}
-              {/* CINEMATIC GSAP SCROLLEXPAND SECTION                       */}
+              {/* SCROLL-EXPAND VIDEO / MEDIA SECTION                       */}
               {/* ========================================================= */}
-              <section className="w-full relative my-8 md:my-16" id="section-scroll-expand">
+              <section className="w-full relative" id="section-scroll-expand">
                 <ScrollExpand
                   src="/runner_hero.jpg"
                   alt="FitFlow Athletic Runner"
                   title="Track Every Motion"
-                  scrollHint="Scroll"
+                  scrollHint="SCROLL"
+                  startWidth={42}
+                  startHeight={56}
                   startRadius={28}
                   endRadius={0}
-                  mediaZoom={1.22}
-                  overlayScrim={0.52}
+                  mediaZoom={1.2}
+                  overlayScrim={0.4}
                 >
                   <div className="max-w-xl text-white px-4 flex flex-col items-center">
                     <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
                       Smart Fitness Engine
                     </span>
-                    <h2 className="text-[28px] sm:text-[38px] font-bold text-white drop-shadow-md leading-tight mb-3">
+                    <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3">
                       Every Rep, Every Milestone
                     </h2>
                     <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
