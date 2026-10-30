@@ -11,14 +11,7 @@ interface RuangEditLandingPageProps {
 }
 
 export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps) {
-  const carouselRef = useRef<HTMLDivElement>(null);
   const [currentView, setCurrentView] = useState<'home' | 'services' | 'about'>('home');
-
-  const scrollCarousel = (offset: number) => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: offset, behavior: 'smooth' });
-    }
-  };
 
   const navigateTo = (view: 'home' | 'services' | 'about') => {
     setCurrentView(view);
@@ -162,29 +155,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 {/* ============================================== */}
                 {/* HERO SECTION (APPLE / LINEAR MINIMALIST UI)    */}
                 {/* ============================================== */}
-                <section className="w-full pt-12 pb-12 flex flex-col items-center relative">
-                  {/* Centered Version Pill Badge with Pulsing Emerald Status Dot */}
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="flex items-center justify-center mb-6"
-                  >
-                    <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-neutral-100/90 hover:bg-neutral-100 border border-neutral-200/70 rounded-full shadow-xs transition-colors backdrop-blur-xs select-none">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                      </span>
-                      <span className="text-[12px] font-semibold text-neutral-800 tracking-tight">
-                        FitFlow 1.0.0
-                      </span>
-                      <span className="text-neutral-300 text-[11px]">|</span>
-                      <span className="text-[12px] font-medium text-neutral-500 font-mono">
-                        2026.04
-                      </span>
-                    </div>
-                  </motion.div>
-
+                <section className="w-full pt-20 sm:pt-28 md:pt-36 pb-16 sm:pb-20 md:pb-24 min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
                   <div className="relative w-full max-w-4xl text-center select-none z-10">
                     {/* Left Floating Frosted-Glass Widget (Tilted -3deg) */}
@@ -201,7 +172,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         x: { duration: 0.8, delay: 0.4 },
                         y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute -left-12 xl:-left-24 top-6 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-56 select-none pointer-events-none"
+                      className="hidden lg:flex items-center gap-3 absolute -left-12 xl:-left-24 top-10 xl:top-12 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-56 select-none pointer-events-none"
                     >
                       <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
                         <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
@@ -217,7 +188,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    {/* Right Floating Frosted-Glass Widget (Tilted 3deg) */}
+                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 3deg) */}
                     <motion.div
                       initial={{ opacity: 0, x: 20, rotate: 3 }}
                       animate={{
@@ -231,29 +202,33 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         x: { duration: 0.8, delay: 0.5 },
                         y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute -right-12 xl:-right-24 top-16 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-60 select-none pointer-events-none"
+                      className="hidden lg:flex items-center gap-3 absolute -right-12 xl:-right-24 top-10 xl:top-12 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-60 select-none pointer-events-none"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center shrink-0 text-rose-500 shadow-xs">
+                      <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
                         <motion.span
-                          animate={{ scale: [1, 1.18, 1] }}
-                          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-                          className="material-symbols-outlined text-[20px]"
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                          className="material-symbols-outlined text-[22px] text-amber-500"
                         >
-                          favorite
+                          local_fire_department
                         </motion.span>
                       </div>
                       <div className="flex-1 min-w-0 text-left">
-                        <div className="text-[11px] font-bold text-neutral-800 truncate mb-1">
-                          Zone 4 Cardio • <span className="text-rose-600 font-mono font-bold">142 BPM</span>
+                        <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1.5">
+                          <span className="truncate">Habit Streak</span>
+                          <span className="text-amber-600 font-mono font-bold">14 Days 🔥</span>
                         </div>
-                        <div className="flex items-end gap-1 h-3">
-                          {[40, 75, 100, 60, 90, 45, 80].map((h, i) => (
-                            <motion.span
-                              key={i}
-                              animate={{ height: [`${h * 0.4}%`, `${h}%`, `${h * 0.4}%`] }}
-                              transition={{ duration: 1.2 + (i % 3) * 0.3, repeat: Infinity, ease: 'easeInOut' }}
-                              className="w-1 rounded-full bg-rose-400"
-                              style={{ height: `${h}%` }}
+                        {/* Weekly Streak Activity Indicators */}
+                        <div className="flex items-center gap-1.5">
+                          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
+                            <div
+                              key={idx}
+                              className={`w-3.5 h-2 rounded-full transition-all ${
+                                idx <= 5
+                                  ? 'bg-amber-500 shadow-xs'
+                                  : 'bg-amber-200 animate-pulse'
+                              }`}
+                              title={`${day}: Active`}
                             />
                           ))}
                         </div>
@@ -459,219 +434,8 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 </ScrollExpand>
               </section>
 
-              {/* BOTTOM CONTAINER: CAROUSEL, FEATURES, COMMUNITY */}
+              {/* BOTTOM CONTAINER: COMMUNITY */}
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-                {/* ============================================== */}
-                {/* FEATURED ILLUSTRATION CAROUSEL                 */}
-                {/* ============================================== */}
-                <div className="w-full max-w-[1140px] mx-auto mt-6 mb-16 flex items-center justify-center gap-3 sm:gap-5 md:gap-7 relative px-2">
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.08 }}
-                    whileTap={{ scale: 0.92 }}
-                    onClick={() => scrollCarousel(-240)}
-                    aria-label="Previous illustrations"
-                    className="w-12 h-12 rounded-full bg-[#BDA5D0]/50 hover:bg-[#BDA5D0] active:bg-[#BDA5D0]/90 text-white flex items-center justify-center shadow-sm shrink-0 transition-colors cursor-pointer z-20"
-                  >
-                    <span className="material-symbols-outlined text-[22px]">arrow_back</span>
-                  </motion.button>
-
-                  <div
-                    ref={carouselRef}
-                    className="flex items-center gap-4 sm:gap-6 md:gap-7 overflow-x-auto scroll-smooth py-5 px-3 no-scrollbar"
-                  >
-                    {/* Tile 1 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#F078AD] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(240,120,173,0.22)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Daily Habit & Goal Tracking"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgjg8LI1bmMZDHiQYFD97qH4RbxRF07S3y1hEX2Vs4NwkYipvIKSXHN6p7uVE9qUK6vJu_psLkFlzu0IPiU6V56sTqpnjRkt7KDOCev4A9HLBRoXKs_WV5YFOnTFl_8ZV6j-PlHzbFtOSAScE2wpQ02dSYtXQs4O4S8-4GRCX4AggbMm6qcDLREhyuaFCiVL53hP0EXBCJvHbFsS9zNK2e24mxhClIzxRjYkrG4t6i"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Tile 2 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#BDA5D0] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(189,165,208,0.25)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Weekly Workout Planner"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiQH2kdhl9qctfUjdWYG_KPyNg80SkF4nawnR6N_TCcxiPcwtXdZZX7HjQSaksOdVVZ7NW1dpX2jinAzNt1TB9JDDVl8zTRKKv8GEtG98CJnPxWwgEsMK0Wl9AnYEdc2-O6K7w8wTLUqGSZwLZ-yaGcMnzG9miEM5FouFJCg6QpOe3uMhDAh8Sc73guTphPfNSzR5TcQgL7USGCXvnWPNwmT83d1tqPdpFuC7vBtNC"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Tile 3 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#7DD9E7] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(125,217,231,0.25)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Biometric Vitals & Hydration"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-b-73omA53MczqBA_-xr71eVKiybUY3B5FXaqtnrK9i8K9AUBZYEy8EgQgCpcIhchn5cg4SxR0coIslbKx32kVY-HL3jD4rwrzax-eviJB75bSScCW9lbVy5WoQzJhweGax6NOGPAanyEIdt3SWFFRIrDHLayXMXUmpQ3kId3-GjnytnoaRRZueTaPEAtJDylwdUUFESDyqDimoFcJji0KP6X7PFXpqbZp-iATmt3"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Tile 4 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#F7B653] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(247,182,83,0.25)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Step Streaks & Activity Rings"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoZScG9lAHG5P-vIrWJQLX8yqikSYLpJ5IXqS3pepz2TMDziYFkSLEFFkOnG754ADcZxm_8S-WuCOJSUuMlHD4M54nCwAAWbr9gitue5allATg--UcDZ-hfFkPQ8VBu3MhJ0uS2fmd59ET10hlU3LUqxoV2Cwext6G1jxIJajY0R5wnROmaa3qHJQ-1ES_hmh8OKJbTYwaHUGZ58KCPs8uABFik_0HA_GqCQCE0XeO"
-                        />
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.08 }}
-                    whileTap={{ scale: 0.92 }}
-                    onClick={() => scrollCarousel(240)}
-                    aria-label="Next illustrations"
-                    className="w-12 h-12 rounded-full bg-[#BDA5D0]/50 hover:bg-[#BDA5D0] active:bg-[#BDA5D0]/90 text-white flex items-center justify-center shadow-sm shrink-0 transition-colors cursor-pointer z-20"
-                  >
-                    <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
-                  </motion.button>
-                </div>
-
-                {/* ============================================== */}
-                {/* OUR FEATURE (CLASS) SECTION                     */}
-                {/* ============================================== */}
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.6 }}
-                  className="w-full bg-white rounded-[32px] p-6 sm:p-10 md:p-12 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] relative my-12"
-                  id="section-our-feature"
-                >
-                  <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                    <div>
-                      <h2 className="font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight">
-                        Our Features
-                      </h2>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[#57535A] text-[13px] sm:text-[14px] max-w-xs md:text-right leading-relaxed">
-                        These are some of the training modules built inside the Fitflow app
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* 3 Interactive Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 1 */}
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.25 }}
-                      onClick={() => navigateTo('services')}
-                      className="group rounded-[24px] border border-[#E7E2E8] bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-['Manrope'] text-[20px] font-bold text-[#1c1b1f]">
-                            Daily Workout Planner
-                          </h3>
-                          <div className="w-9 h-9 rounded-full bg-[#f2ecf3] group-hover:bg-[#ffbd5a] group-hover:text-[#291800] text-[#57535A] flex items-center justify-center transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">north_east</span>
-                          </div>
-                        </div>
-                        <p className="text-[#57535A] text-[14px] leading-relaxed mb-6">
-                          Schedule weekly routines, track sets and reps, and get customized rest interval timers.
-                        </p>
-                      </div>
-                      <div className="w-full h-44 rounded-2xl bg-[#f7f2f8] overflow-hidden flex items-center justify-center p-2">
-                        <img
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpXkauqOnkce4ydkMgJ4rS3FJcIM3feFvXy2X4zDfvhcVZQEjoUcn0tHU9ESNaJTieQVkO7rBRsfHGFtTkS6-81hRSkQc_j_7wd3B6tDSClDb0ebifx1fmuuL-DnSqh_M8Qu504Hu3t0kLlQ_1EiZidQWeCWvI5ff6cORBkcxITexor2hni23eU0rBn6PZkBH7nfSI0XcH9DOD-HtTkFQYVJXcaO3YISYP851ULD3R"
-                          alt="Daily Workout Planner"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Card 2: Featured Purple Card */}
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.25 }}
-                      onClick={() => navigateTo('services')}
-                      className="group rounded-[24px] bg-[#6a527c] text-white p-6 shadow-md hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-['Manrope'] text-[20px] font-bold text-white">
-                            Biometric Sync & Tracking
-                          </h3>
-                          <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#291800] flex items-center justify-center font-bold">
-                            <span className="material-symbols-outlined text-[16px]">north_east</span>
-                          </div>
-                        </div>
-                        <p className="text-[#f2daff] text-[14px] leading-relaxed mb-6">
-                          Sync steps, active calories, and heart rate seamlessly across web and mobile.
-                        </p>
-                      </div>
-                      <div className="w-full h-44 rounded-2xl bg-[#ffddb2]/20 overflow-hidden flex items-center justify-center p-2">
-                        <img
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jTd-hSlDD4SnXOkhA1efXEfSAWGxkHhdpNm-y0uEhguc1iQBWYXg_z7OfYNkkEOaGL6N8YnmE_uh2Gc3qrzuoBH3XQHoRLSLrV7AWO7S4ZS7qye8Gghzx-zrcrOobUsGI3VUyLAq-tBm7wXfPH0twuxKkVzvUeBE8Wn_QyecLorQZhEcB5T2m1onNii01IoLo3RO9Ous9pnXRT8-ev5-o8Q8avHNg4_vOUOr8W_B"
-                          alt="Biometric Sync"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Card 3 */}
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.25 }}
-                      onClick={() => navigateTo('services')}
-                      className="group rounded-[24px] border border-[#E7E2E8] bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-['Manrope'] text-[20px] font-bold text-[#1c1b1f]">
-                            Habit Streaks & Milestones
-                          </h3>
-                          <div className="w-9 h-9 rounded-full bg-[#f2ecf3] group-hover:bg-[#ffbd5a] group-hover:text-[#291800] text-[#57535A] flex items-center justify-center transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">north_east</span>
-                          </div>
-                        </div>
-                        <p className="text-[#57535A] text-[14px] leading-relaxed mb-6">
-                          Gain XP, level up your athlete profile, and build lifelong healthy exercise habits.
-                        </p>
-                      </div>
-                      <div className="w-full h-44 rounded-2xl bg-[#f7f2f8] overflow-hidden flex items-center justify-center p-2">
-                        <img
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAestJaDo2hR_ZmZWnEkGvSTm2dORgcb9bSRitjwE0hoXczGRBSXGvv13mxFxt7402Z4sYIHEHO3IhqUDy663zEcQmMIXxBXdo5UOSPlcWcXZCF1HVlD9p2_ewc8Hjpwy7M4SKSqyQ4YntAKscMhuK4gIZ5QIbXOOe6El9drDDwVPUqBDwz8pv6HKBJr96OhOVcML0cFsnWIemMpOZwq8aNI8tGQ_zxtT9Gh_lu4n0E"
-                          alt="Habit Streaks"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.section>
-
                 {/* ============================================== */}
                 {/* COMMUNITY SECTION                              */}
                 {/* ============================================== */}
