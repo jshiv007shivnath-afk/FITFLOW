@@ -360,3 +360,4 @@ export function AboutView({ onNavigateHome, onNavigateServices }: AboutViewProps
     </div>
   );
 }
+
