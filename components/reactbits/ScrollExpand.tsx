@@ -94,12 +94,15 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-[300vh] bg-black ${className}`.trim()}
+      className={`scroll-expand-container relative w-full h-[300vh] bg-black ${className}`.trim()}
       style={style}
       {...rest}
     >
       {/* Viewport Wrapper: Sticky 100vh, perfectly centered */}
-      <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center overflow-hidden">
+      <div
+        style={{ position: 'sticky', top: 0 }}
+        className="sticky top-0 left-0 w-full h-screen h-[100dvh] flex items-center justify-center overflow-hidden z-20"
+      >
         {/* Centered Expanding Video / Media Container */}
         <motion.div
           style={{

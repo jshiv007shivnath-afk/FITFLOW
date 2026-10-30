@@ -29,7 +29,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
   };
 
   return (
-    <div className="bg-white min-h-screen text-[#1c1b1f] antialiased font-['Manrope',sans-serif] selection:bg-[#ffbd5a] selection:text-[#291800] overflow-x-hidden">
+    <div className="bg-white min-h-screen text-[#1c1b1f] antialiased font-['Manrope',sans-serif] selection:bg-[#ffbd5a] selection:text-[#291800] overflow-x-clip">
       <div className="w-full bg-white flex flex-col">
         {/* ============================================== */}
         {/* HEADER WITH PILLNAV COMPONENT                  */}
