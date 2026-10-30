@@ -1,45 +1,46 @@
-.scroll-stack {
+.scroll-stack-container {
   position: relative;
   width: 100%;
+  margin: 0 auto;
 }
 
-.scroll-stack--contained {
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.scroll-stack__inner {
+.scroll-stack-track {
   position: relative;
-  padding-inline: clamp(1rem, 4%, 3rem);
-}
-
-.scroll-stack__slot {
-  position: sticky;
-}
-
-.scroll-stack-card {
-  position: relative;
-  box-sizing: border-box;
   width: 100%;
-  min-height: 16rem;
-  padding: 2rem;
-  border-radius: 28px;
-  background: #ffffff;
-  color: #1c1b1f;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 16px 36px -12px rgba(49, 37, 55, 0.15),
-    0 24px 48px -24px rgba(49, 37, 55, 0.18);
-  transform-origin: 50% 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  padding-bottom: 5rem;
+}
+
+.scroll-stack-slot {
+  width: 100%;
+  display: flex;
+  justify-content: center;
   will-change: transform;
 }
 
-.scroll-stack-card__shade {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: #000;
-  opacity: var(--scroll-stack-dim, 0);
-  pointer-events: none;
+.scroll-stack-motion-card {
+  width: 100%;
+  will-change: transform;
+  transition: box-shadow 0.3s ease;
+}
+
+.scroll-stack-card-inner {
+  width: 100%;
+  min-height: 280px;
+  border-radius: 28px;
+  padding: 2.25rem;
+  box-shadow: 0 12px 36px rgba(49, 37, 55, 0.08), 0 2px 8px rgba(49, 37, 55, 0.04);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .scroll-stack-card-inner {
+    padding: 1.5rem;
+    min-height: auto;
+    border-radius: 22px;
+  }
 }
