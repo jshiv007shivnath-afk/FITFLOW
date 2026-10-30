@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import PillNav from '@/components/reactbits/PillNav';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
 import { ServicesView } from '@/components/landing/ServicesView';
 import { AboutView } from '@/components/landing/AboutView';
@@ -32,47 +31,51 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
     <div className="bg-white min-h-screen text-[#1c1b1f] antialiased font-['Manrope',sans-serif] selection:bg-[#ffbd5a] selection:text-[#291800] overflow-x-clip">
       <div className="w-full bg-white flex flex-col">
         {/* ============================================== */}
-        {/* HEADER WITH PILLNAV COMPONENT                  */}
+        {/* HEADER WITH REFINED CAPSULE NAVBAR             */}
         {/* ============================================== */}
         <header className="w-full h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 lg:px-12">
           <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-4">
-            {/* React Bits PillNav Component */}
-            <div className="flex-1 flex items-center">
-              <PillNav
-                logo="/icon.png"
-                logoAlt="FitFlow Logo"
-                logoHref="#home"
-                items={[
-                  { label: 'Home', href: '#home' },
-                  { label: 'Services', href: '#services' },
-                  { label: 'About', href: '#about' },
-                ]}
-                activeHref={
-                  currentView === 'home'
-                    ? '#home'
-                    : currentView === 'services'
-                    ? '#services'
-                    : '#about'
-                }
-                theme="light"
-                layout="split"
-                size="md"
-                itemStyle="pill"
-                hoverEffect="fill"
-                indicator="dot"
-                highlightColor="#846a96"
-                highlightTextColor="#ffffff"
-                barColor="#ffffff"
-                textColor="#1c1b1f"
-                onItemClick={(item) => {
-                  if (item.href === '#home') navigateTo('home');
-                  else if (item.href === '#services') navigateTo('services');
-                  else if (item.href === '#about') navigateTo('about');
-                }}
-              />
+            {/* Left: Brand + Refined Pill Capsule */}
+            <div className="flex items-center gap-4 sm:gap-6">
+              <button
+                type="button"
+                onClick={() => navigateTo('home')}
+                className="flex items-center gap-2.5 group cursor-pointer"
+              >
+                <img
+                  src="/icon.png"
+                  alt="FitFlow Logo"
+                  className="w-8 h-8 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform"
+                />
+                <span className="font-['Manrope'] text-[18px] font-bold text-[#1c1b1f] tracking-tight">
+                  Fitflow app
+                </span>
+              </button>
+
+              {/* Single Outer Capsule for Nav */}
+              <nav className="hidden sm:inline-flex items-center bg-neutral-100/90 border border-neutral-200/60 p-1.5 rounded-full backdrop-blur-sm gap-1">
+                {(['home', 'services', 'about'] as const).map((view) => {
+                  const label = view.charAt(0).toUpperCase() + view.slice(1);
+                  const isActive = currentView === view;
+                  return (
+                    <button
+                      key={view}
+                      type="button"
+                      onClick={() => navigateTo(view)}
+                      className={`relative px-4 py-1.5 text-[13px] font-semibold transition-all duration-200 rounded-full cursor-pointer ${
+                        isActive
+                          ? 'bg-white text-neutral-900 shadow-sm'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </nav>
             </div>
 
-            {/* Right Action CTAs (Original layout preserved) */}
+            {/* Right Action CTAs */}
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <motion.button
                 type="button"
@@ -149,88 +152,114 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               transition={{ duration: 0.35 }}
               className="flex-1 w-full bg-white relative"
             >
-              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative" id="home">
-                {/* FLOATING DECORATIVE STARS */}
-                <motion.div
-                  aria-hidden="true"
-                  animate={{
-                    y: [0, -10, 0, 10, 0],
-                    rotate: [0, 90, 180, 270, 360],
-                    opacity: [0.65, 0.95, 0.7, 0.95, 0.65],
-                  }}
-                  transition={{
-                    duration: 4.8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="pointer-events-none absolute top-14 left-4 sm:left-8 md:left-14 text-[#846a96]/80 z-10 w-8 h-8 flex items-center justify-center"
-                >
-                  <svg fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
-                    <path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z" />
-                  </svg>
-                </motion.div>
+              {/* Subtle High-Craft Architectural Grid with Radial Mask */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,#000_70%,transparent_100%)] z-0"
+              />
 
-                <motion.div
-                  aria-hidden="true"
-                  animate={{
-                    y: [0, -12, 0, 12, 0],
-                    rotate: [0, -90, -180, -270, -360],
-                    opacity: [0.75, 1, 0.8, 1, 0.75],
-                  }}
-                  transition={{
-                    duration: 4.2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="pointer-events-none absolute top-16 right-16 sm:right-28 md:right-36 text-[#846a96] z-10 w-10 h-10 flex items-center justify-center"
-                >
-                  <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24">
-                    <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-                  </svg>
-                </motion.div>
-
-                <motion.div
-                  aria-hidden="true"
-                  animate={{
-                    y: [0, 10, 0, -10, 0],
-                    rotate: [0, 120, 240, 360],
-                    opacity: [0.6, 0.9, 0.65, 0.9, 0.6],
-                  }}
-                  transition={{
-                    duration: 5.0,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="pointer-events-none absolute top-48 right-6 sm:right-14 md:right-20 text-[#846a96]/75 z-10 w-9 h-9 flex items-center justify-center"
-                >
-                  <svg fill="currentColor" height="19" viewBox="0 0 24 24" width="19">
-                    <path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z" />
-                  </svg>
-                </motion.div>
-
+              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" id="home">
                 {/* ============================================== */}
-                {/* HERO SECTION (ORIGINAL LAYOUT RESTORED)         */}
+                {/* HERO SECTION (APPLE / LINEAR MINIMALIST UI)    */}
                 {/* ============================================== */}
-                <section className="w-full pt-10 pb-12 flex flex-col items-center relative overflow-hidden">
-                  {/* Top Right Version Pill Badge (1.0.0 Restored) */}
+                <section className="w-full pt-12 pb-12 flex flex-col items-center relative">
+                  {/* Centered Version Pill Badge with Pulsing Emerald Status Dot */}
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full flex justify-end mb-4 md:mb-6"
+                    className="flex items-center justify-center mb-6"
                   >
-                    <div className="inline-flex items-center gap-1.5 p-1 bg-[#f2ecf3] rounded-full shadow-sm">
-                      <span className="px-3.5 py-1 rounded-full bg-[#846a96] text-white text-[12px] font-semibold tracking-wide">
-                        Fitflow 1.0.0
+                    <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-neutral-100/90 hover:bg-neutral-100 border border-neutral-200/70 rounded-full shadow-xs transition-colors backdrop-blur-xs select-none">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                       </span>
-                      <span className="px-3 py-1 rounded-full bg-[#f2daff] text-[#543e63] text-[12px] font-semibold">
+                      <span className="text-[12px] font-semibold text-neutral-800 tracking-tight">
+                        FitFlow 1.0.0
+                      </span>
+                      <span className="text-neutral-300 text-[11px]">|</span>
+                      <span className="text-[12px] font-medium text-neutral-500 font-mono">
                         2026.04
                       </span>
                     </div>
                   </motion.div>
 
-                  {/* Centered Editorial Display Headline */}
-                  <div className="max-w-4xl text-center select-none relative z-10">
+                  {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
+                  <div className="relative w-full max-w-4xl text-center select-none z-10">
+                    {/* Left Floating Frosted-Glass Widget (Tilted -3deg) */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -20, rotate: -3 }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: [0, -6, 0],
+                        rotate: -3,
+                      }}
+                      transition={{
+                        opacity: { duration: 0.8, delay: 0.4 },
+                        x: { duration: 0.8, delay: 0.4 },
+                        y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+                      }}
+                      className="hidden lg:flex items-center gap-3 absolute -left-12 xl:-left-24 top-6 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-56 select-none pointer-events-none"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
+                        <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
+                      </div>
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1">
+                          <span className="truncate">Active Burn</span>
+                          <span className="text-orange-600 font-mono font-bold">640 kcal</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-orange-400 to-amber-500 rounded-full w-[78%]" />
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Right Floating Frosted-Glass Widget (Tilted 3deg) */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 20, rotate: 3 }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: [0, -7, 0],
+                        rotate: 3,
+                      }}
+                      transition={{
+                        opacity: { duration: 0.8, delay: 0.5 },
+                        x: { duration: 0.8, delay: 0.5 },
+                        y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 },
+                      }}
+                      className="hidden lg:flex items-center gap-3 absolute -right-12 xl:-right-24 top-16 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-60 select-none pointer-events-none"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center shrink-0 text-rose-500 shadow-xs">
+                        <motion.span
+                          animate={{ scale: [1, 1.18, 1] }}
+                          transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                          className="material-symbols-outlined text-[20px]"
+                        >
+                          favorite
+                        </motion.span>
+                      </div>
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="text-[11px] font-bold text-neutral-800 truncate mb-1">
+                          Zone 4 Cardio • <span className="text-rose-600 font-mono font-bold">142 BPM</span>
+                        </div>
+                        <div className="flex items-end gap-1 h-3">
+                          {[40, 75, 100, 60, 90, 45, 80].map((h, i) => (
+                            <motion.span
+                              key={i}
+                              animate={{ height: [`${h * 0.4}%`, `${h}%`, `${h * 0.4}%`] }}
+                              transition={{ duration: 1.2 + (i % 3) * 0.3, repeat: Infinity, ease: 'easeInOut' }}
+                              className="w-1 rounded-full bg-rose-400"
+                              style={{ height: `${h}%` }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+
                     <h1 className="font-['Manrope'] text-[38px] sm:text-[54px] lg:text-[72px] text-[#1c1b1f] tracking-tight font-bold leading-[1.08] mb-3 flex flex-col items-center">
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
@@ -249,28 +278,44 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       >
                         <span>Fitness</span>
 
-                        {/* Yellow Pill with Star (Enlarged to touch borders & shifted right per user request) */}
+                        {/* Interactive Orange Pill with Animated SVG ECG Heart-Rate Waveform & Inner Glow */}
                         <motion.span
                           initial={{ opacity: 0, scale: 0.88 }}
-                          animate={{
-                            opacity: 1,
-                            scale: [1, 1.025, 1],
-                          }}
-                          transition={{
-                            opacity: { duration: 0.7, delay: 0.28 },
-                            scale: { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
-                          }}
-                          className="relative inline-flex items-center justify-end w-24 sm:w-28 md:w-32 h-10 sm:h-12 md:h-14 rounded-full bg-[#ffbd5a] shadow-inner pr-1.5 sm:pr-2.5 overflow-hidden"
+                          animate={{ opacity: 1, scale: 1 }}
+                          whileHover={{ scale: 1.06 }}
+                          whileTap={{ scale: 0.95 }}
+                          transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
+                          className="relative inline-flex items-center justify-center w-24 sm:w-28 md:w-32 h-10 sm:h-12 md:h-14 rounded-full bg-gradient-to-r from-[#ffbe5b] via-[#ffa726] to-[#ff9800] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),_0_8px_24px_rgba(255,167,38,0.32)] px-3 overflow-hidden cursor-pointer group"
                         >
-                          <motion.svg
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
-                            className="text-white drop-shadow-sm h-[90%] w-auto max-h-full"
-                            fill="#FFFFFF"
-                            viewBox="0 0 24 24"
+                          <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
+                          <svg
+                            className="w-14 sm:w-16 h-7 text-white drop-shadow-sm"
+                            viewBox="0 0 64 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                           >
-                            <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-                          </motion.svg>
+                            <motion.path
+                              d="M2 12h12l3-7 5 14 5-11 4 7 3-3h18"
+                              initial={{ pathLength: 0.8, opacity: 0.9 }}
+                              animate={{
+                                pathLength: [0.6, 1, 0.6],
+                                opacity: [0.8, 1, 0.8],
+                              }}
+                              transition={{
+                                duration: 2.2,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                              }}
+                            />
+                          </svg>
+                          <motion.span
+                            animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
+                            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                            className="absolute right-2.5 top-2.5 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"
+                          />
                         </motion.span>
 
                         <span>with Our</span>
@@ -280,46 +325,78 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
-                        className="relative inline-flex items-center justify-center mt-2"
+                        className="relative inline-flex flex-col items-center justify-center mt-2"
                       >
-                        {/* Original Curved Orbit Loop Vector */}
-                        <motion.svg
-                          initial={{ opacity: 0, scale: 0.9, rotate: -4 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-                          className="absolute -left-12 sm:-left-20 -bottom-2 sm:-bottom-3 w-16 sm:w-24 md:w-28 h-auto text-[#846a96] pointer-events-none"
-                          fill="none"
-                          stroke="#846a96"
-                          strokeLinecap="round"
-                          strokeWidth="3.2"
-                          viewBox="0 0 110 52"
-                        >
-                          <path d="M102 38C75 48 18 52 8 36C-2 20 18 10 44 8C78 6 94 22 72 32C52 41 22 36 14 26" />
-                        </motion.svg>
                         <span className="relative z-10">FitFlow app</span>
+                        {/* Clean Animated SVG Underline beneath "FitFlow" */}
+                        <svg
+                          className="w-[115%] h-3 sm:h-4 text-[#846a96] -mt-1 sm:-mt-1.5 pointer-events-none overflow-visible"
+                          viewBox="0 0 240 16"
+                          fill="none"
+                        >
+                          <motion.path
+                            d="M4 11C54 4 154 3 236 10"
+                            stroke="#846a96"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                          />
+                        </svg>
                       </motion.span>
                     </h1>
                   </div>
 
-                  {/* Original Hero Underline Split Row: Metrics (Left) & Download CTA (Right) */}
+                  {/* Hero Social Proof Split Row: Stacked Avatars + Rating (Left) & Download CTA (Right) */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
-                    className="w-full max-w-[1080px] mt-10 md:mt-14 flex items-end justify-between px-2 sm:px-4"
+                    className="w-full max-w-[1080px] mt-10 md:mt-14 flex flex-col sm:flex-row sm:items-end justify-between gap-6 px-2 sm:px-4"
                   >
+                    {/* Human Social Proof Block */}
                     <div className="flex flex-col text-left">
-                      <span className="text-[12px] text-[#57535A] tracking-wider uppercase font-semibold">
-                        With more than
-                      </span>
-                      <span className="text-[24px] sm:text-[28px] font-bold text-[#1c1b1f] tracking-tight mt-0.5">
-                        2K + MEMBERS
-                      </span>
-                      <span className="text-[13px] font-semibold text-[#57535A]">
-                        500 + TUTORIALS
-                      </span>
+                      <div className="flex items-center gap-1.5 mb-2">
+                        <div className="flex text-amber-500 text-[14px] tracking-tight">
+                          <span>★</span>
+                          <span>★</span>
+                          <span>★</span>
+                          <span>★</span>
+                          <span>★</span>
+                        </div>
+                        <span className="text-[12px] font-bold text-[#1c1b1f] ml-1">4.9</span>
+                        <span className="text-[12px] text-[#57535A] font-medium">★ Rating (850+ reviews)</span>
+                      </div>
+
+                      <div className="flex items-center gap-3.5">
+                        <div className="flex -space-x-2.5 overflow-hidden py-0.5">
+                          {[
+                            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces',
+                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces',
+                            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces',
+                            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces',
+                          ].map((avatarUrl, i) => (
+                            <img
+                              key={i}
+                              src={avatarUrl}
+                              alt="Active Athlete Member"
+                              className="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                            />
+                          ))}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[18px] sm:text-[22px] font-bold text-[#1c1b1f] tracking-tight leading-none">
+                            2K+ MEMBERS
+                          </span>
+                          <span className="text-[12px] font-semibold text-[#57535A] mt-1">
+                            500+ Guided Fitness Tutorials
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
+                    {/* Download Button */}
                     <motion.button
                       type="button"
                       whileHover={{ scale: 1.04 }}
@@ -328,7 +405,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         const el = document.getElementById('section-scroll-expand');
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
+                      className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer self-start sm:self-auto"
                     >
                       <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
                         Download
