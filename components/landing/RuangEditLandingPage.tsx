@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import PillNav from '@/components/reactbits/PillNav';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
 import ScrollStack, { ScrollStackItem } from '@/components/reactbits/ScrollStack';
-import { useSlowScroll } from '@/components/landing/useSlowScroll';
 import { ServicesView } from '@/components/landing/ServicesView';
 import { AboutView } from '@/components/landing/AboutView';
 
@@ -14,12 +13,8 @@ interface RuangEditLandingPageProps {
 }
 
 export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps) {
-  // Activate luxury slow smooth momentum scroll
-  useSlowScroll(true);
-
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentView, setCurrentView] = useState<'home' | 'services' | 'about'>('home');
-  const [activeDot, setActiveDot] = useState(0);
 
   const scrollCarousel = (offset: number) => {
     if (carouselRef.current) {
@@ -78,23 +73,35 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               />
             </div>
 
-            {/* Right Action CTA (Clean Download Button, Removed user profile icon per user request) */}
-            <div className="flex items-center gap-3 shrink-0">
+            {/* Right Action CTAs (Original layout preserved) */}
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <motion.button
                 type="button"
-                whileHover={{ scale: 1.04 }}
+                whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => {
                   if (currentView !== 'home') navigateTo('home');
                   const el = document.getElementById('section-scroll-expand');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-2 h-[42px] px-5 sm:px-6 rounded-full bg-[#ffbd5a] hover:bg-[#fcba57] text-[#291800] text-[13px] font-bold transition-all shadow-sm cursor-pointer"
+                className="hidden sm:inline-flex items-center gap-2 h-[42px] px-5 rounded-full bg-[#FBFAFC] border border-[#E7E2E8] hover:border-[#B6A6BE] text-[#57535A] hover:text-[#1c1b1f] text-[13px] font-semibold transition-all group cursor-pointer shadow-sm"
               >
-                <span>Download</span>
-                <span className="material-symbols-outlined text-[17px] font-bold">
-                  download
+                <span>Download now</span>
+                <span className="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                  north_east
                 </span>
+              </motion.button>
+
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.94 }}
+                onClick={onLaunchApp}
+                title="Launch Fitflow App"
+                className="w-10 h-10 rounded-full bg-[#6a527c] text-white flex items-center justify-center shrink-0 cursor-pointer shadow-sm hover:bg-[#5a426c] transition-colors"
+                aria-label="User Profile"
+              >
+                <span className="material-symbols-outlined text-[18px]">person</span>
               </motion.button>
             </div>
           </div>
@@ -203,10 +210,27 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 </motion.div>
 
                 {/* ============================================== */}
-                {/* HERO SECTION                                   */}
+                {/* HERO SECTION (ORIGINAL LAYOUT RESTORED)         */}
                 {/* ============================================== */}
-                <section className="w-full pt-14 pb-12 flex flex-col items-center relative overflow-hidden">
-                  {/* Centered Editorial Display Headline with Reveal & Stagger */}
+                <section className="w-full pt-10 pb-12 flex flex-col items-center relative overflow-hidden">
+                  {/* Top Right Version Pill Badge (1.0.0 Restored) */}
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full flex justify-end mb-4 md:mb-6"
+                  >
+                    <div className="inline-flex items-center gap-1.5 p-1 bg-[#f2ecf3] rounded-full shadow-sm">
+                      <span className="px-3.5 py-1 rounded-full bg-[#846a96] text-white text-[12px] font-semibold tracking-wide">
+                        Fitflow 1.0.0
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-[#f2daff] text-[#543e63] text-[12px] font-semibold">
+                        2026.04
+                      </span>
+                    </div>
+                  </motion.div>
+
+                  {/* Centered Editorial Display Headline */}
                   <div className="max-w-4xl text-center select-none relative z-10">
                     <h1 className="font-['Manrope'] text-[38px] sm:text-[54px] lg:text-[72px] text-[#1c1b1f] tracking-tight font-bold leading-[1.08] mb-3 flex flex-col items-center">
                       <motion.span
@@ -259,52 +283,44 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
                         className="relative inline-flex items-center justify-center mt-2"
                       >
-                        {/* Curved Orbit Swoosh */}
+                        {/* Original Curved Orbit Loop Vector */}
                         <motion.svg
-                          initial={{ pathLength: 0, opacity: 0 }}
-                          animate={{ pathLength: 1, opacity: 1 }}
-                          transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.5 }}
-                          aria-hidden="true"
-                          className="absolute -bottom-3 sm:-bottom-4 -left-6 sm:-left-10 w-[120%] h-6 sm:h-9 text-[#846a96] pointer-events-none"
+                          initial={{ opacity: 0, scale: 0.9, rotate: -4 }}
+                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                          className="absolute -left-12 sm:-left-20 -bottom-2 sm:-bottom-3 w-16 sm:w-24 md:w-28 h-auto text-[#846a96] pointer-events-none"
                           fill="none"
-                          preserveAspectRatio="none"
-                          viewBox="0 0 320 20"
+                          stroke="#846a96"
+                          strokeLinecap="round"
+                          strokeWidth="3.2"
+                          viewBox="0 0 110 52"
                         >
-                          <path
-                            d="M3 14C80 2 240 -2 317 14"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeWidth="3.5"
-                          />
+                          <path d="M102 38C75 48 18 52 8 36C-2 20 18 10 44 8C78 6 94 22 72 32C52 41 22 36 14 26" />
                         </motion.svg>
-                        <span>FitFlow app</span>
+                        <span className="relative z-10">FitFlow app</span>
                       </motion.span>
                     </h1>
                   </div>
 
-                  {/* With More Than 2K Members Sub-Badge */}
+                  {/* Original Hero Underline Split Row: Metrics (Left) & Download CTA (Right) */}
                   <motion.div
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.45 }}
-                    className="mt-6 flex flex-col items-center text-center"
+                    transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
+                    className="w-full max-w-[1080px] mt-10 md:mt-14 flex items-end justify-between px-2 sm:px-4"
                   >
-                    <span className="text-[11px] sm:text-[12px] uppercase tracking-wider text-[#827B86] font-semibold">
-                      WITH MORE THAN
-                    </span>
-                    <span className="font-['Manrope'] text-[18px] sm:text-[20px] font-bold text-[#1c1b1f] tracking-tight">
-                      2K + ATHLETES
-                    </span>
-                    <span className="text-[12px] text-[#57535A]">500 + GUIDED WORKOUTS</span>
-                  </motion.div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-[12px] text-[#57535A] tracking-wider uppercase font-semibold">
+                        With more than
+                      </span>
+                      <span className="text-[24px] sm:text-[28px] font-bold text-[#1c1b1f] tracking-tight mt-0.5">
+                        2K + MEMBERS
+                      </span>
+                      <span className="text-[13px] font-semibold text-[#57535A]">
+                        500 + TUTORIALS
+                      </span>
+                    </div>
 
-                  {/* Primary Hero Action Button (Renamed from "Join us" to "Download" per user request) */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.52 }}
-                    className="mt-6 sm:mt-8 flex items-center justify-center"
-                  >
                     <motion.button
                       type="button"
                       whileHover={{ scale: 1.04 }}
@@ -315,7 +331,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       }}
                       className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
                     >
-                      <span className="text-[14px] text-[#1c1b1f] font-bold group-hover:text-[#6a527c] transition-colors tracking-wide">
+                      <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
                         Download
                       </span>
                       <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
@@ -333,16 +349,15 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 <section className="w-full my-8 md:my-14" id="section-scroll-expand">
                   <div className="w-full rounded-[32px] overflow-hidden border border-[#E7E2E8] shadow-[0_12px_36px_rgba(49,37,55,0.06)] bg-[#FBFAFC]">
                     <ScrollExpand
-                      src="/login_mascot_clean.jpg"
-                      alt="FitFlow Workout Showcase"
+                      src="/runner_hero.jpg"
+                      alt="FitFlow Athletic Runner"
                       title="Track Every Motion"
                       scrollHint="Scroll to expand experience"
-                      mediaZoom={1.3}
-                      startWidth={52}
-                      startHeight={64}
+                      mediaZoom={1.25}
+                      startWidth={58}
                       startRadius={28}
-                      endRadius={0}
-                      overlayScrim={0.6}
+                      endRadius={16}
+                      overlayScrim={0.55}
                     >
                       <div className="max-w-xl text-white px-4 flex flex-col items-center">
                         <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
@@ -578,7 +593,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 </motion.section>
 
                 {/* =================================================== */}
-                {/* REACT BITS <ScrollStack /> BELOW OUR FEATURE SECTION */}
+                {/* REACT BITS <ScrollStack /> WITH ATHLETIC IMAGERY    */}
                 {/* =================================================== */}
                 <section className="w-full py-12 md:py-16" id="section-scroll-stack">
                   <div className="w-full max-w-[1140px] mx-auto">
@@ -595,7 +610,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     </div>
 
                     <ScrollStack itemStackDistance={28} topOffset={110} scaleStep={0.035}>
-                      {/* Stack Card 1 */}
+                      {/* Stack Card 1: Athletic Runner in Golden Hour */}
                       <ScrollStackItem itemClassName="border border-[#E7E2E8] bg-white">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6 h-full">
                           <div className="max-w-md">
@@ -610,21 +625,17 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                               Customize exercises, sets, reps, and target weights with auto-advancing rest intervals and symmetric completion checkoffs.
                             </p>
                           </div>
-                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#f7f2f8] flex items-center justify-center p-3 overflow-hidden shadow-inner shrink-0">
+                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#f7f2f8] flex items-center justify-center p-2 overflow-hidden shadow-inner shrink-0">
                             <img
-                              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-pQ4sV7NZZ4nIqWjA1p8Jk_2eR8u8M5kS7wXy8Z1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f"
-                              alt="Structured Workout Splits"
+                              src="/runner_card1.jpg"
+                              alt="Outdoor Athletic Runner"
                               className="w-full h-full object-cover rounded-xl"
-                              onError={(e) => {
-                                e.currentTarget.src =
-                                  'https://lh3.googleusercontent.com/aida-public/AB6AXuCpXkauqOnkce4ydkMgJ4rS3FJcIM3feFvXy2X4zDfvhcVZQEjoUcn0tHU9ESNaJTieQVkO7rBRsfHGFtTkS6-81hRSkQc_j_7wd3B6tDSClDb0ebifx1fmuuL-DnSqh_M8Qu504Hu3t0kLlQ_1EiZidQWeCWvI5ff6cORBkcxITexor2hni23eU0rBn6PZkBH7nfSI0XcH9DOD-HtTkFQYVJXcaO3YISYP851ULD3R';
-                              }}
                             />
                           </div>
                         </div>
                       </ScrollStackItem>
 
-                      {/* Stack Card 2 */}
+                      {/* Stack Card 2: Trail Runner at Sunset */}
                       <ScrollStackItem itemClassName="bg-[#6a527c] text-white">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6 h-full">
                           <div className="max-w-md">
@@ -639,17 +650,17 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                               Seamless sensor integration tracks your active calories, steps, and water intake milestones in real-time.
                             </p>
                           </div>
-                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#ffddb2]/20 flex items-center justify-center p-3 overflow-hidden shadow-inner shrink-0">
+                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#ffddb2]/20 flex items-center justify-center p-2 overflow-hidden shadow-inner shrink-0">
                             <img
-                              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jTd-hSlDD4SnXOkhA1efXEfSAWGxkHhdpNm-y0uEhguc1iQBWYXg_z7OfYNkkEOaGL6N8YnmE_uh2Gc3qrzuoBH3XQHoRLSLrV7AWO7S4ZS7qye8Gghzx-zrcrOobUsGI3VUyLAq-tBm7wXfPH0twuxKkVzvUeBE8Wn_QyecLorQZhEcB5T2m1onNii01IoLo3RO9Ous9pnXRT8-ev5-o8Q8avHNg4_vOUOr8W_B"
-                              alt="Hydration and Biometric Sync"
+                              src="/runner_card2.jpg"
+                              alt="Hydration and Trail Running"
                               className="w-full h-full object-cover rounded-xl"
                             />
                           </div>
                         </div>
                       </ScrollStackItem>
 
-                      {/* Stack Card 3 */}
+                      {/* Stack Card 3: Track Finish Line Sprint */}
                       <ScrollStackItem itemClassName="border border-[#E7E2E8] bg-white">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6 h-full">
                           <div className="max-w-md">
@@ -664,10 +675,10 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                               Complete daily milestones to gain XP, level up your athlete profile, and build lifelong healthy exercise habits.
                             </p>
                           </div>
-                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#f7f2f8] flex items-center justify-center p-3 overflow-hidden shadow-inner shrink-0">
+                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#f7f2f8] flex items-center justify-center p-2 overflow-hidden shadow-inner shrink-0">
                             <img
-                              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAestJaDo2hR_ZmZWnEkGvSTm2dORgcb9bSRitjwE0hoXczGRBSXGvv13mxFxt7402Z4sYIHEHO3IhqUDy663zEcQmMIXxBXdo5UOSPlcWcXZCF1HVlD9p2_ewc8Hjpwy7M4SKSqyQ4YntAKscMhuK4gIZ5QIbXOOe6El9drDDwVPUqBDwz8pv6HKBJr96OhOVcML0cFsnWIemMpOZwq8aNI8tGQ_zxtT9Gh_lu4n0E"
-                              alt="Habit Streaks & Level XP"
+                              src="/runner_card3.jpg"
+                              alt="Track Sprint and Milestones"
                               className="w-full h-full object-cover rounded-xl"
                             />
                           </div>

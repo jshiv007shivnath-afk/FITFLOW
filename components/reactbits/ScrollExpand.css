@@ -1,100 +1,94 @@
-.scroll-expand-pin-container {
+.scroll-expand-fluid-container {
   position: relative;
   width: 100%;
-  height: 180vh;
-  margin: 0;
-  padding: 0;
-}
-
-.scroll-expand-sticky-stage {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: transparent;
-  pointer-events: auto;
+  padding: 1rem 0;
+  overflow: hidden;
 }
 
-.scroll-expand-frame {
+.scroll-expand-fluid-frame {
   position: relative;
+  height: 520px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
-  will-change: width, height, border-radius;
+  will-change: width, border-radius;
+  background-color: #111312;
 }
 
-.scroll-expand-media {
+@media (max-width: 640px) {
+  .scroll-expand-fluid-frame {
+    height: 420px;
+  }
+}
+
+.scroll-expand-fluid-media {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 35%;
   transform-origin: center center;
   will-change: transform;
   user-select: none;
   -webkit-user-drag: none;
 }
 
-.scroll-expand-scrim {
+.scroll-expand-fluid-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(17, 19, 18, 0.35) 0%,
-    rgba(17, 19, 18, 0.75) 100%
+    rgba(17, 19, 18, 0.25) 0%,
+    rgba(17, 19, 18, 0.65) 100%
   );
   z-index: 1;
 }
 
-.scroll-expand-title {
+.scroll-expand-fluid-title {
   position: absolute;
   z-index: 2;
   text-align: center;
   padding: 0 1.5rem;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.scroll-expand-title h2 {
+.scroll-expand-fluid-title h2 {
   font-family: 'Manrope', sans-serif;
-  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-size: clamp(1.8rem, 4.5vw, 3.5rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.1;
   color: #ffffff;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   margin: 0;
 }
 
-.scroll-expand-hint {
-  position: absolute;
-  bottom: 2rem;
-  z-index: 2;
-  text-align: center;
-  pointer-events: none;
-}
-
-.scroll-expand-hint span {
+.scroll-expand-fluid-title span {
   font-family: 'Manrope', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(8px);
-  padding: 0.4rem 1.2rem;
+  padding: 0.35rem 1rem;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.scroll-expand-overlay {
+.scroll-expand-fluid-overlay {
   position: relative;
   z-index: 3;
   width: 100%;

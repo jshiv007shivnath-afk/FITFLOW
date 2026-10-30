@@ -587,3 +587,4 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
     </div>
   );
 }
+
