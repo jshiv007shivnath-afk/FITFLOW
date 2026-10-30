@@ -158,7 +158,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 <section className="w-full pt-8 sm:pt-16 md:pt-28 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
                   <div className="relative w-full max-w-5xl text-center select-none z-10">
-                    {/* Left Floating Frosted-Glass Widget (Tilted -6deg, Shifted away from headline) */}
+                    {/* Left Floating Frosted-Glass Widget (Tilted -6deg, Positioned High & Wide to completely clear headline) */}
                     <motion.div
                       initial={{ opacity: 0, x: -20, rotate: -6 }}
                       animate={{
@@ -175,7 +175,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         scale: { duration: 0.2 },
                         rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-[30%] left-[4%] xl:left-[7%] -rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
+                      className="hidden lg:flex items-center gap-3 absolute top-2 xl:top-4 -left-6 xl:-left-20 2xl:-left-28 -rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
                     >
                       <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
                         <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
@@ -191,7 +191,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 6deg, Shifted away from headline) */}
+                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 6deg, Positioned High & Wide to completely clear headline) */}
                     <motion.div
                       initial={{ opacity: 0, x: 20, rotate: 6 }}
                       animate={{
@@ -208,7 +208,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         scale: { duration: 0.2 },
                         rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-[32%] right-[4%] xl:right-[7%] rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-60 select-none cursor-pointer transition-shadow"
+                      className="hidden lg:flex items-center gap-3 absolute top-4 xl:top-6 -right-6 xl:-right-20 2xl:-right-28 rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-60 select-none cursor-pointer transition-shadow"
                     >
                       <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
                         <motion.span
@@ -323,6 +323,82 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     >
                       Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
                     </motion.p>
+
+                    {/* Mobile/Tablet Floating Interactive Cards Row (Visible on < lg screens) */}
+                    <div className="flex lg:hidden items-center justify-center gap-3 mt-6 sm:mt-7 flex-wrap select-none px-2 z-20">
+                      {/* Left Floating Card: Active Burn */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{
+                          opacity: 1,
+                          y: [0, -5, 0],
+                        }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{
+                          opacity: { duration: 0.6, delay: 0.4 },
+                          y: { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
+                          scale: { duration: 0.2 },
+                        }}
+                        className="flex items-center gap-2.5 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 sm:p-3 w-[168px] sm:w-56 cursor-pointer"
+                      >
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
+                          <span className="material-symbols-outlined text-[18px] sm:text-[20px]">local_fire_department</span>
+                        </div>
+                        <div className="flex-1 min-w-0 text-left">
+                          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-neutral-800 mb-1">
+                            <span className="truncate">Active Burn</span>
+                            <span className="text-orange-600 font-mono font-bold">640 kcal</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-orange-400 to-amber-500 rounded-full w-[78%]" />
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Right Floating Card: Habit Streak */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{
+                          opacity: 1,
+                          y: [0, -6, 0],
+                        }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{
+                          opacity: { duration: 0.6, delay: 0.5 },
+                          y: { duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 },
+                          scale: { duration: 0.2 },
+                        }}
+                        className="flex items-center gap-2.5 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 sm:p-3 w-[184px] sm:w-60 cursor-pointer"
+                      >
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
+                          <motion.span
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                            className="material-symbols-outlined text-[18px] sm:text-[22px] text-amber-500"
+                          >
+                            local_fire_department
+                          </motion.span>
+                        </div>
+                        <div className="flex-1 min-w-0 text-left">
+                          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-neutral-800 mb-1.5">
+                            <span className="truncate">Habit Streak</span>
+                            <span className="text-amber-600 font-mono font-bold">14 Days 🔥</span>
+                          </div>
+                          {/* 7 Orange Streak Activity Indicators */}
+                          <div className="flex items-center gap-1">
+                            {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
+                              <div
+                                key={idx}
+                                className="w-2.5 sm:w-3.5 h-1.5 sm:h-2 rounded-full bg-orange-500 shadow-xs"
+                                title={`${day}: Active`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
                   </div>
 
                   {/* Hero Social Proof Split Row: Stacked Avatars + Rating (Left) & Download CTA (Right) */}
