@@ -158,21 +158,24 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 <section className="w-full pt-8 sm:pt-16 md:pt-28 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
                   <div className="relative w-full max-w-5xl text-center select-none z-10">
-                    {/* Left Floating Frosted-Glass Widget (Tilted -3deg) */}
+                    {/* Left Floating Frosted-Glass Widget (Tilted -6deg, Shifted away from headline) */}
                     <motion.div
-                      initial={{ opacity: 0, x: -20, rotate: -3 }}
+                      initial={{ opacity: 0, x: -20, rotate: -6 }}
                       animate={{
                         opacity: 1,
                         x: 0,
                         y: [0, -6, 0],
-                        rotate: -3,
+                        rotate: -6,
                       }}
+                      whileHover={{ scale: 1.04, rotate: 0 }}
                       transition={{
                         opacity: { duration: 0.8, delay: 0.4 },
                         x: { duration: 0.8, delay: 0.4 },
                         y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+                        scale: { duration: 0.2 },
+                        rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-[34%] left-[12%] -rotate-3 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-56 select-none pointer-events-none"
+                      className="hidden lg:flex items-center gap-3 absolute top-[30%] left-[4%] xl:left-[7%] -rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
                     >
                       <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
                         <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
@@ -188,21 +191,24 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 3deg) */}
+                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 6deg, Shifted away from headline) */}
                     <motion.div
-                      initial={{ opacity: 0, x: 20, rotate: 3 }}
+                      initial={{ opacity: 0, x: 20, rotate: 6 }}
                       animate={{
                         opacity: 1,
                         x: 0,
                         y: [0, -7, 0],
-                        rotate: 3,
+                        rotate: 6,
                       }}
+                      whileHover={{ scale: 1.04, rotate: 0 }}
                       transition={{
                         opacity: { duration: 0.8, delay: 0.5 },
                         x: { duration: 0.8, delay: 0.5 },
                         y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 },
+                        scale: { duration: 0.2 },
+                        rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-[34%] right-[12%] rotate-3 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-60 select-none pointer-events-none"
+                      className="hidden lg:flex items-center gap-3 absolute top-[32%] right-[4%] xl:right-[7%] rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-60 select-none cursor-pointer transition-shadow"
                     >
                       <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
                         <motion.span
@@ -249,45 +255,51 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       >
                         <span>Fitness</span>
 
-                        {/* Interactive Orange Pill with Animated SVG ECG Heart-Rate Waveform & Inner Glow */}
-                        <motion.span
-                          initial={{ opacity: 0, scale: 0.88 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          whileHover={{ scale: 1.06 }}
-                          whileTap={{ scale: 0.95 }}
-                          transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
-                          className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-32 h-8 sm:h-11 md:h-14 rounded-full bg-gradient-to-r from-[#ffbe5b] via-[#ffa726] to-[#ff9800] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),_0_8px_24px_rgba(255,167,38,0.32)] px-2 sm:px-3 overflow-hidden cursor-pointer group shrink-0"
-                        >
-                          <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
-                          <svg
-                            className="w-10 sm:w-14 md:w-16 h-5 sm:h-7 text-white drop-shadow-sm"
-                            viewBox="0 0 64 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <motion.path
-                              d="M2 12h12l3-7 5 14 5-11 4 7 3-3h18"
-                              initial={{ pathLength: 0.8, opacity: 0.9 }}
-                              animate={{
-                                pathLength: [0.6, 1, 0.6],
-                                opacity: [0.8, 1, 0.8],
-                              }}
-                              transition={{
-                                duration: 2.2,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                              }}
-                            />
-                          </svg>
+                        {/* Interactive Orange Pill with Continuous ECG Waveform Pulse & Hover Tooltip */}
+                        <div className="relative inline-flex items-center group">
+                          {/* Hover Tooltip Badge */}
+                          <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-top-10 transition-all duration-200 pointer-events-none z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900/95 text-white text-[11px] font-semibold whitespace-nowrap shadow-lg backdrop-blur-xs border border-white/10 select-none">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>142 BPM • Live Sync</span>
+                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-900 rotate-45" />
+                          </div>
+
                           <motion.span
-                            animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
-                            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"
-                          />
-                        </motion.span>
+                            initial={{ opacity: 0, scale: 0.88 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            whileHover={{ scale: 1.06 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
+                            className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-32 h-8 sm:h-11 md:h-14 rounded-full bg-gradient-to-r from-[#ffbe5b] via-[#ffa726] to-[#ff9800] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),_0_8px_24px_rgba(255,167,38,0.32)] px-2 sm:px-3 overflow-hidden cursor-pointer shrink-0"
+                          >
+                            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
+                            <svg
+                              className="w-10 sm:w-14 md:w-16 h-5 sm:h-7 text-white drop-shadow-sm overflow-visible"
+                              viewBox="0 0 64 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.8"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <motion.path
+                                d="M2 12h12l3-7 5 14 5-11 4 7 3-3h18"
+                                strokeDasharray="64"
+                                animate={{ strokeDashoffset: [64, 0, -64] }}
+                                transition={{
+                                  duration: 2.2,
+                                  repeat: Infinity,
+                                  ease: 'linear',
+                                }}
+                              />
+                            </svg>
+                            <motion.span
+                              animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
+                              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                              className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"
+                            />
+                          </motion.span>
+                        </div>
 
                         <span>with Our</span>
                       </motion.span>
@@ -296,27 +308,21 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
-                        className="relative inline-flex flex-col items-center justify-center mt-2"
+                        className="relative inline-flex items-center justify-center mt-2 font-['Instrument_Serif',Georgia,serif] italic font-normal tracking-normal text-[#1c1b1f] text-[1.12em]"
                       >
-                        <span className="relative z-10">FitFlow app</span>
-                        {/* Clean Animated SVG Underline beneath "FitFlow" */}
-                        <svg
-                          className="w-[115%] h-3 sm:h-4 text-[#846a96] -mt-1 sm:-mt-1.5 pointer-events-none overflow-visible"
-                          viewBox="0 0 240 16"
-                          fill="none"
-                        >
-                          <motion.path
-                            d="M4 11C54 4 154 3 236 10"
-                            stroke="#846a96"
-                            strokeWidth="3.5"
-                            strokeLinecap="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                          />
-                        </svg>
+                        FitFlow app
                       </motion.span>
                     </h1>
+
+                    {/* Editorial Clean Sub-Headline */}
+                    <motion.p
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
+                      className="mt-5 max-w-lg mx-auto text-center text-neutral-500 text-base md:text-lg leading-relaxed font-normal"
+                    >
+                      Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
+                    </motion.p>
                   </div>
 
                   {/* Hero Social Proof Split Row: Stacked Avatars + Rating (Left) & Download CTA (Right) */}
@@ -367,26 +373,61 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </div>
 
-                    {/* Download Button */}
-                    <motion.button
-                      type="button"
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        const el = document.getElementById('section-scroll-expand');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer shrink-0"
-                    >
-                      <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
-                        Download
-                      </span>
-                      <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
-                        <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 font-bold">
-                          north_east
+                    {/* Bottom-Right CTA Actions Cluster */}
+                    <div className="flex flex-wrap items-center gap-3 shrink-0">
+                      {/* Secondary Interactive Pill Button: Watch 45s Demo */}
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          const el = document.getElementById('section-scroll-expand');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="group inline-flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-full bg-white hover:bg-neutral-50 shadow-sm border border-neutral-200/80 hover:border-neutral-300 transition-all duration-200 cursor-pointer"
+                      >
+                        {/* w-7 h-7 rounded-full video preview with play icon overlay */}
+                        <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 shadow-xs ring-1 ring-black/5 bg-neutral-900 flex items-center justify-center">
+                          <video
+                            src="/flow_video.mp4"
+                            muted
+                            loop
+                            autoPlay
+                            playsInline
+                            className="w-full h-full object-cover scale-150 opacity-80"
+                          />
+                          <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
+                            <span className="material-symbols-outlined text-[14px] text-white material-symbols-fill">
+                              play_arrow
+                            </span>
+                          </div>
+                        </div>
+                        <span className="text-[13px] text-neutral-800 font-semibold tracking-tight">
+                          Watch 45s Demo
                         </span>
-                      </div>
-                    </motion.button>
+                      </motion.button>
+
+                      {/* Download Button */}
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          const el = document.getElementById('section-scroll-expand');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
+                      >
+                        <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
+                          Download
+                        </span>
+                        <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+                          <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 font-bold">
+                            north_east
+                          </span>
+                        </div>
+                      </motion.button>
+                    </div>
                   </motion.div>
                 </section>
               </div>
