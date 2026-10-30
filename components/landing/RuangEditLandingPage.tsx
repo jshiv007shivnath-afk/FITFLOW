@@ -351,11 +351,17 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   src="/runner_hero.jpg"
                   alt="FitFlow Athletic Runner"
                   title="Track Every Motion"
-                  scrollHint="Scroll to expand experience"
-                  startWidthPercent={32}
-                  startHeightVh={44}
+                  scrollHint="Scroll"
+                  useWindowScroll
+                  startWidth={42}
+                  startHeight={58}
                   startRadius={24}
-                  overlayScrim={0.58}
+                  endRadius={0}
+                  mediaZoom={1.35}
+                  scrollDistance={1.2}
+                  holdDistance={0.35}
+                  smoothing={0.1}
+                  overlayScrim={0.5}
                 >
                   <div className="max-w-xl text-white px-4 flex flex-col items-center">
                     <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
