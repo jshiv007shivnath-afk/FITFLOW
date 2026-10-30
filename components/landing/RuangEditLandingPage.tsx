@@ -38,9 +38,9 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 <img
                   src="/icon.png"
                   alt="FitFlow Logo"
-                  className="w-8 h-8 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform"
+                  className="w-8 h-8 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
                 />
-                <span className="font-['Manrope'] text-[18px] font-bold text-[#1c1b1f] tracking-tight">
+                <span className="font-semibold text-neutral-900 text-[18px] tracking-tight">
                   Fitflow app
                 </span>
               </button>
@@ -157,7 +157,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 {/* ============================================== */}
                 <section className="w-full pt-20 sm:pt-28 md:pt-36 pb-16 sm:pb-20 md:pb-24 min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
-                  <div className="relative w-full max-w-4xl text-center select-none z-10">
+                  <div className="relative w-full max-w-5xl text-center select-none z-10">
                     {/* Left Floating Frosted-Glass Widget (Tilted -3deg) */}
                     <motion.div
                       initial={{ opacity: 0, x: -20, rotate: -3 }}
@@ -172,7 +172,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         x: { duration: 0.8, delay: 0.4 },
                         y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute -left-12 xl:-left-24 top-10 xl:top-12 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-56 select-none pointer-events-none"
+                      className="hidden lg:flex items-center gap-3 absolute top-[34%] left-[12%] -rotate-3 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-56 select-none pointer-events-none"
                     >
                       <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
                         <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
@@ -202,7 +202,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         x: { duration: 0.8, delay: 0.5 },
                         y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute -right-12 xl:-right-24 top-10 xl:top-12 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-60 select-none pointer-events-none"
+                      className="hidden lg:flex items-center gap-3 absolute top-[34%] right-[12%] rotate-3 z-20 backdrop-blur-md bg-white/80 border border-neutral-200/60 shadow-lg rounded-2xl p-3 w-60 select-none pointer-events-none"
                     >
                       <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
                         <motion.span
@@ -218,16 +218,12 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           <span className="truncate">Habit Streak</span>
                           <span className="text-amber-600 font-mono font-bold">14 Days 🔥</span>
                         </div>
-                        {/* Weekly Streak Activity Indicators */}
+                        {/* 7 Orange Streak Activity Indicators */}
                         <div className="flex items-center gap-1.5">
                           {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
                             <div
                               key={idx}
-                              className={`w-3.5 h-2 rounded-full transition-all ${
-                                idx <= 5
-                                  ? 'bg-amber-500 shadow-xs'
-                                  : 'bg-amber-200 animate-pulse'
-                              }`}
+                              className="w-3.5 h-2 rounded-full bg-orange-500 shadow-xs"
                               title={`${day}: Active`}
                             />
                           ))}
@@ -328,7 +324,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
-                    className="w-full max-w-[1080px] mt-10 md:mt-14 flex flex-col sm:flex-row sm:items-end justify-between gap-6 px-2 sm:px-4"
+                    className="max-w-5xl mx-auto w-full flex items-end justify-between mt-20 px-6"
                   >
                     {/* Human Social Proof Block */}
                     <div className="flex flex-col text-left">
