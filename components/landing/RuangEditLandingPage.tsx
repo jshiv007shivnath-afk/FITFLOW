@@ -4,7 +4,6 @@ import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import PillNav from '@/components/reactbits/PillNav';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
-import ScrollStack, { ScrollStackItem } from '@/components/reactbits/ScrollStack';
 import { ServicesView } from '@/components/landing/ServicesView';
 import { AboutView } from '@/components/landing/AboutView';
 
@@ -342,45 +341,45 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     </motion.button>
                   </motion.div>
                 </section>
+              </div>
 
-                {/* ============================================== */}
-                {/* REACT BITS <ScrollExpand /> BELOW HERO SECTION */}
-                {/* ============================================== */}
-                <section className="w-full my-8 md:my-14" id="section-scroll-expand">
-                  <div className="w-full rounded-[32px] overflow-hidden border border-[#E7E2E8] shadow-[0_12px_36px_rgba(49,37,55,0.06)] bg-[#FBFAFC]">
-                    <ScrollExpand
-                      src="/runner_hero.jpg"
-                      alt="FitFlow Athletic Runner"
-                      title="Track Every Motion"
-                      scrollHint="Scroll to expand experience"
-                      mediaZoom={1.25}
-                      startWidth={58}
-                      startRadius={28}
-                      endRadius={16}
-                      overlayScrim={0.55}
+              {/* ========================================================= */}
+              {/* REACT BITS <ScrollExpand /> FULL SCREEN STICKY EXPERIENCE */}
+              {/* ========================================================= */}
+              <section className="w-full relative my-12 md:my-20" id="section-scroll-expand">
+                <ScrollExpand
+                  src="/runner_hero.jpg"
+                  alt="FitFlow Athletic Runner"
+                  title="Track Every Motion"
+                  scrollHint="Scroll to expand experience"
+                  startWidthPercent={32}
+                  startHeightVh={44}
+                  startRadius={24}
+                  overlayScrim={0.58}
+                >
+                  <div className="max-w-xl text-white px-4 flex flex-col items-center">
+                    <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
+                      Smart Fitness Engine
+                    </span>
+                    <h2 className="text-[28px] sm:text-[38px] font-bold text-white drop-shadow-md leading-tight mb-3">
+                      Every Rep, Every Milestone
+                    </h2>
+                    <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
+                      FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('services')}
+                      className="px-7 py-3 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-[14px] hover:scale-105 active:scale-95 transition-transform shadow-lg cursor-pointer"
                     >
-                      <div className="max-w-xl text-white px-4 flex flex-col items-center">
-                        <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
-                          Smart Fitness Engine
-                        </span>
-                        <h2 className="text-[28px] sm:text-[38px] font-bold text-white drop-shadow-md leading-tight mb-3">
-                          Every Rep, Every Milestone
-                        </h2>
-                        <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
-                          FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => navigateTo('services')}
-                          className="px-7 py-3 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-[14px] hover:scale-105 active:scale-95 transition-transform shadow-lg cursor-pointer"
-                        >
-                          Explore Services & Tracks ↗
-                        </button>
-                      </div>
-                    </ScrollExpand>
+                      Explore Services & Tracks ↗
+                    </button>
                   </div>
-                </section>
+                </ScrollExpand>
+              </section>
 
+              {/* BOTTOM CONTAINER: CAROUSEL, FEATURES, COMMUNITY */}
+              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
                 {/* ============================================== */}
                 {/* FEATURED ILLUSTRATION CAROUSEL                 */}
                 {/* ============================================== */}
@@ -591,102 +590,6 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     </motion.div>
                   </div>
                 </motion.section>
-
-                {/* =================================================== */}
-                {/* REACT BITS <ScrollStack /> WITH ATHLETIC IMAGERY    */}
-                {/* =================================================== */}
-                <section className="w-full py-12 md:py-16" id="section-scroll-stack">
-                  <div className="w-full max-w-[1140px] mx-auto">
-                    <div className="text-center mb-12">
-                      <span className="text-[12px] text-[#846a96] font-bold tracking-wider uppercase">
-                        - Interactive Deck Experience -
-                      </span>
-                      <h2 className="font-['Manrope'] text-[30px] sm:text-[40px] font-bold text-[#1c1b1f] tracking-tight mt-1">
-                        Everything You Need in One Place
-                      </h2>
-                      <p className="text-[15px] text-[#57535A] max-w-lg mx-auto mt-2 leading-relaxed">
-                        Scroll down to watch our 3 core capabilities stack into a smooth 3D deck.
-                      </p>
-                    </div>
-
-                    <ScrollStack itemStackDistance={28} topOffset={110} scaleStep={0.035}>
-                      {/* Stack Card 1: Athletic Runner in Golden Hour */}
-                      <ScrollStackItem itemClassName="border border-[#E7E2E8] bg-white">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 h-full">
-                          <div className="max-w-md">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f2ecf3] text-[#846a96] text-[12px] font-bold mb-3">
-                              <span className="w-2 h-2 rounded-full bg-[#846a96]" />
-                              Feature Stack 01
-                            </div>
-                            <h3 className="font-['Manrope'] text-[24px] sm:text-[28px] font-bold text-[#1c1b1f] leading-snug">
-                              Structured Daily Workout Splits
-                            </h3>
-                            <p className="text-[#57535A] text-[14px] sm:text-[15px] mt-2 leading-relaxed">
-                              Customize exercises, sets, reps, and target weights with auto-advancing rest intervals and symmetric completion checkoffs.
-                            </p>
-                          </div>
-                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#f7f2f8] flex items-center justify-center p-2 overflow-hidden shadow-inner shrink-0">
-                            <img
-                              src="/runner_card1.jpg"
-                              alt="Outdoor Athletic Runner"
-                              className="w-full h-full object-cover rounded-xl"
-                            />
-                          </div>
-                        </div>
-                      </ScrollStackItem>
-
-                      {/* Stack Card 2: Trail Runner at Sunset */}
-                      <ScrollStackItem itemClassName="bg-[#6a527c] text-white">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 h-full">
-                          <div className="max-w-md">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#846a96] text-white text-[12px] font-bold mb-3">
-                              <span className="w-2 h-2 rounded-full bg-[#ffbd5a]" />
-                              Feature Stack 02 • Core Engine
-                            </div>
-                            <h3 className="font-['Manrope'] text-[24px] sm:text-[28px] font-bold text-white leading-snug">
-                              Smart Hydration & Biometric Sync
-                            </h3>
-                            <p className="text-[#f2daff] text-[14px] sm:text-[15px] mt-2 leading-relaxed">
-                              Seamless sensor integration tracks your active calories, steps, and water intake milestones in real-time.
-                            </p>
-                          </div>
-                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#ffddb2]/20 flex items-center justify-center p-2 overflow-hidden shadow-inner shrink-0">
-                            <img
-                              src="/runner_card2.jpg"
-                              alt="Hydration and Trail Running"
-                              className="w-full h-full object-cover rounded-xl"
-                            />
-                          </div>
-                        </div>
-                      </ScrollStackItem>
-
-                      {/* Stack Card 3: Track Finish Line Sprint */}
-                      <ScrollStackItem itemClassName="border border-[#E7E2E8] bg-white">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 h-full">
-                          <div className="max-w-md">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffddb2] text-[#291800] text-[12px] font-bold mb-3">
-                              <span className="w-2 h-2 rounded-full bg-[#815500]" />
-                              Feature Stack 03
-                            </div>
-                            <h3 className="font-['Manrope'] text-[24px] sm:text-[28px] font-bold text-[#1c1b1f] leading-snug">
-                              21-Day Habit Streaks & Level XP
-                            </h3>
-                            <p className="text-[#57535A] text-[14px] sm:text-[15px] mt-2 leading-relaxed">
-                              Complete daily milestones to gain XP, level up your athlete profile, and build lifelong healthy exercise habits.
-                            </p>
-                          </div>
-                          <div className="w-full md:w-64 h-40 rounded-2xl bg-[#f7f2f8] flex items-center justify-center p-2 overflow-hidden shadow-inner shrink-0">
-                            <img
-                              src="/runner_card3.jpg"
-                              alt="Track Sprint and Milestones"
-                              className="w-full h-full object-cover rounded-xl"
-                            />
-                          </div>
-                        </div>
-                      </ScrollStackItem>
-                    </ScrollStack>
-                  </div>
-                </section>
 
                 {/* ============================================== */}
                 {/* COMMUNITY SECTION                              */}
