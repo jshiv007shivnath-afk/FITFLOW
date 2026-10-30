@@ -344,24 +344,18 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               </div>
 
               {/* ========================================================= */}
-              {/* REACT BITS <ScrollExpand /> FULL SCREEN STICKY EXPERIENCE */}
+              {/* CINEMATIC GSAP SCROLLEXPAND SECTION                       */}
               {/* ========================================================= */}
-              <section className="w-full relative my-12 md:my-20" id="section-scroll-expand">
+              <section className="w-full relative my-8 md:my-16" id="section-scroll-expand">
                 <ScrollExpand
                   src="/runner_hero.jpg"
                   alt="FitFlow Athletic Runner"
                   title="Track Every Motion"
                   scrollHint="Scroll"
-                  useWindowScroll
-                  startWidth={42}
-                  startHeight={58}
-                  startRadius={24}
+                  startRadius={28}
                   endRadius={0}
-                  mediaZoom={1.35}
-                  scrollDistance={1.2}
-                  holdDistance={0.35}
-                  smoothing={0.1}
-                  overlayScrim={0.5}
+                  mediaZoom={1.22}
+                  overlayScrim={0.52}
                 >
                   <div className="max-w-xl text-white px-4 flex flex-col items-center">
                     <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">

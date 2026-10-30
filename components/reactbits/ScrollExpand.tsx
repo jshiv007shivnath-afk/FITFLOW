@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef } from 'react';
-
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './ScrollExpand.css';
 
-const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
-
-const smoothstep = (edge0: number, edge1: number, x: number) => {
-  const t = clamp((x - edge0) / (edge1 - edge0 || 1e-6), 0, 1);
-  return t * t * (3 - 2 * t);
-};
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export interface ScrollExpandProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -18,217 +16,213 @@ export interface ScrollExpandProps extends React.HTMLAttributes<HTMLDivElement> 
   alt?: string;
   title?: string;
   scrollHint?: string;
-  startWidth?: number;
-  startHeight?: number;
   startRadius?: number;
   endRadius?: number;
   mediaZoom?: number;
-  scrollDistance?: number;
-  holdDistance?: number;
-  smoothing?: number;
   overlayScrim?: number;
-  useWindowScroll?: boolean;
-  enabled?: boolean;
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
 
 const ScrollExpand: React.FC<ScrollExpandProps> = ({
-  src = '',
+  src = '/runner_hero.jpg',
   mediaType = 'image',
   poster = '',
-  alt = '',
-  title = '',
-  scrollHint = '',
-  startWidth = 42,
-  startHeight = 58,
-  startRadius = 24,
+  alt = 'FitFlow Athletic Runner',
+  title = 'Track Every Motion',
+  scrollHint = 'Scroll',
+  startRadius = 28,
   endRadius = 0,
-  mediaZoom = 1.35,
-  scrollDistance = 1.2,
-  holdDistance = 0.35,
-  smoothing = 0.1,
-  overlayScrim = 0.45,
-  useWindowScroll = false,
-  enabled = true,
+  mediaZoom = 1.22,
+  overlayScrim = 0.52,
   children,
   className = '',
   style,
   ...rest
 }) => {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLElement | null>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
+  const titleWrapperRef = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
-
-  const propsRef = useRef({
-    startWidth,
-    startHeight,
-    startRadius,
-    endRadius,
-    mediaZoom,
-    scrollDistance,
-    holdDistance,
-    smoothing,
-    overlayScrim,
-    useWindowScroll,
-    enabled,
-  });
-  propsRef.current = {
-    startWidth,
-    startHeight,
-    startRadius,
-    endRadius,
-    mediaZoom,
-    scrollDistance,
-    holdDistance,
-    smoothing,
-    overlayScrim,
-    useWindowScroll,
-    enabled,
-  };
-
-  const applyProgress = useCallback((p: number) => {
-    const frame = frameRef.current;
-    const media = mediaRef.current;
-    if (!frame || !media) return;
-    const c = propsRef.current;
-
-    const e = smoothstep(0, 1, p);
-
-    const w = c.startWidth + (100 - c.startWidth) * e;
-    const h = c.startHeight + (100 - c.startHeight) * e;
-    const ix = Math.max(0, (100 - w) / 2);
-    const iy = Math.max(0, (100 - h) / 2);
-    const r = c.startRadius + (c.endRadius - c.startRadius) * e;
-    frame.style.clipPath = `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${r}px)`;
-
-    media.style.transform = `scale(${c.mediaZoom + (1 - c.mediaZoom) * e})`;
-
-    if (scrimRef.current) scrimRef.current.style.opacity = `${c.overlayScrim * e}`;
-
-    if (titleRef.current) {
-      const out = smoothstep(0.4, 0.88, p);
-      titleRef.current.style.opacity = `${1 - out}`;
-      titleRef.current.style.transform = `translate3d(0, ${-28 * out}px, 0) scale(${1 + 0.06 * out})`;
-    }
-
-    if (hintRef.current) {
-      const gone = smoothstep(0, 0.12, p);
-      hintRef.current.style.opacity = `${1 - gone}`;
-      hintRef.current.style.transform = `translate3d(0, ${8 * gone}px, 0)`;
-    }
-
-    if (overlayRef.current) {
-      const inn = smoothstep(0.68, 1, p);
-      overlayRef.current.style.opacity = `${inn}`;
-      overlayRef.current.style.transform = `translate3d(0, ${18 * (1 - inn)}px, 0)`;
-    }
-  }, []);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const root = rootRef.current;
-    const track = trackRef.current;
+    if (typeof window === 'undefined') return;
+
+    const container = containerRef.current;
     const stage = stageRef.current;
-    if (!root || !track || !stage) return;
+    const frame = frameRef.current;
+    const media = mediaRef.current;
+    const scrim = scrimRef.current;
+    const titleWrapper = titleWrapperRef.current;
+    const hint = hintRef.current;
+    const overlay = overlayRef.current;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!container || !stage || !frame || !media) return;
 
-    let raf = 0;
-    let current = 0;
-    let target = 0;
-    let stageH = 0;
-    let running = false;
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
 
-    const measure = () => {
-      const c = propsRef.current;
-      stageH = c.useWindowScroll ? window.innerHeight : root.clientHeight;
-      if (stageH <= 0) return;
-      stage.style.height = `${stageH}px`;
-      track.style.height = `${stageH * (1 + Math.max(0, c.scrollDistance) + Math.max(0, c.holdDistance))}px`;
+      // 1. Accessibility: Respect prefers-reduced-motion
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        gsap.set(frame, { clipPath: `inset(0% 0% 0% 0% round ${endRadius}px)` });
+        gsap.set(media, { scale: 1 });
+        if (scrim) gsap.set(scrim, { opacity: overlayScrim });
+        if (titleWrapper) gsap.set(titleWrapper, { opacity: 0, display: 'none' });
+        if (overlay) gsap.set(overlay, { opacity: 1, y: 0 });
+      });
 
-      const w = root.clientWidth || stageH;
-      stage.style.setProperty('--se-title-size', `${clamp(w * 0.075, 20, 84)}px`);
-    };
+      // 2. Desktop: Centered card (~38vw × 56vh) expands to cinematic full screen
+      mm.add('(min-width: 769px) and (prefers-reduced-motion: no-preference)', () => {
+        const startClip = `inset(22% 31% 22% 31% round ${startRadius}px)`;
+        const endClip = `inset(0% 0% 0% 0% round ${endRadius}px)`;
 
-    const readProgress = () => {
-      const c = propsRef.current;
-      if (!c.enabled) return 1;
-      const span = stageH * Math.max(0.01, c.scrollDistance);
-      if (c.useWindowScroll) {
-        const top = track.getBoundingClientRect().top;
-        return clamp(-top / span, 0, 1);
-      }
-      return clamp(root.scrollTop / span, 0, 1);
-    };
+        // Initial setup
+        gsap.set(frame, { clipPath: startClip });
+        gsap.set(media, { scale: mediaZoom });
+        if (scrim) gsap.set(scrim, { opacity: 0.15 });
+        if (titleWrapper) gsap.set(titleWrapper, { opacity: 1, scale: 1, y: 0 });
+        if (hint) gsap.set(hint, { opacity: 1, y: 0 });
+        if (overlay) gsap.set(overlay, { opacity: 0, y: 32 });
 
-    const tick = () => {
-      const c = propsRef.current;
-      const k = c.smoothing <= 0 ? 1 : 1 - Math.exp(-1 / (60 * c.smoothing));
-      current += (target - current) * k;
-      if (Math.abs(target - current) < 0.0004) {
-        current = target;
-        running = false;
-      }
-      applyProgress(current);
-      raf = running ? requestAnimationFrame(tick) : 0;
-    };
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: 'top top',
+            end: '+=140%',
+            pin: true,
+            scrub: 0.8,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
 
-    const kick = () => {
-      if (running) return;
-      running = true;
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
+        // Cue fades out quickly as scroll begins
+        if (hint) {
+          tl.to(hint, { opacity: 0, y: 14, duration: 0.14, ease: 'power1.out' }, 0);
+        }
 
-    const onScroll = () => {
-      target = readProgress();
-      if (propsRef.current.smoothing <= 0 || reduceMotion) {
-        current = target;
-        applyProgress(current);
-        return;
-      }
-      kick();
-    };
+        // Title smoothly elevates, subtly scales and dissolves
+        if (titleWrapper) {
+          tl.to(
+            titleWrapper,
+            { opacity: 0, y: -28, scale: 1.05, duration: 0.35, ease: 'power1.out' },
+            0.05
+          );
+        }
 
-    const onResize = () => {
-      measure();
-      target = readProgress();
-      current = target;
-      applyProgress(current);
-    };
+        // Frame expands smoothly from 28px rounded card to full bleed
+        tl.to(
+          frame,
+          { clipPath: endClip, duration: 0.75, ease: 'power1.inOut' },
+          0
+        );
 
-    measure();
-    target = readProgress();
-    current = target;
-    applyProgress(current);
+        // Counter-zoom on media for depth & cinematic parallax
+        tl.to(
+          media,
+          { scale: 1.0, duration: 0.75, ease: 'power1.out' },
+          0
+        );
 
-    const scroller = useWindowScroll ? window : root;
-    scroller.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
-    const ro = new ResizeObserver(onResize);
-    ro.observe(root);
+        // Scrim transition for legibility
+        if (scrim) {
+          tl.to(scrim, { opacity: overlayScrim, duration: 0.55, ease: 'power1.inOut' }, 0.2);
+        }
 
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      scroller.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-      ro.disconnect();
-    };
-  }, [applyProgress, useWindowScroll]);
+        // Overlay content reveals softly over expanded visual
+        if (overlay) {
+          tl.to(
+            overlay,
+            { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+            0.55
+          );
+        }
 
-  const media =
+        // Controlled hold buffer before smooth exit into next section
+        tl.to({}, { duration: 0.2 });
+      });
+
+      // 3. Tablet & Mobile: Proportional card (~80vw × 52vh)
+      mm.add('(max-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+        const mobileStartRadius = Math.min(startRadius, 24);
+        const startClip = `inset(24% 10% 24% 10% round ${mobileStartRadius}px)`;
+        const endClip = `inset(0% 0% 0% 0% round ${endRadius}px)`;
+
+        // Initial setup
+        gsap.set(frame, { clipPath: startClip });
+        gsap.set(media, { scale: Math.min(mediaZoom, 1.18) });
+        if (scrim) gsap.set(scrim, { opacity: 0.15 });
+        if (titleWrapper) gsap.set(titleWrapper, { opacity: 1, scale: 1, y: 0 });
+        if (hint) gsap.set(hint, { opacity: 1, y: 0 });
+        if (overlay) gsap.set(overlay, { opacity: 0, y: 24 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: 'top top',
+            end: '+=120%',
+            pin: true,
+            scrub: 0.8,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        if (hint) {
+          tl.to(hint, { opacity: 0, y: 10, duration: 0.14, ease: 'power1.out' }, 0);
+        }
+
+        if (titleWrapper) {
+          tl.to(
+            titleWrapper,
+            { opacity: 0, y: -22, scale: 1.04, duration: 0.35, ease: 'power1.out' },
+            0.05
+          );
+        }
+
+        tl.to(
+          frame,
+          { clipPath: endClip, duration: 0.75, ease: 'power1.inOut' },
+          0
+        );
+
+        tl.to(
+          media,
+          { scale: 1.0, duration: 0.75, ease: 'power1.out' },
+          0
+        );
+
+        if (scrim) {
+          tl.to(scrim, { opacity: overlayScrim, duration: 0.55, ease: 'power1.inOut' }, 0.2);
+        }
+
+        if (overlay) {
+          tl.to(
+            overlay,
+            { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+            0.55
+          );
+        }
+
+        tl.to({}, { duration: 0.2 });
+      });
+    }, container);
+
+    return () => ctx.revert();
+  }, [endRadius, mediaZoom, overlayScrim, startRadius]);
+
+  const mediaElement =
     mediaType === 'video' ? (
       <video
         ref={(el) => {
           mediaRef.current = el;
         }}
-        className="scroll-expand__media"
+        className="scroll-expand-media"
         src={src}
         poster={poster}
         autoPlay
@@ -241,7 +235,7 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
         ref={(el) => {
           mediaRef.current = el;
         }}
-        className="scroll-expand__media"
+        className="scroll-expand-media"
         src={src}
         alt={alt}
         draggable={false}
@@ -250,32 +244,31 @@ const ScrollExpand: React.FC<ScrollExpandProps> = ({
 
   return (
     <div
-      ref={rootRef}
-      className={`scroll-expand ${useWindowScroll ? '' : 'scroll-expand--scroller'} ${className}`.trim()}
+      ref={containerRef}
+      className={`scroll-expand-container ${className}`.trim()}
       style={style}
       {...rest}
     >
-      <div ref={trackRef} className="scroll-expand__track">
-        <div ref={stageRef} className="scroll-expand__stage">
-          <div ref={frameRef} className="scroll-expand__frame">
-            {media}
-            <div ref={scrimRef} className="scroll-expand__scrim" />
-            {children ? (
-              <div ref={overlayRef} className="scroll-expand__overlay">
-                {children}
-              </div>
-            ) : null}
-          </div>
-          {title ? (
-            <div ref={titleRef} className="scroll-expand__title">
-              {title}
+      <div ref={stageRef} className="scroll-expand-stage">
+        <div ref={frameRef} className="scroll-expand-frame">
+          {mediaElement}
+          <div ref={scrimRef} className="scroll-expand-scrim" />
+          {children && (
+            <div ref={overlayRef} className="scroll-expand-overlay">
+              {children}
             </div>
-          ) : null}
-          {scrollHint ? (
-            <div ref={hintRef} className="scroll-expand__hint">
-              {scrollHint}
+          )}
+        </div>
+
+        {/* Centered responsive title and scroll cue */}
+        <div ref={titleWrapperRef} className="scroll-expand-title-wrapper">
+          {title && <h2 className="scroll-expand-title">{title}</h2>}
+          {scrollHint && (
+            <div ref={hintRef} className="scroll-expand-hint">
+              <span>{scrollHint}</span>
+              <span className="material-symbols-outlined text-[15px]">south</span>
             </div>
-          ) : null}
+          )}
         </div>
       </div>
     </div>
