@@ -346,10 +346,12 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               {/* ========================================================= */}
               {/* SCROLL-EXPAND VIDEO / MEDIA SECTION                       */}
               {/* ========================================================= */}
-              <section className="w-full relative" id="section-scroll-expand">
+              <section className="w-full relative mt-12 sm:mt-16 md:mt-20" id="section-scroll-expand">
                 <ScrollExpand
-                  src="/runner_hero.jpg"
-                  alt="FitFlow Athletic Runner"
+                  src="/flow_video.mp4"
+                  mediaType="video"
+                  poster="/runner_hero.jpg"
+                  alt="FitFlow Athletic Runner Video"
                   title="Track Every Motion"
                   scrollHint="SCROLL"
                   startWidth={42}

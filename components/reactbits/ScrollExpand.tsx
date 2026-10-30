@@ -41,7 +41,15 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   ...rest
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (mediaType === 'video' && videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [mediaType, src]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -94,7 +102,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`scroll-expand-container relative w-full h-[300vh] bg-black ${className}`.trim()}
+      className={`scroll-expand-container relative w-full h-[300vh] bg-white ${className}`.trim()}
       style={style}
       {...rest}
     >
@@ -115,6 +123,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
           {/* Inner Media Element */}
           {mediaType === 'video' ? (
             <motion.video
+              ref={videoRef}
               style={{ scale: mediaScale }}
               className="w-full h-full object-cover will-change-transform select-none"
               src={src}
@@ -123,6 +132,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               muted
               loop
               playsInline
+              preload="auto"
             />
           ) : (
             <motion.img
