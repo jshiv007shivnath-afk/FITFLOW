@@ -26,7 +26,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
         {/* ============================================== */}
         {/* HEADER WITH REFINED CAPSULE NAVBAR             */}
         {/* ============================================== */}
-        <header className="w-full h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 lg:px-12">
+        <header className="w-full h-[68px] sm:h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 lg:px-12">
           <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-4">
             {/* Left: Brand + Refined Pill Capsule */}
             <div className="flex items-center gap-4 sm:gap-6">
@@ -155,7 +155,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 {/* ============================================== */}
                 {/* HERO SECTION (APPLE / LINEAR MINIMALIST UI)    */}
                 {/* ============================================== */}
-                <section className="w-full pt-20 sm:pt-28 md:pt-36 pb-16 sm:pb-20 md:pb-24 min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
+                <section className="w-full pt-8 sm:pt-16 md:pt-28 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
                   <div className="relative w-full max-w-5xl text-center select-none z-10">
                     {/* Left Floating Frosted-Glass Widget (Tilted -3deg) */}
@@ -231,7 +231,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    <h1 className="font-['Manrope'] text-[38px] sm:text-[54px] lg:text-[72px] text-[#1c1b1f] tracking-tight font-bold leading-[1.08] mb-3 flex flex-col items-center">
+                    <h1 className="font-['Manrope'] text-[28px] xs:text-[32px] sm:text-[50px] lg:text-[72px] text-[#1c1b1f] tracking-tight font-bold leading-[1.12] sm:leading-[1.08] mb-3 flex flex-col items-center">
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -245,7 +245,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                        className="inline-flex flex-wrap items-center justify-center gap-3 md:gap-4 mt-1"
+                        className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-1"
                       >
                         <span>Fitness</span>
 
@@ -256,11 +256,11 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           whileHover={{ scale: 1.06 }}
                           whileTap={{ scale: 0.95 }}
                           transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
-                          className="relative inline-flex items-center justify-center w-24 sm:w-28 md:w-32 h-10 sm:h-12 md:h-14 rounded-full bg-gradient-to-r from-[#ffbe5b] via-[#ffa726] to-[#ff9800] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),_0_8px_24px_rgba(255,167,38,0.32)] px-3 overflow-hidden cursor-pointer group"
+                          className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-32 h-8 sm:h-11 md:h-14 rounded-full bg-gradient-to-r from-[#ffbe5b] via-[#ffa726] to-[#ff9800] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),_0_8px_24px_rgba(255,167,38,0.32)] px-2 sm:px-3 overflow-hidden cursor-pointer group shrink-0"
                         >
                           <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
                           <svg
-                            className="w-14 sm:w-16 h-7 text-white drop-shadow-sm"
+                            className="w-10 sm:w-14 md:w-16 h-5 sm:h-7 text-white drop-shadow-sm"
                             viewBox="0 0 64 24"
                             fill="none"
                             stroke="currentColor"
@@ -285,7 +285,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           <motion.span
                             animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
                             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute right-2.5 top-2.5 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"
+                            className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"
                           />
                         </motion.span>
 
@@ -324,12 +324,12 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
-                    className="max-w-5xl mx-auto w-full flex items-end justify-between mt-20 px-6"
+                    className="max-w-5xl mx-auto w-full flex flex-col sm:flex-row items-center sm:items-end justify-between mt-8 sm:mt-14 md:mt-20 px-4 sm:px-6 gap-6 sm:gap-0"
                   >
                     {/* Human Social Proof Block */}
-                    <div className="flex flex-col text-left">
-                      <div className="flex items-center gap-1.5 mb-2">
-                        <div className="flex text-amber-500 text-[14px] tracking-tight">
+                    <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                      <div className="flex items-center gap-1.5 mb-2 whitespace-nowrap">
+                        <div className="flex text-amber-500 text-[13px] sm:text-[14px] tracking-tight">
                           <span>★</span>
                           <span>★</span>
                           <span>★</span>
@@ -337,11 +337,11 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           <span>★</span>
                         </div>
                         <span className="text-[12px] font-bold text-[#1c1b1f] ml-1">4.9</span>
-                        <span className="text-[12px] text-[#57535A] font-medium">★ Rating (850+ reviews)</span>
+                        <span className="text-[12px] text-[#57535A] font-medium ml-1">Rating (850+ reviews)</span>
                       </div>
 
-                      <div className="flex items-center gap-3.5">
-                        <div className="flex -space-x-2.5 overflow-hidden py-0.5">
+                      <div className="flex items-center gap-3 sm:gap-3.5">
+                        <div className="flex -space-x-2 sm:-space-x-2.5 overflow-hidden py-0.5 shrink-0">
                           {[
                             'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces',
                             'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces',
@@ -352,15 +352,15 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                               key={i}
                               src={avatarUrl}
                               alt="Active Athlete Member"
-                              className="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                              className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-white object-cover shadow-xs"
                             />
                           ))}
                         </div>
-                        <div className="flex flex-col">
-                          <span className="text-[18px] sm:text-[22px] font-bold text-[#1c1b1f] tracking-tight leading-none">
+                        <div className="flex flex-col text-left">
+                          <span className="text-[17px] sm:text-[22px] font-bold text-[#1c1b1f] tracking-tight leading-none">
                             2K+ MEMBERS
                           </span>
-                          <span className="text-[12px] font-semibold text-[#57535A] mt-1">
+                          <span className="text-[11px] sm:text-[12px] font-semibold text-[#57535A] mt-1 whitespace-nowrap">
                             500+ Guided Fitness Tutorials
                           </span>
                         </div>
@@ -376,7 +376,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         const el = document.getElementById('section-scroll-expand');
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer self-start sm:self-auto"
+                      className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer shrink-0"
                     >
                       <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
                         Download
