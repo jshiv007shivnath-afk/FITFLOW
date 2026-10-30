@@ -22,6 +22,7 @@ import { BannedAccountView } from '@/components/screens/BannedAccountView';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DashboardSkeleton } from '@/components/ui/Skeleton';
 import { RuangEditLandingPage } from '@/components/landing/RuangEditLandingPage';
+import { NotificationsView } from '@/components/screens/NotificationsView';
 
 import { motion, AnimatePresence } from 'motion/react';
 
