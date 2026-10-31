@@ -5,6 +5,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
 import { ServicesView } from '@/components/landing/ServicesView';
 import { AboutView } from '@/components/landing/AboutView';
+import { AthleteConsoleSection } from '@/components/landing/AthleteConsoleSection';
+import { WeeklyTimelineSection } from '@/components/landing/WeeklyTimelineSection';
+import { HardwareSyncSection } from '@/components/landing/HardwareSyncSection';
+import { SportsScienceMethodologySection } from '@/components/landing/SportsScienceMethodologySection';
+import { RealAthleteLogsSection } from '@/components/landing/RealAthleteLogsSection';
+import { ComparisonMatrixSection } from '@/components/landing/ComparisonMatrixSection';
+import { AthleteFaqSection } from '@/components/landing/AthleteFaqSection';
+import { AthleteCtaSection } from '@/components/landing/AthleteCtaSection';
 
 interface RuangEditLandingPageProps {
   onLaunchApp?: () => void;
@@ -530,10 +538,10 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
                       Smart Fitness Engine
                     </span>
-                    <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3">
+                    <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3 [text-wrap:balance]">
                       Every Rep, Every Milestone
                     </h2>
-                    <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
+                    <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-md [text-wrap:pretty]">
                       FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
                     </p>
                     <button
@@ -547,18 +555,52 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 </ScrollExpand>
               </section>
 
-              {/* BOTTOM CONTAINER: COMMUNITY */}
+              {/* ========================================================= */}
+              {/* 1. ATHLETE CONSOLE (DAILY PERFORMANCE MATRIX)             */}
+              {/* ========================================================= */}
+              <AthleteConsoleSection />
+
+              {/* ========================================================= */}
+              {/* 2. THE WEEK IN MOTION (PERIODIZATION & TIMELINE)          */}
+              {/* ========================================================= */}
+              <WeeklyTimelineSection />
+
+              {/* ========================================================= */}
+              {/* 3. HARDWARE & SENSOR SYNC ECOSYSTEM                       */}
+              {/* ========================================================= */}
+              <HardwareSyncSection />
+
+              {/* ========================================================= */}
+              {/* 4. SPORTS SCIENCE METHODOLOGY & ALGORITHMS                */}
+              {/* ========================================================= */}
+              <SportsScienceMethodologySection />
+
+              {/* ========================================================= */}
+              {/* 5. VERIFIED REAL ATHLETE LOGS & TRAINING ARCHIVES         */}
+              {/* ========================================================= */}
+              <RealAthleteLogsSection />
+
+              {/* ========================================================= */}
+              {/* 6. SYSTEM COMPARISON MATRIX (FITFLOW VS GENERIC APPS)     */}
+              {/* ========================================================= */}
+              <ComparisonMatrixSection />
+
+              {/* ========================================================= */}
+              {/* 7. ATHLETE FAQ (SPORTS SCIENCE & GYM FLOOR MECHANICS)     */}
+              {/* ========================================================= */}
+              <AthleteFaqSection />
+
+              {/* ========================================================= */}
+              {/* 8. ATHLETIC COMMUNITY SECTION                             */}
+              {/* ========================================================= */}
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-                {/* ============================================== */}
-                {/* ATHLETIC COMMUNITY SECTION                     */}
-                {/* ============================================== */}
                 <section className="w-full my-12" id="section-community">
                   <div className="w-full bg-white rounded-[32px] px-6 py-12 sm:px-12 sm:py-16 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] text-center relative overflow-hidden flex flex-col items-center">
                     <span className="text-[12px] font-bold text-[#6a527c] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
                       Athletic Community
                     </span>
 
-                    <h2 className="max-w-2xl font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4">
+                    <h2 className="max-w-2xl font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4 [text-wrap:balance]">
                       Built for athletes committed to{' '}
                       <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800]">
                         progressive
@@ -566,7 +608,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       discipline
                     </h2>
 
-                    <p className="max-w-lg text-[15px] text-[#57535A] leading-relaxed mb-8">
+                    <p className="max-w-md text-[15px] text-[#57535A] leading-relaxed mb-8 [text-wrap:pretty]">
                       Join 2,000+ members logging workouts, sharing recovery milestones, and staying accountable every day in a supportive team environment.
                     </p>
 
@@ -607,6 +649,11 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   </div>
                 </section>
               </div>
+
+              {/* ========================================================= */}
+              {/* 9. ATHLETE CTA & PLATFORM HUB                             */}
+              {/* ========================================================= */}
+              <AthleteCtaSection onLaunchApp={onLaunchApp} />
             </motion.main>
           )}
         </AnimatePresence>

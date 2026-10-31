@@ -79,8 +79,9 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   const height = useTransform(smoothProgress, [0.05, 0.75], [`${startHeight}vh`, '100vh']);
   const borderRadius = useTransform(smoothProgress, [0.05, 0.75], [`${startRadius}px`, `${endRadius}px`]);
 
-  // Parallax subtle counter-zoom on media
-  const mediaScale = useTransform(smoothProgress, [0.05, 0.75], [mediaZoom, 1]);
+  // Parallax subtle counter-zoom on media (kept full zoom for mobile/iOS, calibrated for desktop framing)
+  const initialScale = isMobile ? mediaZoom : Math.min(mediaZoom, 1.08);
+  const mediaScale = useTransform(smoothProgress, [0.05, 0.75], [initialScale, 1]);
 
   // Contrast overlay (bg-black/30 - bg-black/40) fades in between [0.5, 0.75]
   const scrimOpacity = useTransform(smoothProgress, [0.5, 0.75], [0, overlayScrim]);
@@ -125,7 +126,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
             <motion.video
               ref={videoRef}
               style={{ scale: mediaScale }}
-              className="w-full h-full object-cover will-change-transform select-none"
+              className="w-full h-full object-cover object-center md:object-[center_12%] will-change-transform select-none"
               src={src}
               poster={poster}
               autoPlay
@@ -137,7 +138,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
           ) : (
             <motion.img
               style={{ scale: mediaScale }}
-              className="w-full h-full object-cover object-[center_32%] will-change-transform select-none"
+              className="w-full h-full object-cover object-center md:object-[center_12%] will-change-transform select-none"
               src={src}
               alt={alt}
               draggable={false}
