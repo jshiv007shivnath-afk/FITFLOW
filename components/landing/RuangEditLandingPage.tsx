@@ -145,76 +145,76 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               transition={{ duration: 0.35 }}
               className="flex-1 w-full bg-white relative"
             >
-              {/* Subtle High-Craft Architectural Grid with Radial Mask */}
+              {/* Subtle High-Craft Ambient Lighting Vignette (Replaces mechanical AI grid per anti-slop R-07) */}
               <div
                 aria-hidden="true"
-                className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_30%,#000_70%,transparent_100%)] z-0"
+                className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_70%_50%_at_50%_18%,rgba(255,189,90,0.08),transparent_75%)] z-0"
               />
 
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" id="home">
                 {/* ============================================== */}
                 {/* HERO SECTION (APPLE / LINEAR MINIMALIST UI)    */}
                 {/* ============================================== */}
-                <section className="w-full pt-8 sm:pt-16 md:pt-28 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(82vh-80px)] flex flex-col items-center justify-center relative">
+                <section className="w-full pt-8 sm:pt-14 md:pt-20 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(80vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
                   <div className="relative w-full max-w-5xl text-center select-none z-10">
-                    {/* Left Floating Frosted-Glass Widget (Tilted -6deg, Positioned High & Wide to completely clear headline) */}
+                    {/* Left Floating Frosted-Glass Widget (Tilted -3deg, Snug & Balanced within Hero Container) */}
                     <motion.div
-                      initial={{ opacity: 0, x: -20, rotate: -6 }}
+                      initial={{ opacity: 0, x: -16, rotate: -3 }}
                       animate={{
                         opacity: 1,
                         x: 0,
                         y: [0, -6, 0],
-                        rotate: -6,
+                        rotate: -3,
                       }}
                       whileHover={{ scale: 1.04, rotate: 0 }}
                       transition={{
-                        opacity: { duration: 0.8, delay: 0.4 },
-                        x: { duration: 0.8, delay: 0.4 },
+                        opacity: { duration: 0.8, delay: 0.35 },
+                        x: { duration: 0.8, delay: 0.35 },
                         y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
                         scale: { duration: 0.2 },
                         rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-2 xl:top-4 -left-6 xl:-left-20 2xl:-left-28 -rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
+                      className="hidden lg:flex items-center gap-3 absolute top-1 xl:top-3 left-2 lg:left-6 xl:left-10 -rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-52 select-none cursor-pointer transition-shadow"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
+                      <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
                         <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
                       </div>
                       <div className="flex-1 min-w-0 text-left">
                         <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1">
                           <span className="truncate">Active Burn</span>
-                          <span className="text-orange-600 font-mono font-bold">640 kcal</span>
+                          <span className="text-orange-700 font-mono font-bold">640 kcal</span>
                         </div>
                         <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-orange-400 to-amber-500 rounded-full w-[78%]" />
+                          <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
                         </div>
                       </div>
                     </motion.div>
 
-                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 6deg, Positioned High & Wide to completely clear headline) */}
+                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 3deg, Snug & Balanced within Hero Container) */}
                     <motion.div
-                      initial={{ opacity: 0, x: 20, rotate: 6 }}
+                      initial={{ opacity: 0, x: 16, rotate: 3 }}
                       animate={{
                         opacity: 1,
                         x: 0,
                         y: [0, -7, 0],
-                        rotate: 6,
+                        rotate: 3,
                       }}
                       whileHover={{ scale: 1.04, rotate: 0 }}
                       transition={{
-                        opacity: { duration: 0.8, delay: 0.5 },
-                        x: { duration: 0.8, delay: 0.5 },
-                        y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 },
+                        opacity: { duration: 0.8, delay: 0.45 },
+                        x: { duration: 0.8, delay: 0.45 },
+                        y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 },
                         scale: { duration: 0.2 },
                         rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-4 xl:top-6 -right-6 xl:-right-20 2xl:-right-28 rotate-6 z-20 backdrop-blur-md bg-white/85 border border-neutral-200/70 shadow-lg hover:shadow-xl rounded-2xl p-3 w-60 select-none cursor-pointer transition-shadow"
+                      className="hidden lg:flex items-center gap-3 absolute top-3 xl:top-5 right-2 lg:right-6 xl:right-10 rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
+                      <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
                         <motion.span
-                          animate={{ scale: [1, 1.2, 1] }}
+                          animate={{ scale: [1, 1.15, 1] }}
                           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                          className="material-symbols-outlined text-[22px] text-amber-500"
+                          className="material-symbols-outlined text-[22px] text-amber-600"
                         >
                           local_fire_department
                         </motion.span>
@@ -222,14 +222,14 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       <div className="flex-1 min-w-0 text-left">
                         <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1.5">
                           <span className="truncate">Habit Streak</span>
-                          <span className="text-amber-600 font-mono font-bold">14 Days 🔥</span>
+                          <span className="text-amber-700 font-mono font-bold">14 Days 🔥</span>
                         </div>
                         {/* 7 Orange Streak Activity Indicators */}
                         <div className="flex items-center gap-1.5">
                           {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
                             <div
                               key={idx}
-                              className="w-3.5 h-2 rounded-full bg-orange-500 shadow-xs"
+                              className="w-3.5 h-2 rounded-full bg-amber-500 shadow-xs"
                               title={`${day}: Active`}
                             />
                           ))}
@@ -237,7 +237,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    <h1 className="font-['Manrope'] text-[28px] xs:text-[32px] sm:text-[50px] lg:text-[72px] text-[#1c1b1f] tracking-tight font-bold leading-[1.12] sm:leading-[1.08] mb-3 flex flex-col items-center">
+                    <h1 className="font-['Manrope'] text-[28px] xs:text-[34px] sm:text-[48px] lg:text-[60px] xl:text-[68px] text-[#1c1b1f] tracking-tight font-bold leading-[1.12] sm:leading-[1.08] mb-3 flex flex-col items-center">
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -259,7 +259,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         <div className="relative inline-flex items-center group">
                           {/* Hover Tooltip Badge */}
                           <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-top-10 transition-all duration-200 pointer-events-none z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900/95 text-white text-[11px] font-semibold whitespace-nowrap shadow-lg backdrop-blur-xs border border-white/10 select-none">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             <span>142 BPM • Live Sync</span>
                             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-900 rotate-45" />
                           </div>
@@ -342,16 +342,16 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         }}
                         className="flex items-center gap-2.5 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 sm:p-3 w-[168px] sm:w-56 cursor-pointer"
                       >
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-500 shadow-xs">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
                           <span className="material-symbols-outlined text-[18px] sm:text-[20px]">local_fire_department</span>
                         </div>
                         <div className="flex-1 min-w-0 text-left">
                           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-neutral-800 mb-1">
                             <span className="truncate">Active Burn</span>
-                            <span className="text-orange-600 font-mono font-bold">640 kcal</span>
+                            <span className="text-orange-700 font-mono font-bold">640 kcal</span>
                           </div>
                           <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-orange-400 to-amber-500 rounded-full w-[78%]" />
+                            <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
                           </div>
                         </div>
                       </motion.div>
@@ -372,11 +372,11 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         }}
                         className="flex items-center gap-2.5 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 sm:p-3 w-[184px] sm:w-60 cursor-pointer"
                       >
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-500 shadow-xs">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
                           <motion.span
-                            animate={{ scale: [1, 1.2, 1] }}
+                            animate={{ scale: [1, 1.15, 1] }}
                             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                            className="material-symbols-outlined text-[18px] sm:text-[22px] text-amber-500"
+                            className="material-symbols-outlined text-[18px] sm:text-[22px] text-amber-600"
                           >
                             local_fire_department
                           </motion.span>
@@ -384,14 +384,14 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         <div className="flex-1 min-w-0 text-left">
                           <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-neutral-800 mb-1.5">
                             <span className="truncate">Habit Streak</span>
-                            <span className="text-amber-600 font-mono font-bold">14 Days 🔥</span>
+                            <span className="text-amber-700 font-mono font-bold">14 Days 🔥</span>
                           </div>
                           {/* 7 Orange Streak Activity Indicators */}
                           <div className="flex items-center gap-1">
                             {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
                               <div
                                 key={idx}
-                                className="w-2.5 sm:w-3.5 h-1.5 sm:h-2 rounded-full bg-orange-500 shadow-xs"
+                                className="w-2.5 sm:w-3.5 h-1.5 sm:h-2 rounded-full bg-amber-500 shadow-xs"
                                 title={`${day}: Active`}
                               />
                             ))}
@@ -550,28 +550,28 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               {/* BOTTOM CONTAINER: COMMUNITY */}
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
                 {/* ============================================== */}
-                {/* COMMUNITY SECTION                              */}
+                {/* ATHLETIC COMMUNITY SECTION                     */}
                 {/* ============================================== */}
                 <section className="w-full my-12" id="section-community">
                   <div className="w-full bg-white rounded-[32px] px-6 py-12 sm:px-12 sm:py-16 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] text-center relative overflow-hidden flex flex-col items-center">
-                    <span className="text-[13px] text-[#6a527c] font-semibold tracking-wider uppercase mb-4">
-                      - Fitflow app -
+                    <span className="text-[12px] font-bold text-[#6a527c] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
+                      Athletic Community
                     </span>
 
-                    <h2 className="max-w-2xl font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight leading-snug mb-5">
-                      Helps you learn and hone your skills through a trusted{' '}
+                    <h2 className="max-w-2xl font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4">
+                      Built for athletes committed to{' '}
                       <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800]">
-                        Fitflow
+                        progressive
                       </span>{' '}
-                      community
+                      discipline
                     </h2>
 
-                    <p className="max-w-md text-[14px] text-[#57535A] leading-relaxed mb-10">
-                      Come join us and not only increase your knowledge but also your family because we are a solid team
+                    <p className="max-w-lg text-[15px] text-[#57535A] leading-relaxed mb-8">
+                      Join 2,000+ members logging workouts, sharing recovery milestones, and staying accountable every day in a supportive team environment.
                     </p>
 
-                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#827B86]">
-                      <span className="text-[14px] text-[#57535A]">Part of Fitflow app</span>
+                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#57535A]">
+                      <span className="text-[14px] font-medium text-[#57535A]">FitFlow Athlete Network</span>
 
                       <div className="flex items-center gap-4 text-[#57535A]">
                         <motion.a
@@ -600,8 +600,8 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         </motion.a>
                       </div>
 
-                      <span className="text-[14px] text-[#827B86]">
-                        Archived by Fitflow app -- 2026
+                      <span className="text-[13px] text-[#57535A] font-medium">
+                        FitFlow Collective • 2026
                       </span>
                     </div>
                   </div>
@@ -625,7 +625,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               <span className="font-['Manrope'] text-[17px] text-[#1c1b1f] font-bold">
                 Fitflow app
               </span>
-              <span className="text-[#827B86] text-[13px] ml-2">
+              <span className="text-[#57535A] text-[13px] ml-2 font-medium">
                 © 2026 Fitflow. All rights reserved.
               </span>
             </div>
