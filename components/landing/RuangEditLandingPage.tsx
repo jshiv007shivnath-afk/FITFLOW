@@ -1,18 +1,10 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
 import { ServicesView } from '@/components/landing/ServicesView';
 import { AboutView } from '@/components/landing/AboutView';
-import { AthleteConsoleSection } from '@/components/landing/AthleteConsoleSection';
-import { WeeklyTimelineSection } from '@/components/landing/WeeklyTimelineSection';
-import { HardwareSyncSection } from '@/components/landing/HardwareSyncSection';
-import { SportsScienceMethodologySection } from '@/components/landing/SportsScienceMethodologySection';
-import { RealAthleteLogsSection } from '@/components/landing/RealAthleteLogsSection';
-import { ComparisonMatrixSection } from '@/components/landing/ComparisonMatrixSection';
-import { AthleteFaqSection } from '@/components/landing/AthleteFaqSection';
-import { AthleteCtaSection } from '@/components/landing/AthleteCtaSection';
 
 interface RuangEditLandingPageProps {
   onLaunchApp?: () => void;
@@ -34,21 +26,21 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
         {/* ============================================== */}
         {/* HEADER WITH REFINED CAPSULE NAVBAR             */}
         {/* ============================================== */}
-        <header className="w-full h-[68px] sm:h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 lg:px-12">
-          <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-4">
+        <header className="w-full h-[64px] sm:h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-3 sm:px-8 lg:px-12">
+          <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-2 sm:gap-4">
             {/* Left: Brand + Refined Pill Capsule */}
-            <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-3 sm:gap-6">
               <button
                 type="button"
                 onClick={() => navigateTo('home')}
-                className="flex items-center gap-2.5 group cursor-pointer"
+                className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer"
               >
                 <img
                   src="/icon.png"
                   alt="FitFlow Logo"
-                  className="w-8 h-8 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
                 />
-                <span className="font-semibold text-neutral-900 text-[18px] tracking-tight">
+                <span className="font-semibold text-neutral-900 text-[16px] sm:text-[18px] tracking-tight">
                   Fitflow app
                 </span>
               </button>
@@ -76,8 +68,8 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               </nav>
             </div>
 
-            {/* Right Action CTAs */}
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* Right Action CTA: Clean Download Button (No direct browser launch) */}
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.03 }}
@@ -87,24 +79,20 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   const el = document.getElementById('section-scroll-expand');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="hidden sm:inline-flex items-center gap-2 h-[42px] px-5 rounded-full bg-[#FBFAFC] border border-[#E7E2E8] hover:border-[#B6A6BE] text-[#57535A] hover:text-[#1c1b1f] text-[13px] font-semibold transition-all group cursor-pointer shadow-sm"
+                className="inline-flex items-center gap-1.5 sm:gap-2 h-[34px] sm:h-[42px] px-3 sm:px-5 rounded-full bg-[#FBFAFC] border border-[#E7E2E8] hover:border-[#B6A6BE] text-[#57535A] hover:text-[#1c1b1f] text-[11px] sm:text-[13px] font-semibold transition-all group cursor-pointer shadow-sm"
               >
-                <span>Download now</span>
-                <span className="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                  north_east
-                </span>
-              </motion.button>
-
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.06 }}
-                whileTap={{ scale: 0.94 }}
-                onClick={onLaunchApp}
-                title="Launch Fitflow App"
-                className="w-10 h-10 rounded-full bg-[#6a527c] text-white flex items-center justify-center shrink-0 cursor-pointer shadow-sm hover:bg-[#5a426c] transition-colors"
-                aria-label="User Profile"
-              >
-                <span className="material-symbols-outlined text-[18px]">person</span>
+                <span>Download<span className="hidden sm:inline"> now</span></span>
+                <svg
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
               </motion.button>
             </div>
           </div>
@@ -151,22 +139,78 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
-              className="flex-1 w-full bg-white relative"
+              className="flex-1 w-full bg-white relative overflow-hidden"
             >
-              {/* Subtle High-Craft Ambient Lighting Vignette (Replaces mechanical AI grid per anti-slop R-07) */}
+              {/* ============================================== */}
+              {/* 1. BACKGROUND ARCHITECTURAL GRID & AURA        */}
+              {/* ============================================== */}
               <div
                 aria-hidden="true"
-                className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_70%_50%_at_50%_18%,rgba(255,189,90,0.08),transparent_75%)] z-0"
+                className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-[#FAF9F6]"
+              >
+                <div
+                  className="absolute inset-0 bg-[linear-gradient(to_right,rgba(23,23,23,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(23,23,23,0.045)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_45%,#000_60%,transparent_100%)]"
+                />
+              </div>
+
+              {/* Center Warm Radial Aura behind H1 (Responsive scaling) */}
+              <div
+                aria-hidden="true"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[650px] h-[300px] sm:h-[420px] rounded-full blur-[90px] sm:blur-[110px] pointer-events-none z-0 bg-[radial-gradient(circle,rgba(251,146,60,0.16)_0%,rgba(253,186,116,0.08)_45%,transparent_75%)]"
               />
+
+              {/* Biometric Telemetry SVG Wave Lines Container */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-[42%] -translate-y-1/2 w-full h-[260px] pointer-events-none z-0 overflow-hidden"
+              >
+                <svg
+                  className="w-full h-full sm:min-w-[1200px] absolute inset-0 sm:left-1/2 sm:-translate-x-1/2"
+                  viewBox="0 0 1440 260"
+                  fill="none"
+                  preserveAspectRatio="none"
+                >
+                  {/* Wave 1: Primary Smooth Amber Sine Wave with Horizontal Pulse */}
+                  <motion.path
+                    d="M0,130 C240,40 480,220 720,130 C960,40 1200,220 1440,130"
+                    stroke="#F59E0B"
+                    strokeWidth="1.75"
+                    strokeOpacity="0.35"
+                    fill="none"
+                    strokeDasharray="1440"
+                    animate={{
+                      strokeDashoffset: [1440, 0],
+                    }}
+                    transition={{
+                      duration: 12,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                  />
+                  {/* Wave 2: Secondary Dashed Slate Inverse Curve */}
+                  <path
+                    d="M0,130 C240,220 480,40 720,130 C960,220 1200,40 1440,130"
+                    stroke="#737373"
+                    strokeWidth="1.5"
+                    strokeDasharray="4 6"
+                    strokeOpacity="0.28"
+                    fill="none"
+                  />
+                </svg>
+                {/* Ambient Micro-dots */}
+                <div className="absolute top-[35%] left-[22%] w-2 h-2 rounded-full bg-orange-400/50 blur-[1px]" />
+                <div className="absolute top-[65%] left-[52%] w-2 h-2 rounded-full bg-amber-400/40 blur-[1px]" />
+                <div className="absolute top-[38%] right-[24%] w-2 h-2 rounded-full bg-orange-400/50 blur-[1px]" />
+              </div>
 
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" id="home">
                 {/* ============================================== */}
-                {/* HERO SECTION (APPLE / LINEAR MINIMALIST UI)    */}
+                {/* HERO SECTION (EDITORIAL APPLE/LINEAR MINIMAL) */}
                 {/* ============================================== */}
                 <section className="w-full pt-8 sm:pt-14 md:pt-20 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(80vh-80px)] flex flex-col items-center justify-center relative">
                   {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
                   <div className="relative w-full max-w-5xl text-center select-none z-10">
-                    {/* Left Floating Frosted-Glass Widget (Tilted -3deg, Snug & Balanced within Hero Container) */}
+                    {/* Left Floating Frosted-Glass Widget (Tilted -3deg, Generously Spaced from Headline) */}
                     <motion.div
                       initial={{ opacity: 0, x: -16, rotate: -3 }}
                       animate={{
@@ -183,10 +227,12 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         scale: { duration: 0.2 },
                         rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-1 xl:top-3 left-2 lg:left-6 xl:left-10 -rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-52 select-none cursor-pointer transition-shadow"
+                      className="hidden lg:flex items-center gap-3 absolute top-3 xl:top-5 left-0 lg:-left-3 xl:left-0 -rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-52 select-none cursor-pointer transition-shadow"
                     >
                       <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
-                        <span className="material-symbols-outlined text-[20px]">local_fire_department</span>
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                        </svg>
                       </div>
                       <div className="flex-1 min-w-0 text-left">
                         <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1">
@@ -199,7 +245,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    {/* Right Floating Frosted-Glass Widget: Habit Streaks (Tilted 3deg, Snug & Balanced within Hero Container) */}
+                    {/* Right Floating Frosted-Glass Widget: Habit Streak (Shifted Down Under "with Our") */}
                     <motion.div
                       initial={{ opacity: 0, x: 16, rotate: 3 }}
                       animate={{
@@ -216,16 +262,12 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         scale: { duration: 0.2 },
                         rotate: { duration: 0.2 },
                       }}
-                      className="hidden lg:flex items-center gap-3 absolute top-3 xl:top-5 right-2 lg:right-6 xl:right-10 rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
+                      className="hidden lg:flex items-center gap-3 absolute top-[44%] xl:top-[46%] right-0 lg:-right-3 xl:right-0 rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
                     >
                       <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
-                        <motion.span
-                          animate={{ scale: [1, 1.15, 1] }}
-                          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                          className="material-symbols-outlined text-[22px] text-amber-600"
-                        >
-                          local_fire_department
-                        </motion.span>
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                        </svg>
                       </div>
                       <div className="flex-1 min-w-0 text-left">
                         <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1.5">
@@ -245,7 +287,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       </div>
                     </motion.div>
 
-                    <h1 className="font-['Manrope'] text-[28px] xs:text-[34px] sm:text-[48px] lg:text-[60px] xl:text-[68px] text-[#1c1b1f] tracking-tight font-bold leading-[1.12] sm:leading-[1.08] mb-3 flex flex-col items-center">
+                    <h1 className="font-['Manrope'] text-[26px] xs:text-[32px] sm:text-[46px] lg:text-[58px] xl:text-[66px] text-[#1c1b1f] tracking-tight font-bold leading-[1.18] sm:leading-[1.08] mb-3 flex flex-col items-center">
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -259,34 +301,47 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                        className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-1"
+                        className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-1"
                       >
                         <span>Fitness</span>
 
-                        {/* Interactive Orange Pill with Continuous ECG Waveform Pulse & Hover Tooltip */}
-                        <div className="relative inline-flex items-center group">
+                        {/* Interactive Orange Capsule Pill with Continuous ECG Waveform & "Active Sync" Badge */}
+                        <div className="relative inline-flex items-center group mx-1 sm:mx-2 md:mx-3 align-middle">
+                          {/* "Active Sync" Floating Micro-Badge */}
+                          <motion.div
+                            animate={{ y: [0, -2, 0] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                            className="absolute scale-90 sm:scale-100 -top-3 sm:-top-3.5 right-0 sm:right-1 z-30 px-2 sm:px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-sm border border-orange-200/80 shadow-[0_4px_10px_rgba(0,0,0,0.06)] flex items-center gap-1.5 select-none pointer-events-none"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
+                            <span className="text-[10px] sm:text-[11px] font-semibold tracking-tight text-neutral-800 whitespace-nowrap">
+                              Active Sync
+                            </span>
+                          </motion.div>
+
                           {/* Hover Tooltip Badge */}
-                          <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-top-10 transition-all duration-200 pointer-events-none z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900/95 text-white text-[11px] font-semibold whitespace-nowrap shadow-lg backdrop-blur-xs border border-white/10 select-none">
+                          <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-200 pointer-events-none z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900/95 text-white text-[11px] font-semibold whitespace-nowrap shadow-lg backdrop-blur-xs border border-white/10 select-none">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             <span>142 BPM • Live Sync</span>
                             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-900 rotate-45" />
                           </div>
 
+                          {/* Orange Capsule Base */}
                           <motion.span
                             initial={{ opacity: 0, scale: 0.88 }}
                             animate={{ opacity: 1, scale: 1 }}
                             whileHover={{ scale: 1.06 }}
                             whileTap={{ scale: 0.95 }}
                             transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
-                            className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-32 h-8 sm:h-11 md:h-14 rounded-full bg-gradient-to-r from-[#ffbe5b] via-[#ffa726] to-[#ff9800] shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.6),_0_8px_24px_rgba(255,167,38,0.32)] px-2 sm:px-3 overflow-hidden cursor-pointer shrink-0"
+                            className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-[108px] h-8 sm:h-11 md:h-[54px] rounded-full bg-gradient-to-b from-[#FFB340] to-[#F97316] shadow-[0_12px_28px_-6px_rgba(249,115,22,0.55),inset_0_2px_4px_rgba(255,255,255,0.45)] px-2 sm:px-3 overflow-hidden cursor-pointer shrink-0"
                           >
                             <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
                             <svg
                               className="w-10 sm:w-14 md:w-16 h-5 sm:h-7 text-white drop-shadow-sm overflow-visible"
                               viewBox="0 0 64 24"
                               fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.8"
+                              stroke="#FFFFFF"
+                              strokeWidth="2.2"
                               strokeLinecap="round"
                               strokeLinejoin="round"
                             >
@@ -301,24 +356,49 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                                 }}
                               />
                             </svg>
-                            <motion.span
-                              animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
-                              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                              className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]"
-                            />
+                            <span className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
                           </motion.span>
                         </div>
 
                         <span>with Our</span>
                       </motion.span>
 
+                      {/* Editorial FitFlow app with Hand-Crafted Double-Stroke Underline */}
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
-                        className="relative inline-flex items-center justify-center mt-2 font-['Instrument_Serif',Georgia,serif] italic font-normal tracking-normal text-[#1c1b1f] text-[1.12em]"
+                        className="relative inline-block mt-2 font-['Instrument_Serif',Georgia,serif] italic font-normal tracking-normal text-[#1c1b1f] text-[1.12em]"
                       >
-                        FitFlow app
+                        <span>FitFlow app</span>
+                        {/* Double-Stroke Hand-Crafted SVG Underline */}
+                        <svg
+                          className="absolute -bottom-3 left-0 w-full h-[14px] pointer-events-none overflow-visible"
+                          viewBox="0 0 320 16"
+                          fill="none"
+                        >
+                          <motion.path
+                            d="M 4 9 Q 160 3 316 8"
+                            stroke="#171717"
+                            strokeWidth="2.4"
+                            strokeLinecap="round"
+                            fill="none"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+                          />
+                          <motion.path
+                            d="M 28 13 Q 165 9 292 12"
+                            stroke="#171717"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeOpacity="0.75"
+                            fill="none"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.8, delay: 0.45, ease: 'easeOut' }}
+                          />
+                        </svg>
                       </motion.span>
                     </h1>
 
@@ -327,13 +407,13 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
-                      className="mt-5 max-w-lg mx-auto text-center text-neutral-500 text-base md:text-lg leading-relaxed font-normal"
+                      className="mt-5 max-w-lg mx-auto text-center text-neutral-500 text-base md:text-lg leading-relaxed font-normal px-2"
                     >
                       Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
                     </motion.p>
 
-                    {/* Mobile/Tablet Floating Interactive Cards Row (Visible on < lg screens) */}
-                    <div className="flex lg:hidden items-center justify-center gap-3 mt-6 sm:mt-7 flex-wrap select-none px-2 z-20">
+                    {/* Mobile/Tablet Floating Interactive Cards Row (Visible on < lg screens, fully responsive) */}
+                    <div className="grid grid-cols-2 lg:hidden gap-2 sm:gap-3 mt-6 sm:mt-7 select-none px-2 z-20 w-full max-w-[340px] xs:max-w-[360px] mx-auto">
                       {/* Left Floating Card: Active Burn */}
                       <motion.div
                         initial={{ opacity: 0, y: 15 }}
@@ -348,17 +428,21 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           y: { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
                           scale: { duration: 0.2 },
                         }}
-                        className="flex items-center gap-2.5 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 sm:p-3 w-[168px] sm:w-56 cursor-pointer"
+                        className="flex items-center gap-2 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 cursor-pointer"
                       >
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
-                          <span className="material-symbols-outlined text-[18px] sm:text-[20px]">local_fire_department</span>
+                        <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                          </svg>
                         </div>
                         <div className="flex-1 min-w-0 text-left">
-                          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-neutral-800 mb-1">
-                            <span className="truncate">Active Burn</span>
-                            <span className="text-orange-700 font-mono font-bold">640 kcal</span>
+                          <div className="text-[10px] font-bold text-neutral-800 leading-tight">
+                            Active Burn
                           </div>
-                          <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+                          <div className="text-orange-700 font-mono font-bold text-[10px] mb-1">
+                            640 kcal
+                          </div>
+                          <div className="w-full h-1 bg-neutral-100 rounded-full overflow-hidden">
                             <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
                           </div>
                         </div>
@@ -378,28 +462,26 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           y: { duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 },
                           scale: { duration: 0.2 },
                         }}
-                        className="flex items-center gap-2.5 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 sm:p-3 w-[184px] sm:w-60 cursor-pointer"
+                        className="flex items-center gap-2 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 cursor-pointer"
                       >
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
-                          <motion.span
-                            animate={{ scale: [1, 1.15, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                            className="material-symbols-outlined text-[18px] sm:text-[22px] text-amber-600"
-                          >
-                            local_fire_department
-                          </motion.span>
+                        <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                          </svg>
                         </div>
                         <div className="flex-1 min-w-0 text-left">
-                          <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-bold text-neutral-800 mb-1.5">
-                            <span className="truncate">Habit Streak</span>
-                            <span className="text-amber-700 font-mono font-bold">14 Days 🔥</span>
+                          <div className="text-[10px] font-bold text-neutral-800 leading-tight">
+                            Habit Streak
+                          </div>
+                          <div className="text-amber-700 font-mono font-bold text-[10px] mb-1">
+                            14 Days 🔥
                           </div>
                           {/* 7 Orange Streak Activity Indicators */}
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-0.5">
                             {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
                               <div
                                 key={idx}
-                                className="w-2.5 sm:w-3.5 h-1.5 sm:h-2 rounded-full bg-amber-500 shadow-xs"
+                                className="w-2.5 h-1 rounded-full bg-amber-500 shadow-xs"
                                 title={`${day}: Active`}
                               />
                             ))}
@@ -458,7 +540,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                     </div>
 
                     {/* Bottom-Right CTA Actions Cluster */}
-                    <div className="flex flex-wrap items-center gap-3 shrink-0">
+                    <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 shrink-0">
                       {/* Secondary Interactive Pill Button: Watch 45s Demo */}
                       <motion.button
                         type="button"
@@ -481,9 +563,9 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                             className="w-full h-full object-cover scale-150 opacity-80"
                           />
                           <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[14px] text-white material-symbols-fill">
-                              play_arrow
-                            </span>
+                            <svg className="w-3.5 h-3.5 text-white fill-current translate-x-0.5" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
                           </div>
                         </div>
                         <span className="text-[13px] text-neutral-800 font-semibold tracking-tight">
@@ -506,9 +588,17 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           Download
                         </span>
                         <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
-                          <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 font-bold">
-                            north_east
-                          </span>
+                          <svg
+                            className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M7 17L17 7M17 7H7M17 7V17" />
+                          </svg>
                         </div>
                       </motion.button>
                     </div>
@@ -517,7 +607,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               </div>
 
               {/* ========================================================= */}
-              {/* SCROLL-EXPAND VIDEO / MEDIA SECTION                       */}
+              {/* 2. SCROLL-EXPAND VIDEO / MEDIA SECTION                    */}
               {/* ========================================================= */}
               <section className="w-full relative mt-12 sm:mt-16 md:mt-20" id="section-scroll-expand">
                 <ScrollExpand
@@ -556,45 +646,10 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               </section>
 
               {/* ========================================================= */}
-              {/* 1. ATHLETE CONSOLE (DAILY PERFORMANCE MATRIX)             */}
-              {/* ========================================================= */}
-              <AthleteConsoleSection />
-
-              {/* ========================================================= */}
-              {/* 2. THE WEEK IN MOTION (PERIODIZATION & TIMELINE)          */}
-              {/* ========================================================= */}
-              <WeeklyTimelineSection />
-
-              {/* ========================================================= */}
-              {/* 3. HARDWARE & SENSOR SYNC ECOSYSTEM                       */}
-              {/* ========================================================= */}
-              <HardwareSyncSection />
-
-              {/* ========================================================= */}
-              {/* 4. SPORTS SCIENCE METHODOLOGY & ALGORITHMS                */}
-              {/* ========================================================= */}
-              <SportsScienceMethodologySection />
-
-              {/* ========================================================= */}
-              {/* 5. VERIFIED REAL ATHLETE LOGS & TRAINING ARCHIVES         */}
-              {/* ========================================================= */}
-              <RealAthleteLogsSection />
-
-              {/* ========================================================= */}
-              {/* 6. SYSTEM COMPARISON MATRIX (FITFLOW VS GENERIC APPS)     */}
-              {/* ========================================================= */}
-              <ComparisonMatrixSection />
-
-              {/* ========================================================= */}
-              {/* 7. ATHLETE FAQ (SPORTS SCIENCE & GYM FLOOR MECHANICS)     */}
-              {/* ========================================================= */}
-              <AthleteFaqSection />
-
-              {/* ========================================================= */}
-              {/* 8. ATHLETIC COMMUNITY SECTION                             */}
+              {/* 3. ATHLETIC COMMUNITY SECTION                             */}
               {/* ========================================================= */}
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-                <section className="w-full my-12" id="section-community">
+                <section className="w-full my-10 sm:my-16" id="section-community">
                   <div className="w-full bg-white rounded-[32px] px-6 py-12 sm:px-12 sm:py-16 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] text-center relative overflow-hidden flex flex-col items-center">
                     <span className="text-[12px] font-bold text-[#6a527c] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
                       Athletic Community
@@ -619,26 +674,35 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="mailto:contact@fitflow.app"
-                          className="hover:text-[#6a527c] transition-colors"
+                          className="hover:text-[#6a527c] transition-colors p-1"
                           aria-label="Email Contact"
                         >
-                          <span className="material-symbols-outlined text-[20px]">mail</span>
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                          </svg>
                         </motion.a>
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="#home"
-                          className="hover:text-[#6a527c] transition-colors"
+                          className="hover:text-[#6a527c] transition-colors p-1"
                           aria-label="Phone Contact"
                         >
-                          <span className="material-symbols-outlined text-[20px]">call</span>
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                          </svg>
                         </motion.a>
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="#home"
-                          className="hover:text-[#6a527c] transition-colors"
+                          className="hover:text-[#6a527c] transition-colors p-1"
                           aria-label="Instagram Channel"
                         >
-                          <span className="material-symbols-outlined text-[20px]">photo_camera</span>
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                          </svg>
                         </motion.a>
                       </div>
 
@@ -649,11 +713,6 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   </div>
                 </section>
               </div>
-
-              {/* ========================================================= */}
-              {/* 9. ATHLETE CTA & PLATFORM HUB                             */}
-              {/* ========================================================= */}
-              <AthleteCtaSection onLaunchApp={onLaunchApp} />
             </motion.main>
           )}
         </AnimatePresence>

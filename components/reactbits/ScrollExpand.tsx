@@ -73,37 +73,36 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
     mass: 0.5,
   });
 
-  // 3. Map progress [0.05, 0.75] to video container dimensions (Centered Symmetrical Expansion)
+  // 3. Map progress [0.05, 0.60] to video container dimensions (Centered Symmetrical Expansion)
   const initialWidth = isMobile ? '88vw' : `${startWidth}vw`;
-  const width = useTransform(smoothProgress, [0.05, 0.75], [initialWidth, '100vw']);
-  const height = useTransform(smoothProgress, [0.05, 0.75], [`${startHeight}vh`, '100vh']);
-  const borderRadius = useTransform(smoothProgress, [0.05, 0.75], [`${startRadius}px`, `${endRadius}px`]);
+  const width = useTransform(smoothProgress, [0.05, 0.6], [initialWidth, '100vw']);
+  const height = useTransform(smoothProgress, [0.05, 0.6], [`${startHeight}vh`, '100vh']);
+  const borderRadius = useTransform(smoothProgress, [0.05, 0.6], [`${startRadius}px`, `${endRadius}px`]);
 
   // Parallax subtle counter-zoom on media (kept full zoom for mobile/iOS, calibrated for desktop framing)
   const initialScale = isMobile ? mediaZoom : Math.min(mediaZoom, 1.08);
-  const mediaScale = useTransform(smoothProgress, [0.05, 0.75], [initialScale, 1]);
+  const mediaScale = useTransform(smoothProgress, [0.05, 0.6], [initialScale, 1]);
 
-  // Contrast overlay (bg-black/30 - bg-black/40) fades in between [0.5, 0.75]
-  const scrimOpacity = useTransform(smoothProgress, [0.5, 0.75], [0, overlayScrim]);
+  // Contrast overlay (bg-black/30 - bg-black/40) fades in between [0.30, 0.60]
+  const scrimOpacity = useTransform(smoothProgress, [0.3, 0.6], [0, overlayScrim]);
 
   // 4. Two-Stage Content Crossfade Choreography
-  // Stage 1 Overlay ("Track Every Motion" + "SCROLL ↓" badge): [0, 0.28]
-  const stage1Opacity = useTransform(smoothProgress, [0, 0.28], [1, 0]);
-  const stage1Scale = useTransform(smoothProgress, [0, 0.28], [1, 0.92]);
-  const stage1Y = useTransform(smoothProgress, [0, 0.28], [0, -20]);
-  const stage1PointerEvents = useTransform(smoothProgress, (p) => (p > 0.28 ? 'none' : 'auto'));
+  // Stage 1 Overlay ("Track Every Motion" + "SCROLL ↓" badge): [0, 0.20]
+  const stage1Opacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
+  const stage1Scale = useTransform(smoothProgress, [0, 0.2], [1, 0.92]);
+  const stage1Y = useTransform(smoothProgress, [0, 0.2], [0, -20]);
+  const stage1PointerEvents = useTransform(smoothProgress, (p) => (p > 0.2 ? 'none' : 'auto'));
 
-  // Stage 2 Overlay ("SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA): [0.65, 0.88]
-  // Holds fully expanded state from 0.88 to 1.0 before unpinning
-  const stage2Opacity = useTransform(smoothProgress, [0.65, 0.88], [0, 1]);
-  const stage2Y = useTransform(smoothProgress, [0.65, 0.88], [35, 0]);
-  const stage2Scale = useTransform(smoothProgress, [0.65, 0.88], [0.96, 1]);
-  const stage2PointerEvents = useTransform(smoothProgress, (p) => (p >= 0.65 ? 'auto' : 'none'));
+  // Stage 2 Overlay ("SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA): [0.50, 0.70]
+  const stage2Opacity = useTransform(smoothProgress, [0.5, 0.7], [0, 1]);
+  const stage2Y = useTransform(smoothProgress, [0.5, 0.7], [35, 0]);
+  const stage2Scale = useTransform(smoothProgress, [0.5, 0.7], [0.96, 1]);
+  const stage2PointerEvents = useTransform(smoothProgress, (p) => (p >= 0.5 ? 'auto' : 'none'));
 
   return (
     <div
       ref={containerRef}
-      className={`scroll-expand-container relative w-full h-[300vh] bg-white ${className}`.trim()}
+      className={`scroll-expand-container relative w-full h-[120vh] sm:h-[135vh] bg-white ${className}`.trim()}
       style={style}
       {...rest}
     >
