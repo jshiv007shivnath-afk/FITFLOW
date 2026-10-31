@@ -500,16 +500,20 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   >
                     {/* Human Social Proof Block */}
                     <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-                      <div className="flex items-center gap-1.5 mb-2 whitespace-nowrap">
-                        <div className="flex text-amber-500 text-[13px] sm:text-[14px] tracking-tight">
-                          <span>★</span>
-                          <span>★</span>
-                          <span>★</span>
-                          <span>★</span>
-                          <span>★</span>
+                      <div
+                        className="flex items-center gap-1.5 mb-2 whitespace-nowrap"
+                        role="img"
+                        aria-label="Rated 4.9 out of 5 stars based on 850+ reviews"
+                      >
+                        <div className="flex text-amber-500 text-xs sm:text-sm tracking-tight" aria-hidden="true">
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
                         </div>
-                        <span className="text-[12px] font-bold text-[#1c1b1f] ml-1">4.9</span>
-                        <span className="text-[12px] text-[#57535A] font-medium ml-1">Rating (850+ reviews)</span>
+                        <span className="text-xs font-bold text-[#1c1b1f] ml-1">4.9</span>
+                        <span className="text-xs text-[#423E45] font-medium ml-1">Rating (850+ reviews)</span>
                       </div>
 
                       <div className="flex items-center gap-3 sm:gap-3.5">
@@ -529,10 +533,10 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           ))}
                         </div>
                         <div className="flex flex-col text-left">
-                          <span className="text-[17px] sm:text-[22px] font-bold text-[#1c1b1f] tracking-tight leading-none">
+                          <span className="text-lg sm:text-2xl font-bold text-[#1c1b1f] tracking-tight leading-none">
                             2K+ MEMBERS
                           </span>
-                          <span className="text-[11px] sm:text-[12px] font-semibold text-[#57535A] mt-1 whitespace-nowrap">
+                          <span className="text-xs font-semibold text-[#423E45] mt-1 whitespace-nowrap">
                             500+ Guided Fitness Tutorials
                           </span>
                         </div>
@@ -560,15 +564,18 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                             loop
                             autoPlay
                             playsInline
+                            aria-label="FitFlow 45-second preview demo video"
                             className="w-full h-full object-cover scale-150 opacity-80"
-                          />
-                          <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                            <svg className="w-3.5 h-3.5 text-white fill-current translate-x-0.5" viewBox="0 0 24 24">
+                          >
+                            <track kind="captions" src="data:text/vtt,WEBVTT" label="No speech" default />
+                          </video>
+                          <div className="absolute inset-0 bg-black/25 flex items-center justify-center pointer-events-none">
+                            <svg aria-hidden="true" className="w-3.5 h-3.5 text-white fill-current translate-x-0.5" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z" />
                             </svg>
                           </div>
                         </div>
-                        <span className="text-[13px] text-neutral-800 font-semibold tracking-tight">
+                        <span className="text-xs sm:text-sm text-neutral-800 font-semibold tracking-tight">
                           Watch 45s Demo
                         </span>
                       </motion.button>
@@ -582,12 +589,12 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                           const el = document.getElementById('section-scroll-expand');
                           if (el) el.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
+                        className="group inline-flex items-center gap-3 pl-5 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
                       >
-                        <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
+                        <span className="text-xs sm:text-sm text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
                           Download
                         </span>
-                        <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+                        <div className="w-8 h-8 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
                           <svg
                             className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                             viewBox="0 0 24 24"
@@ -625,19 +632,19 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   overlayScrim={0.4}
                 >
                   <div className="max-w-xl text-white px-4 flex flex-col items-center">
-                    <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
+                    <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-xs font-bold tracking-normal mb-3 shadow-md">
                       Smart Fitness Engine
                     </span>
-                    <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3 [text-wrap:balance]">
+                    <h2 className="text-2xl sm:text-4xl font-bold text-white drop-shadow-md leading-tight mb-3 [text-wrap:balance]">
                       Every Rep, Every Milestone
                     </h2>
-                    <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-md [text-wrap:pretty]">
-                      FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
+                    <p className="text-sm sm:text-base text-white/90 leading-relaxed mb-6 max-w-md [text-wrap:pretty]">
+                      FitFlow tracks your workouts, water, calories, and daily streaks in one simple place.
                     </p>
                     <button
                       type="button"
                       onClick={() => navigateTo('services')}
-                      className="px-7 py-3 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-[14px] hover:scale-105 active:scale-95 transition-transform shadow-lg cursor-pointer"
+                      className="px-6 py-2.5 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-sm hover:brightness-105 active:scale-95 transition-all shadow-md cursor-pointer"
                     >
                       Explore Services & Tracks ↗
                     </button>
@@ -651,11 +658,11 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <section className="w-full my-10 sm:my-16" id="section-community">
                   <div className="w-full bg-white rounded-[32px] px-6 py-12 sm:px-12 sm:py-16 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] text-center relative overflow-hidden flex flex-col items-center">
-                    <span className="text-[12px] font-bold text-[#6a527c] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
+                    <span className="text-xs font-bold text-[#4c355d] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
                       Athletic Community
                     </span>
 
-                    <h2 className="max-w-2xl font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4 [text-wrap:balance]">
+                    <h2 className="max-w-2xl font-['Manrope'] text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4 [text-wrap:balance]">
                       Built for athletes committed to{' '}
                       <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800]">
                         progressive
@@ -663,14 +670,14 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                       discipline
                     </h2>
 
-                    <p className="max-w-md text-[15px] text-[#57535A] leading-relaxed mb-8 [text-wrap:pretty]">
-                      Join 2,000+ members logging workouts, sharing recovery milestones, and staying accountable every day in a supportive team environment.
+                    <p className="max-w-md text-sm sm:text-base text-[#423E45] leading-relaxed mb-8 [text-wrap:pretty]">
+                      Join 2,000+ athletes who track workouts, share progress, and stay motivated together every day.
                     </p>
 
-                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#57535A]">
-                      <span className="text-[14px] font-medium text-[#57535A]">FitFlow Athlete Network</span>
+                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#423E45]">
+                      <span className="text-sm font-medium text-[#423E45]">FitFlow Athlete Network</span>
 
-                      <div className="flex items-center gap-4 text-[#57535A]">
+                      <div className="flex items-center gap-4 text-[#423E45]">
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="mailto:contact@fitflow.app"
@@ -706,7 +713,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         </motion.a>
                       </div>
 
-                      <span className="text-[13px] text-[#57535A] font-medium">
+                      <span className="text-xs text-[#423E45] font-medium">
                         FitFlow Collective • 2026
                       </span>
                     </div>

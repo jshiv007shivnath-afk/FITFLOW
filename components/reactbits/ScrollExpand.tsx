@@ -133,7 +133,10 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               loop
               playsInline
               preload="auto"
-            />
+              aria-label={alt || title}
+            >
+              <track kind="captions" src="data:text/vtt,WEBVTT" label="No speech" default />
+            </motion.video>
           ) : (
             <motion.img
               style={{ scale: mediaScale }}
@@ -164,14 +167,18 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               {title}
             </h2>
             {scrollHint && (
-              <div className="mt-5 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white/90 text-xs font-bold uppercase tracking-widest shadow-md flex items-center gap-1.5">
+              <div
+                role="status"
+                aria-label="Scroll down to expand video"
+                className="mt-5 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white/90 text-xs font-semibold tracking-normal shadow-md flex items-center gap-1.5"
+              >
                 <span>{scrollHint}</span>
-                <span className="text-sm font-black">↓</span>
+                <span aria-hidden="true" className="text-sm font-black">↓</span>
               </div>
             )}
           </motion.div>
 
-          {/* Stage 2 Overlay: "SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA */}
+          {/* Stage 2 Overlay: "Smart Fitness Engine" + "Every Rep, Every Milestone" + CTA */}
           <motion.div
             style={{
               opacity: stage2Opacity,
@@ -185,14 +192,14 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               children
             ) : (
               <div className="max-w-xl text-white px-4 flex flex-col items-center">
-                <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
+                <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-xs font-bold tracking-normal mb-3 shadow-md">
                   Smart Fitness Engine
                 </span>
                 <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3">
                   Every Rep, Every Milestone
                 </h2>
-                <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
-                  FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
+                <p className="text-sm sm:text-base text-white/90 leading-relaxed mb-6 max-w-lg">
+                  FitFlow tracks your workouts, water, calories, and daily streaks in one simple place.
                 </p>
                 <button
                   type="button"
