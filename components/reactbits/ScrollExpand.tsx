@@ -79,20 +79,21 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   const height = useTransform(smoothProgress, [0.05, 0.75], [`${startHeight}vh`, '100vh']);
   const borderRadius = useTransform(smoothProgress, [0.05, 0.75], [`${startRadius}px`, `${endRadius}px`]);
 
-  // Parallax subtle counter-zoom on media
-  const mediaScale = useTransform(smoothProgress, [0.05, 0.75], [mediaZoom, 1]);
+  // Parallax subtle counter-zoom on media (kept full zoom for mobile/iOS, calibrated for desktop framing)
+  const initialScale = isMobile ? mediaZoom : Math.min(mediaZoom, 1.08);
+  const mediaScale = useTransform(smoothProgress, [0.05, 0.75], [initialScale, 1]);
 
-  // Contrast overlay (bg-black/30 - bg-black/40) fades in between [0.5, 0.75]
-  const scrimOpacity = useTransform(smoothProgress, [0.5, 0.75], [0, overlayScrim]);
+  // Contrast overlay (bg-black/30 - bg-black/40) fades in between [0.45, 0.75]
+  const scrimOpacity = useTransform(smoothProgress, [0.45, 0.75], [0, overlayScrim]);
 
   // 4. Two-Stage Content Crossfade Choreography
-  // Stage 1 Overlay ("Track Every Motion" + "SCROLL ↓" badge): [0, 0.28]
-  const stage1Opacity = useTransform(smoothProgress, [0, 0.28], [1, 0]);
-  const stage1Scale = useTransform(smoothProgress, [0, 0.28], [1, 0.92]);
-  const stage1Y = useTransform(smoothProgress, [0, 0.28], [0, -20]);
-  const stage1PointerEvents = useTransform(smoothProgress, (p) => (p > 0.28 ? 'none' : 'auto'));
+  // Stage 1 Overlay ("Track Every Motion" + "SCROLL ↓" badge): [0, 0.25]
+  const stage1Opacity = useTransform(smoothProgress, [0, 0.25], [1, 0]);
+  const stage1Scale = useTransform(smoothProgress, [0, 0.25], [1, 0.92]);
+  const stage1Y = useTransform(smoothProgress, [0, 0.25], [0, -20]);
+  const stage1PointerEvents = useTransform(smoothProgress, (p) => (p > 0.25 ? 'none' : 'auto'));
 
-  // Stage 2 Overlay ("SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA): [0.65, 0.88]
+  // Stage 2 Overlay ("Smart Fitness Engine" + "Every Rep, Every Milestone" + CTA): [0.65, 0.88]
   // Holds fully expanded state from 0.88 to 1.0 before unpinning
   const stage2Opacity = useTransform(smoothProgress, [0.65, 0.88], [0, 1]);
   const stage2Y = useTransform(smoothProgress, [0.65, 0.88], [35, 0]);
@@ -102,7 +103,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`scroll-expand-container relative w-full h-[300vh] bg-white ${className}`.trim()}
+      className={`scroll-expand-container relative w-full h-[260vh] sm:h-[280vh] bg-white ${className}`.trim()}
       style={style}
       {...rest}
     >
@@ -125,7 +126,7 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
             <motion.video
               ref={videoRef}
               style={{ scale: mediaScale }}
-              className="w-full h-full object-cover will-change-transform select-none"
+              className="w-full h-full object-cover object-center md:object-[center_12%] will-change-transform select-none"
               src={src}
               poster={poster}
               autoPlay
@@ -133,11 +134,14 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               loop
               playsInline
               preload="auto"
-            />
+              aria-label={alt || title}
+            >
+              <track kind="captions" src="data:text/vtt,WEBVTT" label="No speech" default />
+            </motion.video>
           ) : (
             <motion.img
               style={{ scale: mediaScale }}
-              className="w-full h-full object-cover object-[center_32%] will-change-transform select-none"
+              className="w-full h-full object-cover object-center md:object-[center_12%] will-change-transform select-none"
               src={src}
               alt={alt}
               draggable={false}
@@ -164,14 +168,18 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               {title}
             </h2>
             {scrollHint && (
-              <div className="mt-5 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white/90 text-xs font-bold uppercase tracking-widest shadow-md flex items-center gap-1.5">
+              <div
+                role="status"
+                aria-label="Scroll down to expand video"
+                className="mt-5 px-4 py-1.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white/90 text-xs font-semibold tracking-normal shadow-md flex items-center gap-1.5"
+              >
                 <span>{scrollHint}</span>
-                <span className="text-sm font-black">↓</span>
+                <span aria-hidden="true" className="text-sm font-black">↓</span>
               </div>
             )}
           </motion.div>
 
-          {/* Stage 2 Overlay: "SMART FITNESS ENGINE" + "Every Rep, Every Milestone" + CTA */}
+          {/* Stage 2 Overlay: "Smart Fitness Engine" + "Every Rep, Every Milestone" + CTA */}
           <motion.div
             style={{
               opacity: stage2Opacity,
@@ -185,14 +193,14 @@ export const ScrollExpand: React.FC<ScrollExpandProps> = ({
               children
             ) : (
               <div className="max-w-xl text-white px-4 flex flex-col items-center">
-                <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
+                <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-xs font-bold tracking-normal mb-3 shadow-md">
                   Smart Fitness Engine
                 </span>
                 <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3">
                   Every Rep, Every Milestone
                 </h2>
-                <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
-                  FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
+                <p className="text-sm sm:text-base text-white/90 leading-relaxed mb-6 max-w-lg">
+                  FitFlow tracks your workouts, water, calories, and daily streaks in one simple place.
                 </p>
                 <button
                   type="button"

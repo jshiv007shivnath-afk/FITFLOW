@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import PillNav from '@/components/reactbits/PillNav';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
 import { ServicesView } from '@/components/landing/ServicesView';
 import { AboutView } from '@/components/landing/AboutView';
@@ -12,14 +11,7 @@ interface RuangEditLandingPageProps {
 }
 
 export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps) {
-  const carouselRef = useRef<HTMLDivElement>(null);
   const [currentView, setCurrentView] = useState<'home' | 'services' | 'about'>('home');
-
-  const scrollCarousel = (offset: number) => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: offset, behavior: 'smooth' });
-    }
-  };
 
   const navigateTo = (view: 'home' | 'services' | 'about') => {
     setCurrentView(view);
@@ -32,48 +24,52 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
     <div className="bg-white min-h-screen text-[#1c1b1f] antialiased font-['Manrope',sans-serif] selection:bg-[#ffbd5a] selection:text-[#291800] overflow-x-clip">
       <div className="w-full bg-white flex flex-col">
         {/* ============================================== */}
-        {/* HEADER WITH PILLNAV COMPONENT                  */}
+        {/* HEADER WITH REFINED CAPSULE NAVBAR             */}
         {/* ============================================== */}
-        <header className="w-full h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 lg:px-12">
-          <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-4">
-            {/* React Bits PillNav Component */}
-            <div className="flex-1 flex items-center">
-              <PillNav
-                logo="/icon.png"
-                logoAlt="FitFlow Logo"
-                logoHref="#home"
-                items={[
-                  { label: 'Home', href: '#home' },
-                  { label: 'Services', href: '#services' },
-                  { label: 'About', href: '#about' },
-                ]}
-                activeHref={
-                  currentView === 'home'
-                    ? '#home'
-                    : currentView === 'services'
-                    ? '#services'
-                    : '#about'
-                }
-                theme="light"
-                layout="split"
-                size="md"
-                itemStyle="pill"
-                hoverEffect="fill"
-                indicator="dot"
-                highlightColor="#846a96"
-                highlightTextColor="#ffffff"
-                barColor="#ffffff"
-                textColor="#1c1b1f"
-                onItemClick={(item) => {
-                  if (item.href === '#home') navigateTo('home');
-                  else if (item.href === '#services') navigateTo('services');
-                  else if (item.href === '#about') navigateTo('about');
-                }}
-              />
+        <header className="w-full h-[64px] sm:h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-3 sm:px-8 lg:px-12">
+          <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-2 sm:gap-4">
+            {/* Left: Brand + Refined Pill Capsule */}
+            <div className="flex items-center gap-3 sm:gap-6">
+              <button
+                type="button"
+                onClick={() => navigateTo('home')}
+                className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer"
+              >
+                <img
+                  src="/icon.png"
+                  alt="FitFlow Logo"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
+                />
+                <span className="font-semibold text-neutral-900 text-[16px] sm:text-[18px] tracking-tight">
+                  Fitflow app
+                </span>
+              </button>
+
+              {/* Single Outer Capsule for Nav */}
+              <nav className="hidden sm:inline-flex items-center bg-neutral-100/90 border border-neutral-200/60 p-1.5 rounded-full backdrop-blur-sm gap-1">
+                {(['home', 'services', 'about'] as const).map((view) => {
+                  const label = view.charAt(0).toUpperCase() + view.slice(1);
+                  const isActive = currentView === view;
+                  return (
+                    <button
+                      key={view}
+                      type="button"
+                      onClick={() => navigateTo(view)}
+                      className={`relative px-4 py-1.5 text-[13px] font-semibold transition-all duration-200 rounded-full cursor-pointer ${
+                        isActive
+                          ? 'bg-white text-neutral-900 shadow-sm'
+                          : 'text-neutral-600 hover:text-neutral-900'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </nav>
             </div>
 
-            {/* Right Action CTAs (Original layout preserved) */}
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* Right Action CTA: Clean Download Button (No direct browser launch) */}
+            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
               <motion.button
                 type="button"
                 whileHover={{ scale: 1.03 }}
@@ -83,24 +79,20 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   const el = document.getElementById('section-scroll-expand');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="hidden sm:inline-flex items-center gap-2 h-[42px] px-5 rounded-full bg-[#FBFAFC] border border-[#E7E2E8] hover:border-[#B6A6BE] text-[#57535A] hover:text-[#1c1b1f] text-[13px] font-semibold transition-all group cursor-pointer shadow-sm"
+                className="inline-flex items-center gap-1.5 sm:gap-2 h-[34px] sm:h-[42px] px-3 sm:px-5 rounded-full bg-[#FBFAFC] border border-[#E7E2E8] hover:border-[#B6A6BE] text-[#57535A] hover:text-[#1c1b1f] text-[11px] sm:text-[13px] font-semibold transition-all group cursor-pointer shadow-sm"
               >
-                <span>Download now</span>
-                <span className="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                  north_east
-                </span>
-              </motion.button>
-
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.06 }}
-                whileTap={{ scale: 0.94 }}
-                onClick={onLaunchApp}
-                title="Launch Fitflow App"
-                className="w-10 h-10 rounded-full bg-[#6a527c] text-white flex items-center justify-center shrink-0 cursor-pointer shadow-sm hover:bg-[#5a426c] transition-colors"
-                aria-label="User Profile"
-              >
-                <span className="material-symbols-outlined text-[18px]">person</span>
+                <span>Download<span className="hidden sm:inline"> now</span></span>
+                <svg
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
               </motion.button>
             </div>
           </div>
@@ -149,89 +141,153 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               transition={{ duration: 0.35 }}
               className="flex-1 w-full bg-white relative"
             >
-              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative" id="home">
-                {/* FLOATING DECORATIVE STARS */}
-                <motion.div
-                  aria-hidden="true"
-                  animate={{
-                    y: [0, -10, 0, 10, 0],
-                    rotate: [0, 90, 180, 270, 360],
-                    opacity: [0.65, 0.95, 0.7, 0.95, 0.65],
-                  }}
-                  transition={{
-                    duration: 4.8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="pointer-events-none absolute top-14 left-4 sm:left-8 md:left-14 text-[#846a96]/80 z-10 w-8 h-8 flex items-center justify-center"
-                >
-                  <svg fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
-                    <path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z" />
-                  </svg>
-                </motion.div>
+              {/* ============================================== */}
+              {/* 1. BACKGROUND ARCHITECTURAL GRID & AURA        */}
+              {/* ============================================== */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-[#FAF9F6]"
+              >
+                <div
+                  className="absolute inset-0 bg-[linear-gradient(to_right,rgba(23,23,23,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(23,23,23,0.045)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_45%,#000_60%,transparent_100%)]"
+                />
+              </div>
 
-                <motion.div
-                  aria-hidden="true"
-                  animate={{
-                    y: [0, -12, 0, 12, 0],
-                    rotate: [0, -90, -180, -270, -360],
-                    opacity: [0.75, 1, 0.8, 1, 0.75],
-                  }}
-                  transition={{
-                    duration: 4.2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="pointer-events-none absolute top-16 right-16 sm:right-28 md:right-36 text-[#846a96] z-10 w-10 h-10 flex items-center justify-center"
-                >
-                  <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24">
-                    <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-                  </svg>
-                </motion.div>
+              {/* Center Warm Radial Aura behind H1 (Responsive scaling) */}
+              <div
+                aria-hidden="true"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[650px] h-[300px] sm:h-[420px] rounded-full blur-[90px] sm:blur-[110px] pointer-events-none z-0 bg-[radial-gradient(circle,rgba(251,146,60,0.16)_0%,rgba(253,186,116,0.08)_45%,transparent_75%)]"
+              />
 
-                <motion.div
-                  aria-hidden="true"
-                  animate={{
-                    y: [0, 10, 0, -10, 0],
-                    rotate: [0, 120, 240, 360],
-                    opacity: [0.6, 0.9, 0.65, 0.9, 0.6],
-                  }}
-                  transition={{
-                    duration: 5.0,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                  }}
-                  className="pointer-events-none absolute top-48 right-6 sm:right-14 md:right-20 text-[#846a96]/75 z-10 w-9 h-9 flex items-center justify-center"
+              {/* Biometric Telemetry SVG Wave Lines Container */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-x-0 top-[42%] -translate-y-1/2 w-full h-[260px] pointer-events-none z-0 overflow-hidden"
+              >
+                <svg
+                  className="w-full h-full sm:min-w-[1200px] absolute inset-0 sm:left-1/2 sm:-translate-x-1/2"
+                  viewBox="0 0 1440 260"
+                  fill="none"
+                  preserveAspectRatio="none"
                 >
-                  <svg fill="currentColor" height="19" viewBox="0 0 24 24" width="19">
-                    <path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z" />
-                  </svg>
-                </motion.div>
+                  {/* Wave 1: Primary Smooth Amber Sine Wave with Horizontal Pulse */}
+                  <motion.path
+                    d="M0,130 C240,40 480,220 720,130 C960,40 1200,220 1440,130"
+                    stroke="#F59E0B"
+                    strokeWidth="1.75"
+                    strokeOpacity="0.35"
+                    fill="none"
+                    strokeDasharray="1440"
+                    animate={{
+                      strokeDashoffset: [1440, 0],
+                    }}
+                    transition={{
+                      duration: 12,
+                      repeat: Infinity,
+                      ease: 'linear',
+                    }}
+                  />
+                  {/* Wave 2: Secondary Dashed Slate Inverse Curve */}
+                  <path
+                    d="M0,130 C240,220 480,40 720,130 C960,220 1200,40 1440,130"
+                    stroke="#737373"
+                    strokeWidth="1.5"
+                    strokeDasharray="4 6"
+                    strokeOpacity="0.28"
+                    fill="none"
+                  />
+                </svg>
+                {/* Ambient Micro-dots */}
+                <div className="absolute top-[35%] left-[22%] w-2 h-2 rounded-full bg-orange-400/50 blur-[1px]" />
+                <div className="absolute top-[65%] left-[52%] w-2 h-2 rounded-full bg-amber-400/40 blur-[1px]" />
+                <div className="absolute top-[38%] right-[24%] w-2 h-2 rounded-full bg-orange-400/50 blur-[1px]" />
+              </div>
 
+              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" id="home">
                 {/* ============================================== */}
-                {/* HERO SECTION (ORIGINAL LAYOUT RESTORED)         */}
+                {/* HERO SECTION (EDITORIAL APPLE/LINEAR MINIMAL) */}
                 {/* ============================================== */}
-                <section className="w-full pt-10 pb-12 flex flex-col items-center relative overflow-hidden">
-                  {/* Top Right Version Pill Badge (1.0.0 Restored) */}
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full flex justify-end mb-4 md:mb-6"
-                  >
-                    <div className="inline-flex items-center gap-1.5 p-1 bg-[#f2ecf3] rounded-full shadow-sm">
-                      <span className="px-3.5 py-1 rounded-full bg-[#846a96] text-white text-[12px] font-semibold tracking-wide">
-                        Fitflow 1.0.0
-                      </span>
-                      <span className="px-3 py-1 rounded-full bg-[#f2daff] text-[#543e63] text-[12px] font-semibold">
-                        2026.04
-                      </span>
-                    </div>
-                  </motion.div>
+                <section className="w-full pt-8 sm:pt-14 md:pt-20 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(80vh-80px)] flex flex-col items-center justify-center relative">
+                  {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
+                  <div className="relative w-full max-w-5xl text-center select-none z-10">
+                    {/* Left Floating Frosted-Glass Widget (Tilted -3deg, Generously Spaced from Headline) */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -16, rotate: -3 }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: [0, -6, 0],
+                        rotate: -3,
+                      }}
+                      whileHover={{ scale: 1.04, rotate: 0 }}
+                      transition={{
+                        opacity: { duration: 0.8, delay: 0.35 },
+                        x: { duration: 0.8, delay: 0.35 },
+                        y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+                        scale: { duration: 0.2 },
+                        rotate: { duration: 0.2 },
+                      }}
+                      className="hidden lg:flex items-center gap-3 absolute top-3 xl:top-5 left-0 lg:-left-3 xl:left-0 -rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-52 select-none cursor-pointer transition-shadow"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1">
+                          <span className="truncate">Active Burn</span>
+                          <span className="text-orange-700 font-mono font-bold">640 kcal</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
+                        </div>
+                      </div>
+                    </motion.div>
 
-                  {/* Centered Editorial Display Headline */}
-                  <div className="max-w-4xl text-center select-none relative z-10">
-                    <h1 className="font-['Manrope'] text-[38px] sm:text-[54px] lg:text-[72px] text-[#1c1b1f] tracking-tight font-bold leading-[1.08] mb-3 flex flex-col items-center">
+                    {/* Right Floating Frosted-Glass Widget: Habit Streak (Shifted Down Under "with Our") */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 16, rotate: 3 }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        y: [0, -7, 0],
+                        rotate: 3,
+                      }}
+                      whileHover={{ scale: 1.04, rotate: 0 }}
+                      transition={{
+                        opacity: { duration: 0.8, delay: 0.45 },
+                        x: { duration: 0.8, delay: 0.45 },
+                        y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 },
+                        scale: { duration: 0.2 },
+                        rotate: { duration: 0.2 },
+                      }}
+                      className="hidden lg:flex items-center gap-3 absolute top-[44%] xl:top-[46%] right-0 lg:-right-3 xl:right-0 rotate-3 z-20 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1.5">
+                          <span className="truncate">Habit Streak</span>
+                          <span className="text-amber-700 font-mono font-bold">14 Days 🔥</span>
+                        </div>
+                        {/* 7 Orange Streak Activity Indicators */}
+                        <div className="flex items-center gap-1.5">
+                          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
+                            <div
+                              key={idx}
+                              className="w-3.5 h-2 rounded-full bg-amber-500 shadow-xs"
+                              title={`${day}: Active`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    <h1 className="font-['Manrope'] text-[26px] xs:text-[32px] sm:text-[46px] lg:text-[58px] xl:text-[66px] text-[#1c1b1f] tracking-tight font-bold leading-[1.18] sm:leading-[1.08] mb-3 flex flex-col items-center">
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -245,106 +301,320 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                        className="inline-flex flex-wrap items-center justify-center gap-3 md:gap-4 mt-1"
+                        className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-1"
                       >
                         <span>Fitness</span>
 
-                        {/* Yellow Pill with Star (Enlarged to touch borders & shifted right per user request) */}
-                        <motion.span
-                          initial={{ opacity: 0, scale: 0.88 }}
-                          animate={{
-                            opacity: 1,
-                            scale: [1, 1.025, 1],
-                          }}
-                          transition={{
-                            opacity: { duration: 0.7, delay: 0.28 },
-                            scale: { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
-                          }}
-                          className="relative inline-flex items-center justify-end w-24 sm:w-28 md:w-32 h-10 sm:h-12 md:h-14 rounded-full bg-[#ffbd5a] shadow-inner pr-1.5 sm:pr-2.5 overflow-hidden"
-                        >
-                          <motion.svg
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
-                            className="text-white drop-shadow-sm h-[90%] w-auto max-h-full"
-                            fill="#FFFFFF"
-                            viewBox="0 0 24 24"
+                        {/* Interactive Orange Capsule Pill with Continuous ECG Waveform & "Active Sync" Badge */}
+                        <div className="relative inline-flex items-center group mx-1 sm:mx-2 md:mx-3 align-middle">
+                          {/* "Active Sync" Floating Micro-Badge */}
+                          <motion.div
+                            animate={{ y: [0, -2, 0] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                            className="absolute scale-90 sm:scale-100 -top-3 sm:-top-3.5 right-0 sm:right-1 z-30 px-2 sm:px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-sm border border-orange-200/80 shadow-[0_4px_10px_rgba(0,0,0,0.06)] flex items-center gap-1.5 select-none pointer-events-none"
                           >
-                            <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-                          </motion.svg>
-                        </motion.span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
+                            <span className="text-[10px] sm:text-[11px] font-semibold tracking-tight text-neutral-800 whitespace-nowrap">
+                              Active Sync
+                            </span>
+                          </motion.div>
+
+                          {/* Hover Tooltip Badge */}
+                          <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-200 pointer-events-none z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900/95 text-white text-[11px] font-semibold whitespace-nowrap shadow-lg backdrop-blur-xs border border-white/10 select-none">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                            <span>142 BPM • Live Sync</span>
+                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-900 rotate-45" />
+                          </div>
+
+                          {/* Orange Capsule Base */}
+                          <motion.span
+                            initial={{ opacity: 0, scale: 0.88 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            whileHover={{ scale: 1.06 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
+                            className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-[108px] h-8 sm:h-11 md:h-[54px] rounded-full bg-gradient-to-b from-[#FFB340] to-[#F97316] shadow-[0_12px_28px_-6px_rgba(249,115,22,0.55),inset_0_2px_4px_rgba(255,255,255,0.45)] px-2 sm:px-3 overflow-hidden cursor-pointer shrink-0"
+                          >
+                            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
+                            <svg
+                              className="w-10 sm:w-14 md:w-16 h-5 sm:h-7 text-white drop-shadow-sm overflow-visible"
+                              viewBox="0 0 64 24"
+                              fill="none"
+                              stroke="#FFFFFF"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <motion.path
+                                d="M2 12h12l3-7 5 14 5-11 4 7 3-3h18"
+                                strokeDasharray="64"
+                                animate={{ strokeDashoffset: [64, 0, -64] }}
+                                transition={{
+                                  duration: 2.2,
+                                  repeat: Infinity,
+                                  ease: 'linear',
+                                }}
+                              />
+                            </svg>
+                            <span className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
+                          </motion.span>
+                        </div>
 
                         <span>with Our</span>
                       </motion.span>
 
+                      {/* Editorial FitFlow app with Hand-Crafted Double-Stroke Underline */}
                       <motion.span
                         initial={{ opacity: 0, y: 25 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
-                        className="relative inline-flex items-center justify-center mt-2"
+                        className="relative inline-block mt-2 font-['Instrument_Serif',Georgia,serif] italic font-normal tracking-normal text-[#1c1b1f] text-[1.12em]"
                       >
-                        {/* Original Curved Orbit Loop Vector */}
-                        <motion.svg
-                          initial={{ opacity: 0, scale: 0.9, rotate: -4 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-                          className="absolute -left-12 sm:-left-20 -bottom-2 sm:-bottom-3 w-16 sm:w-24 md:w-28 h-auto text-[#846a96] pointer-events-none"
+                        <span>FitFlow app</span>
+                        {/* Double-Stroke Hand-Crafted SVG Underline */}
+                        <svg
+                          className="absolute -bottom-3 left-0 w-full h-[14px] pointer-events-none overflow-visible"
+                          viewBox="0 0 320 16"
                           fill="none"
-                          stroke="#846a96"
-                          strokeLinecap="round"
-                          strokeWidth="3.2"
-                          viewBox="0 0 110 52"
                         >
-                          <path d="M102 38C75 48 18 52 8 36C-2 20 18 10 44 8C78 6 94 22 72 32C52 41 22 36 14 26" />
-                        </motion.svg>
-                        <span className="relative z-10">FitFlow app</span>
+                          <motion.path
+                            d="M 4 9 Q 160 3 316 8"
+                            stroke="#171717"
+                            strokeWidth="2.4"
+                            strokeLinecap="round"
+                            fill="none"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+                          />
+                          <motion.path
+                            d="M 28 13 Q 165 9 292 12"
+                            stroke="#171717"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeOpacity="0.75"
+                            fill="none"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.8, delay: 0.45, ease: 'easeOut' }}
+                          />
+                        </svg>
                       </motion.span>
                     </h1>
+
+                    {/* Editorial Clean Sub-Headline */}
+                    <motion.p
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
+                      className="mt-5 max-w-lg mx-auto text-center text-neutral-500 text-base md:text-lg leading-relaxed font-normal px-2"
+                    >
+                      Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
+                    </motion.p>
+
+                    {/* Mobile/Tablet Floating Interactive Cards Row (Visible on < lg screens, fully responsive) */}
+                    <div className="grid grid-cols-2 lg:hidden gap-2 sm:gap-3 mt-6 sm:mt-7 select-none px-2 z-20 w-full max-w-[340px] xs:max-w-[360px] mx-auto">
+                      {/* Left Floating Card: Active Burn */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{
+                          opacity: 1,
+                          y: [0, -5, 0],
+                        }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{
+                          opacity: { duration: 0.6, delay: 0.4 },
+                          y: { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
+                          scale: { duration: 0.2 },
+                        }}
+                        className="flex items-center gap-2 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 cursor-pointer"
+                      >
+                        <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0 text-left">
+                          <div className="text-[10px] font-bold text-neutral-800 leading-tight">
+                            Active Burn
+                          </div>
+                          <div className="text-orange-700 font-mono font-bold text-[10px] mb-1">
+                            640 kcal
+                          </div>
+                          <div className="w-full h-1 bg-neutral-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Right Floating Card: Habit Streak */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{
+                          opacity: 1,
+                          y: [0, -6, 0],
+                        }}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        transition={{
+                          opacity: { duration: 0.6, delay: 0.5 },
+                          y: { duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 },
+                          scale: { duration: 0.2 },
+                        }}
+                        className="flex items-center gap-2 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 cursor-pointer"
+                      >
+                        <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
+                          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0 text-left">
+                          <div className="text-[10px] font-bold text-neutral-800 leading-tight">
+                            Habit Streak
+                          </div>
+                          <div className="text-amber-700 font-mono font-bold text-[10px] mb-1">
+                            14 Days 🔥
+                          </div>
+                          {/* 7 Orange Streak Activity Indicators */}
+                          <div className="flex items-center gap-0.5">
+                            {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
+                              <div
+                                key={idx}
+                                className="w-2.5 h-1 rounded-full bg-amber-500 shadow-xs"
+                                title={`${day}: Active`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
                   </div>
 
-                  {/* Original Hero Underline Split Row: Metrics (Left) & Download CTA (Right) */}
+                  {/* Hero Social Proof Split Row: Stacked Avatars + Rating (Left) & Download CTA (Right) */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
-                    className="w-full max-w-[1080px] mt-10 md:mt-14 flex items-end justify-between px-2 sm:px-4"
+                    className="max-w-5xl mx-auto w-full flex flex-col sm:flex-row items-center sm:items-end justify-between mt-8 sm:mt-14 md:mt-20 px-4 sm:px-6 gap-6 sm:gap-0"
                   >
-                    <div className="flex flex-col text-left">
-                      <span className="text-[12px] text-[#57535A] tracking-wider uppercase font-semibold">
-                        With more than
-                      </span>
-                      <span className="text-[24px] sm:text-[28px] font-bold text-[#1c1b1f] tracking-tight mt-0.5">
-                        2K + MEMBERS
-                      </span>
-                      <span className="text-[13px] font-semibold text-[#57535A]">
-                        500 + TUTORIALS
-                      </span>
+                    {/* Human Social Proof Block */}
+                    <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                      <div
+                        className="flex items-center gap-1.5 mb-2 whitespace-nowrap"
+                        role="img"
+                        aria-label="Rated 4.9 out of 5 stars based on 850+ reviews"
+                      >
+                        <div className="flex text-amber-500 text-xs sm:text-sm tracking-tight" aria-hidden="true">
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                          <span aria-hidden="true">★</span>
+                        </div>
+                        <span className="text-xs font-bold text-[#1c1b1f] ml-1">4.9</span>
+                        <span className="text-xs text-[#423E45] font-medium ml-1">Rating (850+ reviews)</span>
+                      </div>
+
+                      <div className="flex items-center gap-3 sm:gap-3.5">
+                        <div className="flex -space-x-2 sm:-space-x-2.5 overflow-hidden py-0.5 shrink-0">
+                          {[
+                            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces',
+                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces',
+                            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces',
+                            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces',
+                          ].map((avatarUrl, i) => (
+                            <img
+                              key={i}
+                              src={avatarUrl}
+                              alt="Active Athlete Member"
+                              className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                            />
+                          ))}
+                        </div>
+                        <div className="flex flex-col text-left">
+                          <span className="text-lg sm:text-2xl font-bold text-[#1c1b1f] tracking-tight leading-none">
+                            2K+ MEMBERS
+                          </span>
+                          <span className="text-xs font-semibold text-[#423E45] mt-1 whitespace-nowrap">
+                            500+ Guided Fitness Tutorials
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    <motion.button
-                      type="button"
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        const el = document.getElementById('section-scroll-expand');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                      className="group inline-flex items-center gap-3 pl-6 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
-                    >
-                      <span className="text-[13px] text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
-                        Download
-                      </span>
-                      <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
-                        <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 font-bold">
-                          north_east
+                    {/* Bottom-Right CTA Actions Cluster */}
+                    <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 shrink-0">
+                      {/* Secondary Interactive Pill Button: Watch 45s Demo */}
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          const el = document.getElementById('section-scroll-expand');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="group inline-flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-full bg-white hover:bg-neutral-50 shadow-sm border border-neutral-200/80 hover:border-neutral-300 transition-all duration-200 cursor-pointer"
+                      >
+                        {/* w-7 h-7 rounded-full video preview with play icon overlay */}
+                        <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 shadow-xs ring-1 ring-black/5 bg-neutral-900 flex items-center justify-center">
+                          <video
+                            src="/flow_video.mp4"
+                            muted
+                            loop
+                            autoPlay
+                            playsInline
+                            aria-label="FitFlow 45-second preview demo video"
+                            className="w-full h-full object-cover scale-150 opacity-80"
+                          >
+                            <track kind="captions" src="data:text/vtt,WEBVTT" label="No speech" default />
+                          </video>
+                          <div className="absolute inset-0 bg-black/25 flex items-center justify-center pointer-events-none">
+                            <svg aria-hidden="true" className="w-3.5 h-3.5 text-white fill-current translate-x-0.5" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                        <span className="text-xs sm:text-sm text-neutral-800 font-semibold tracking-tight">
+                          Watch 45s Demo
                         </span>
-                      </div>
-                    </motion.button>
+                      </motion.button>
+
+                      {/* Download Button */}
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          const el = document.getElementById('section-scroll-expand');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="group inline-flex items-center gap-3 pl-5 pr-2 py-1.5 rounded-full bg-[#f7f2f8] hover:bg-[#f2ecf3] shadow-sm border border-[#E7E2E8] hover:border-[#B6A6BE] transition-all duration-300 cursor-pointer"
+                      >
+                        <span className="text-xs sm:text-sm text-[#1c1b1f] font-semibold group-hover:text-[#6a527c] transition-colors tracking-wide">
+                          Download
+                        </span>
+                        <div className="w-8 h-8 rounded-full bg-[#ffbd5a] text-[#744c00] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+                          <svg
+                            className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M7 17L17 7M17 7H7M17 7V17" />
+                          </svg>
+                        </div>
+                      </motion.button>
+                    </div>
                   </motion.div>
                 </section>
               </div>
 
               {/* ========================================================= */}
-              {/* SCROLL-EXPAND VIDEO / MEDIA SECTION                       */}
+              {/* 2. SCROLL-EXPAND VIDEO / MEDIA SECTION                    */}
               {/* ========================================================= */}
               <section className="w-full relative mt-12 sm:mt-16 md:mt-20" id="section-scroll-expand">
                 <ScrollExpand
@@ -362,19 +632,19 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                   overlayScrim={0.4}
                 >
                   <div className="max-w-xl text-white px-4 flex flex-col items-center">
-                    <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-[12px] font-bold uppercase tracking-wider mb-3 shadow-md">
+                    <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-xs font-bold tracking-normal mb-3 shadow-md">
                       Smart Fitness Engine
                     </span>
-                    <h2 className="text-[28px] sm:text-[42px] font-bold text-white drop-shadow-md leading-tight mb-3">
+                    <h2 className="text-2xl sm:text-4xl font-bold text-white drop-shadow-md leading-tight mb-3 [text-wrap:balance]">
                       Every Rep, Every Milestone
                     </h2>
-                    <p className="text-[14px] sm:text-[16px] text-white/90 leading-relaxed mb-6 max-w-lg">
-                      FitFlow synchronizes your daily workout sets, water intake, calorie burns, and streak milestones into a fluid, visual experience.
+                    <p className="text-sm sm:text-base text-white/90 leading-relaxed mb-6 max-w-md [text-wrap:pretty]">
+                      FitFlow tracks your workouts, water, calories, and daily streaks in one simple place.
                     </p>
                     <button
                       type="button"
                       onClick={() => navigateTo('services')}
-                      className="px-7 py-3 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-[14px] hover:scale-105 active:scale-95 transition-transform shadow-lg cursor-pointer"
+                      className="px-6 py-2.5 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-sm hover:brightness-105 active:scale-95 transition-all shadow-md cursor-pointer"
                     >
                       Explore Services & Tracks ↗
                     </button>
@@ -382,272 +652,69 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
                 </ScrollExpand>
               </section>
 
-              {/* BOTTOM CONTAINER: CAROUSEL, FEATURES, COMMUNITY */}
+              {/* ========================================================= */}
+              {/* 3. ATHLETIC COMMUNITY SECTION                             */}
+              {/* ========================================================= */}
               <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-                {/* ============================================== */}
-                {/* FEATURED ILLUSTRATION CAROUSEL                 */}
-                {/* ============================================== */}
-                <div className="w-full max-w-[1140px] mx-auto mt-6 mb-16 flex items-center justify-center gap-3 sm:gap-5 md:gap-7 relative px-2">
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.08 }}
-                    whileTap={{ scale: 0.92 }}
-                    onClick={() => scrollCarousel(-240)}
-                    aria-label="Previous illustrations"
-                    className="w-12 h-12 rounded-full bg-[#BDA5D0]/50 hover:bg-[#BDA5D0] active:bg-[#BDA5D0]/90 text-white flex items-center justify-center shadow-sm shrink-0 transition-colors cursor-pointer z-20"
-                  >
-                    <span className="material-symbols-outlined text-[22px]">arrow_back</span>
-                  </motion.button>
-
-                  <div
-                    ref={carouselRef}
-                    className="flex items-center gap-4 sm:gap-6 md:gap-7 overflow-x-auto scroll-smooth py-5 px-3 no-scrollbar"
-                  >
-                    {/* Tile 1 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#F078AD] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(240,120,173,0.22)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Daily Habit & Goal Tracking"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgjg8LI1bmMZDHiQYFD97qH4RbxRF07S3y1hEX2Vs4NwkYipvIKSXHN6p7uVE9qUK6vJu_psLkFlzu0IPiU6V56sTqpnjRkt7KDOCev4A9HLBRoXKs_WV5YFOnTFl_8ZV6j-PlHzbFtOSAScE2wpQ02dSYtXQs4O4S8-4GRCX4AggbMm6qcDLREhyuaFCiVL53hP0EXBCJvHbFsS9zNK2e24mxhClIzxRjYkrG4t6i"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Tile 2 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#BDA5D0] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(189,165,208,0.25)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Weekly Workout Planner"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiQH2kdhl9qctfUjdWYG_KPyNg80SkF4nawnR6N_TCcxiPcwtXdZZX7HjQSaksOdVVZ7NW1dpX2jinAzNt1TB9JDDVl8zTRKKv8GEtG98CJnPxWwgEsMK0Wl9AnYEdc2-O6K7w8wTLUqGSZwLZ-yaGcMnzG9miEM5FouFJCg6QpOe3uMhDAh8Sc73guTphPfNSzR5TcQgL7USGCXvnWPNwmT83d1tqPdpFuC7vBtNC"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Tile 3 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#7DD9E7] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(125,217,231,0.25)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Biometric Vitals & Hydration"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-b-73omA53MczqBA_-xr71eVKiybUY3B5FXaqtnrK9i8K9AUBZYEy8EgQgCpcIhchn5cg4SxR0coIslbKx32kVY-HL3jD4rwrzax-eviJB75bSScCW9lbVy5WoQzJhweGax6NOGPAanyEIdt3SWFFRIrDHLayXMXUmpQ3kId3-GjnytnoaRRZueTaPEAtJDylwdUUFESDyqDimoFcJji0KP6X7PFXpqbZp-iATmt3"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Tile 4 */}
-                    <motion.div
-                      whileHover={{ y: -6, scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ duration: 0.25, ease: 'easeOut' }}
-                      className="w-[160px] sm:w-[190px] md:w-[210px] h-[160px] sm:h-[190px] md:h-[210px] rounded-[36px] bg-[#F7B653] p-3.5 sm:p-4 shrink-0 flex items-center justify-center shadow-[0_10px_28px_rgba(247,182,83,0.25)]"
-                    >
-                      <div className="w-full h-full rounded-[26px] overflow-hidden flex items-center justify-center bg-white/25">
-                        <img
-                          alt="Step Streaks & Activity Rings"
-                          className="w-full h-full object-cover rounded-[22px] transition-transform duration-300 hover:scale-105"
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoZScG9lAHG5P-vIrWJQLX8yqikSYLpJ5IXqS3pepz2TMDziYFkSLEFFkOnG754ADcZxm_8S-WuCOJSUuMlHD4M54nCwAAWbr9gitue5allATg--UcDZ-hfFkPQ8VBu3MhJ0uS2fmd59ET10hlU3LUqxoV2Cwext6G1jxIJajY0R5wnROmaa3qHJQ-1ES_hmh8OKJbTYwaHUGZ58KCPs8uABFik_0HA_GqCQCE0XeO"
-                        />
-                      </div>
-                    </motion.div>
-                  </div>
-
-                  <motion.button
-                    type="button"
-                    whileHover={{ scale: 1.08 }}
-                    whileTap={{ scale: 0.92 }}
-                    onClick={() => scrollCarousel(240)}
-                    aria-label="Next illustrations"
-                    className="w-12 h-12 rounded-full bg-[#BDA5D0]/50 hover:bg-[#BDA5D0] active:bg-[#BDA5D0]/90 text-white flex items-center justify-center shadow-sm shrink-0 transition-colors cursor-pointer z-20"
-                  >
-                    <span className="material-symbols-outlined text-[22px]">arrow_forward</span>
-                  </motion.button>
-                </div>
-
-                {/* ============================================== */}
-                {/* OUR FEATURE (CLASS) SECTION                     */}
-                {/* ============================================== */}
-                <motion.section
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.6 }}
-                  className="w-full bg-white rounded-[32px] p-6 sm:p-10 md:p-12 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] relative my-12"
-                  id="section-our-feature"
-                >
-                  <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                    <div>
-                      <h2 className="font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight">
-                        Our Features
-                      </h2>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[#57535A] text-[13px] sm:text-[14px] max-w-xs md:text-right leading-relaxed">
-                        These are some of the training modules built inside the Fitflow app
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* 3 Interactive Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 1 */}
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.25 }}
-                      onClick={() => navigateTo('services')}
-                      className="group rounded-[24px] border border-[#E7E2E8] bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-['Manrope'] text-[20px] font-bold text-[#1c1b1f]">
-                            Daily Workout Planner
-                          </h3>
-                          <div className="w-9 h-9 rounded-full bg-[#f2ecf3] group-hover:bg-[#ffbd5a] group-hover:text-[#291800] text-[#57535A] flex items-center justify-center transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">north_east</span>
-                          </div>
-                        </div>
-                        <p className="text-[#57535A] text-[14px] leading-relaxed mb-6">
-                          Schedule weekly routines, track sets and reps, and get customized rest interval timers.
-                        </p>
-                      </div>
-                      <div className="w-full h-44 rounded-2xl bg-[#f7f2f8] overflow-hidden flex items-center justify-center p-2">
-                        <img
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpXkauqOnkce4ydkMgJ4rS3FJcIM3feFvXy2X4zDfvhcVZQEjoUcn0tHU9ESNaJTieQVkO7rBRsfHGFtTkS6-81hRSkQc_j_7wd3B6tDSClDb0ebifx1fmuuL-DnSqh_M8Qu504Hu3t0kLlQ_1EiZidQWeCWvI5ff6cORBkcxITexor2hni23eU0rBn6PZkBH7nfSI0XcH9DOD-HtTkFQYVJXcaO3YISYP851ULD3R"
-                          alt="Daily Workout Planner"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Card 2: Featured Purple Card */}
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.25 }}
-                      onClick={() => navigateTo('services')}
-                      className="group rounded-[24px] bg-[#6a527c] text-white p-6 shadow-md hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-['Manrope'] text-[20px] font-bold text-white">
-                            Biometric Sync & Tracking
-                          </h3>
-                          <div className="w-9 h-9 rounded-full bg-[#ffbd5a] text-[#291800] flex items-center justify-center font-bold">
-                            <span className="material-symbols-outlined text-[16px]">north_east</span>
-                          </div>
-                        </div>
-                        <p className="text-[#f2daff] text-[14px] leading-relaxed mb-6">
-                          Sync steps, active calories, and heart rate seamlessly across web and mobile.
-                        </p>
-                      </div>
-                      <div className="w-full h-44 rounded-2xl bg-[#ffddb2]/20 overflow-hidden flex items-center justify-center p-2">
-                        <img
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jTd-hSlDD4SnXOkhA1efXEfSAWGxkHhdpNm-y0uEhguc1iQBWYXg_z7OfYNkkEOaGL6N8YnmE_uh2Gc3qrzuoBH3XQHoRLSLrV7AWO7S4ZS7qye8Gghzx-zrcrOobUsGI3VUyLAq-tBm7wXfPH0twuxKkVzvUeBE8Wn_QyecLorQZhEcB5T2m1onNii01IoLo3RO9Ous9pnXRT8-ev5-o8Q8avHNg4_vOUOr8W_B"
-                          alt="Biometric Sync"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </div>
-                    </motion.div>
-
-                    {/* Card 3 */}
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.25 }}
-                      onClick={() => navigateTo('services')}
-                      className="group rounded-[24px] border border-[#E7E2E8] bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="font-['Manrope'] text-[20px] font-bold text-[#1c1b1f]">
-                            Habit Streaks & Milestones
-                          </h3>
-                          <div className="w-9 h-9 rounded-full bg-[#f2ecf3] group-hover:bg-[#ffbd5a] group-hover:text-[#291800] text-[#57535A] flex items-center justify-center transition-colors">
-                            <span className="material-symbols-outlined text-[16px]">north_east</span>
-                          </div>
-                        </div>
-                        <p className="text-[#57535A] text-[14px] leading-relaxed mb-6">
-                          Gain XP, level up your athlete profile, and build lifelong healthy exercise habits.
-                        </p>
-                      </div>
-                      <div className="w-full h-44 rounded-2xl bg-[#f7f2f8] overflow-hidden flex items-center justify-center p-2">
-                        <img
-                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAestJaDo2hR_ZmZWnEkGvSTm2dORgcb9bSRitjwE0hoXczGRBSXGvv13mxFxt7402Z4sYIHEHO3IhqUDy663zEcQmMIXxBXdo5UOSPlcWcXZCF1HVlD9p2_ewc8Hjpwy7M4SKSqyQ4YntAKscMhuK4gIZ5QIbXOOe6El9drDDwVPUqBDwz8pv6HKBJr96OhOVcML0cFsnWIemMpOZwq8aNI8tGQ_zxtT9Gh_lu4n0E"
-                          alt="Habit Streaks"
-                          className="w-full h-full object-cover rounded-xl"
-                        />
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.section>
-
-                {/* ============================================== */}
-                {/* COMMUNITY SECTION                              */}
-                {/* ============================================== */}
-                <section className="w-full my-12" id="section-community">
+                <section className="w-full my-10 sm:my-16" id="section-community">
                   <div className="w-full bg-white rounded-[32px] px-6 py-12 sm:px-12 sm:py-16 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] text-center relative overflow-hidden flex flex-col items-center">
-                    <span className="text-[13px] text-[#6a527c] font-semibold tracking-wider uppercase mb-4">
-                      - Fitflow app -
+                    <span className="text-xs font-bold text-[#4c355d] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
+                      Athletic Community
                     </span>
 
-                    <h2 className="max-w-2xl font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] tracking-tight leading-snug mb-5">
-                      Helps you learn and hone your skills through a trusted{' '}
+                    <h2 className="max-w-2xl font-['Manrope'] text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4 [text-wrap:balance]">
+                      Built for athletes committed to{' '}
                       <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800]">
-                        Fitflow
+                        progressive
                       </span>{' '}
-                      community
+                      discipline
                     </h2>
 
-                    <p className="max-w-md text-[14px] text-[#57535A] leading-relaxed mb-10">
-                      Come join us and not only increase your knowledge but also your family because we are a solid team
+                    <p className="max-w-md text-sm sm:text-base text-[#423E45] leading-relaxed mb-8 [text-wrap:pretty]">
+                      Join 2,000+ athletes who track workouts, share progress, and stay motivated together every day.
                     </p>
 
-                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#827B86]">
-                      <span className="text-[14px] text-[#57535A]">Part of Fitflow app</span>
+                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#423E45]">
+                      <span className="text-sm font-medium text-[#423E45]">FitFlow Athlete Network</span>
 
-                      <div className="flex items-center gap-4 text-[#57535A]">
+                      <div className="flex items-center gap-4 text-[#423E45]">
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="mailto:contact@fitflow.app"
-                          className="hover:text-[#6a527c] transition-colors"
+                          className="hover:text-[#6a527c] transition-colors p-1"
                           aria-label="Email Contact"
                         >
-                          <span className="material-symbols-outlined text-[20px]">mail</span>
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                          </svg>
                         </motion.a>
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="#home"
-                          className="hover:text-[#6a527c] transition-colors"
+                          className="hover:text-[#6a527c] transition-colors p-1"
                           aria-label="Phone Contact"
                         >
-                          <span className="material-symbols-outlined text-[20px]">call</span>
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                          </svg>
                         </motion.a>
                         <motion.a
                           whileHover={{ scale: 1.15 }}
                           href="#home"
-                          className="hover:text-[#6a527c] transition-colors"
+                          className="hover:text-[#6a527c] transition-colors p-1"
                           aria-label="Instagram Channel"
                         >
-                          <span className="material-symbols-outlined text-[20px]">photo_camera</span>
+                          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                          </svg>
                         </motion.a>
                       </div>
 
-                      <span className="text-[14px] text-[#827B86]">
-                        Archived by Fitflow app -- 2026
+                      <span className="text-xs text-[#423E45] font-medium">
+                        FitFlow Collective • 2026
                       </span>
                     </div>
                   </div>
@@ -671,7 +738,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               <span className="font-['Manrope'] text-[17px] text-[#1c1b1f] font-bold">
                 Fitflow app
               </span>
-              <span className="text-[#827B86] text-[13px] ml-2">
+              <span className="text-[#57535A] text-[13px] ml-2 font-medium">
                 © 2026 Fitflow. All rights reserved.
               </span>
             </div>

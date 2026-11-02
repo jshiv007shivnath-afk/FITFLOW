@@ -16,37 +16,6 @@ export function AboutView({ onNavigateHome, onNavigateServices }: AboutViewProps
         {/* HERO SECTION                                   */}
         {/* ============================================== */}
         <section className="relative pt-4 pb-4">
-          {/* Floating Stars */}
-          <motion.div
-            aria-hidden="true"
-            animate={{
-              y: [0, -10, 0, 10, 0],
-              rotate: [0, 90, 180, 270, 360],
-              opacity: [0.6, 1, 0.7, 1, 0.6],
-            }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -top-3 right-8 sm:right-16 w-12 h-12 flex items-center justify-center pointer-events-none text-[#6a527c]"
-          >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-            </svg>
-          </motion.div>
-
-          <motion.div
-            aria-hidden="true"
-            animate={{
-              y: [0, 8, 0, -8, 0],
-              rotate: [0, -90, -180, -270, -360],
-              opacity: [0.5, 0.85, 0.5, 0.85, 0.5],
-            }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/2 -left-2 sm:left-4 w-10 h-10 flex items-center justify-center pointer-events-none text-[#BDA5D0]"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-            </svg>
-          </motion.div>
-
           {/* Sub-badge */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -54,9 +23,9 @@ export function AboutView({ onNavigateHome, onNavigateServices }: AboutViewProps
             transition={{ duration: 0.6 }}
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f2ecf3] text-[#6a527c] text-[13px] font-semibold mb-6 shadow-sm"
           >
-            <span className="w-2 h-2 rounded-full bg-[#ffbd5a] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#ffbd5a]" />
             <span>The Fitflow Story</span>
-            <span className="text-[#827B86] text-[11px] font-semibold uppercase tracking-wider pl-1">
+            <span className="text-[#57535A] text-[11px] font-semibold uppercase tracking-wider pl-1">
               Est. 2026
             </span>
           </motion.div>

@@ -96,37 +96,6 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
         {/* HERO SECTION                                   */}
         {/* ============================================== */}
         <section className="flex flex-col items-center text-center relative pt-4 pb-6 md:pb-10">
-          {/* Decorative Floating Stars */}
-          <motion.div
-            aria-hidden="true"
-            animate={{
-              y: [0, -8, 0, 8, 0],
-              rotate: [0, 90, 180, 270, 360],
-              opacity: [0.5, 0.9, 0.6, 0.9, 0.5],
-            }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -top-2 left-4 sm:left-12 pointer-events-none select-none text-[#846a96]/50"
-          >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0L14.2 9.8L24 12L14.2 14.2L12 24L9.8 14.2L0 12L9.8 9.8L12 0Z" />
-            </svg>
-          </motion.div>
-
-          <motion.div
-            aria-hidden="true"
-            animate={{
-              y: [0, 10, 0, -10, 0],
-              rotate: [0, -90, -180, -270, -360],
-              opacity: [0.6, 1, 0.7, 1, 0.6],
-            }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-6 right-6 sm:right-20 pointer-events-none select-none text-[#846a96]"
-          >
-            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-            </svg>
-          </motion.div>
-
           {/* Eyebrow Badge */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -135,10 +104,10 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
             className="flex items-center gap-3 mb-6"
           >
             <div className="px-4 py-1.5 rounded-full bg-[#f2ecf3] text-[#6a527c] text-[13px] font-semibold flex items-center gap-2 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#6a527c] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[#6a527c]" />
               <span>What We Do • Fitflow Services</span>
             </div>
-            <div className="hidden sm:inline-flex px-3 py-1 rounded-full bg-[#ece6ed] text-[#827B86] text-[11px] font-semibold uppercase tracking-wider">
+            <div className="hidden sm:inline-flex px-3 py-1 rounded-full bg-[#ece6ed] text-[#57535A] text-[11px] font-semibold uppercase tracking-wider">
               Athlete Edition • 2026.04
             </div>
           </motion.div>
@@ -152,9 +121,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
           >
             Fitness tools for{' '}
             <span className="inline-flex items-center align-middle mx-1 md:mx-2 px-4 py-1 rounded-full bg-[#ffbd5a] text-[#291800] shadow-sm transform -translate-y-1">
-              <svg className="w-5 h-5 mr-1.5 text-[#291800]" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0L14.4 9.6L24 12L14.4 14.4L12 24L9.6 14.4L0 12L9.6 9.6L12 0Z" />
-              </svg>
+              <span className="material-symbols-outlined text-[20px] mr-1.5 text-[#291800]">bolt</span>
               <span className="text-[18px] sm:text-[24px] font-bold">goals</span>
             </span>{' '}
             worth reaching{' '}
@@ -194,7 +161,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
               </div>
               <div>
                 <div className="font-['Manrope'] text-[24px] text-[#1c1b1f] font-bold">12+</div>
-                <div className="text-[11px] text-[#827B86] uppercase tracking-wider font-semibold">Modular Tracks</div>
+                <div className="text-[11px] text-[#4E4752] uppercase tracking-wider font-bold">Modular Tracks</div>
               </div>
             </div>
 
@@ -204,7 +171,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
               </div>
               <div>
                 <div className="font-['Manrope'] text-[24px] text-[#1c1b1f] font-bold">2.4k+</div>
-                <div className="text-[11px] text-[#827B86] uppercase tracking-wider font-semibold">Active Athletes</div>
+                <div className="text-[11px] text-[#4E4752] uppercase tracking-wider font-bold">Active Athletes</div>
               </div>
             </div>
 
@@ -214,7 +181,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
               </div>
               <div>
                 <div className="font-['Manrope'] text-[24px] text-[#1c1b1f] font-bold">98%</div>
-                <div className="text-[11px] text-[#827B86] uppercase tracking-wider font-semibold">Streak Completion</div>
+                <div className="text-[11px] text-[#4E4752] uppercase tracking-wider font-bold">Streak Completion</div>
               </div>
             </div>
           </motion.div>
@@ -260,13 +227,13 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                   Build functional muscle mass with scientifically structured push/pull/legs routines and progressive overload tracking.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#827B86] text-[11px] font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
                     Progressive Overload
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#827B86] text-[11px] font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
                     RPE Sets
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#827B86] text-[11px] font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
                     Deload Cycles
                   </span>
                 </div>
@@ -342,13 +309,13 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                   Intelligent water intake pacing, calorie balance, and recovery score monitoring tuned to your specific metabolism.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#827B86] text-[11px] font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
                     Hydration Log
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#827B86] text-[11px] font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
                     Calorie Math
                   </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#827B86] text-[11px] font-medium">
+                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
                     Sleep Score
                   </span>
                 </div>
@@ -389,7 +356,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                 <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">01</span>
                 <span className="w-3 h-3 rounded-full bg-[#7DD9E7]" />
               </div>
-              <h4 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Discover</h4>
+              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Discover</h3>
               <p className="text-[13px] text-[#57535A] leading-relaxed">
                 Assess current strength baseline, mobility limitations, and daily nutrition patterns.
               </p>
@@ -400,7 +367,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                 <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">02</span>
                 <span className="w-3 h-3 rounded-full bg-[#F078AD]" />
               </div>
-              <h4 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Design</h4>
+              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Design</h3>
               <p className="text-[13px] text-[#57535A] leading-relaxed">
                 Build personalized workout splits and water goals calibrated to your schedule.
               </p>
@@ -411,7 +378,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                 <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">03</span>
                 <span className="w-3 h-3 rounded-full bg-[#ffbd5a]" />
               </div>
-              <h4 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Refine</h4>
+              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Refine</h3>
               <p className="text-[13px] text-[#57535A] leading-relaxed">
                 Review weekly lifting metrics, hydration consistency, and micro-progression weights.
               </p>
@@ -422,7 +389,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                 <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">04</span>
                 <span className="w-3 h-3 rounded-full bg-[#BDA5D0]" />
               </div>
-              <h4 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Lock-In</h4>
+              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Lock-In</h3>
               <p className="text-[13px] text-[#57535A] leading-relaxed">
                 Solidify 21-day streaks, level progression, and lifelong healthy physical fitness reflexes.
               </p>
@@ -508,7 +475,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                 ))}
               </div>
 
-              <div className="mt-2 flex flex-wrap items-center gap-4 text-[#827B86] text-[13px] pl-2">
+              <div className="mt-2 flex flex-wrap items-center gap-4 text-[#4E4752] text-[13px] pl-2 font-medium">
                 <span className="flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px] text-[#6a527c]">schedule</span>
                   6-week program duration
@@ -528,16 +495,16 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
             <div className="w-full lg:w-2/5 rounded-2xl bg-[#f2ecf3] p-6 flex flex-col justify-between self-stretch shadow-sm">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-[11px] uppercase tracking-wider text-[#827B86] font-bold">
+                  <span className="text-[11px] uppercase tracking-wider text-[#4E4752] font-bold">
                     Cohort Snapshot
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800] text-[11px] font-bold">
                     Enrollment Open
                   </span>
                 </div>
-                <h4 className="font-['Manrope'] text-[22px] font-bold text-[#1c1b1f] mb-2">
+                <h3 className="font-['Manrope'] text-[22px] font-bold text-[#1c1b1f] mb-2">
                   {current.heading}
-                </h4>
+                </h3>
                 <p className="text-[#57535A] text-[14px] mb-6 leading-relaxed">
                   {current.sub}
                 </p>
@@ -553,7 +520,7 @@ export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewPr
                       style={{ width: current.percent }}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#827B86]">
+                  <div className="flex items-center justify-between text-[11px] text-[#4E4752] font-medium">
                     <span>{current.next}</span>
                     <span>Small athlete cohort</span>
                   </div>
