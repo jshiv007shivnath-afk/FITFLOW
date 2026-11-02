@@ -27,12 +27,14 @@ import { NotificationsView } from '@/components/screens/NotificationsView';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<'landing' | 'app'>('landing');
+  const [viewMode, setViewMode] = useState<'landing' | 'app'>('app');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('app') === 'true' || window.location.pathname.startsWith('/app')) {
+      if (params.get('landing') === 'true' || params.get('view') === 'landing' || window.location.pathname.startsWith('/landing')) {
+        setViewMode('landing');
+      } else if (params.get('app') === 'true' || params.get('view') === 'app' || window.location.pathname.startsWith('/app')) {
         setViewMode('app');
       }
     }
@@ -61,14 +63,29 @@ export default function App() {
 
   if (viewMode === 'landing') {
     return (
-      <RuangEditLandingPage
-        onLaunchApp={() => {
-          setViewMode('app');
-          if (typeof window !== 'undefined') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }}
-      />
+      <div className="relative">
+        <div className="fixed top-4 right-4 z-[999]">
+          <button
+            onClick={() => {
+              setViewMode('app');
+              if (typeof window !== 'undefined') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1c1b1f] hover:bg-[#ffbd5a] hover:text-[#291800] text-white border border-neutral-300 shadow-xl text-xs font-semibold backdrop-blur-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <span>📱 Switch to FitFlow App</span>
+          </button>
+        </div>
+        <RuangEditLandingPage
+          onLaunchApp={() => {
+            setViewMode('app');
+            if (typeof window !== 'undefined') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+        />
+      </div>
     );
   }
 
