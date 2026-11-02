@@ -139,7 +139,7 @@ export function RuangEditLandingPage({ onLaunchApp }: RuangEditLandingPageProps)
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
-              className="flex-1 w-full bg-white relative overflow-hidden"
+              className="flex-1 w-full bg-white relative"
             >
               {/* ============================================== */}
               {/* 1. BACKGROUND ARCHITECTURAL GRID & AURA        */}
