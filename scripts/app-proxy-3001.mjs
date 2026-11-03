@@ -4,11 +4,13 @@ const TARGET_PORT = 3000;
 const PROXY_PORT = 3001;
 
 const server = http.createServer((req, res) => {
-  let targetPath = req.url;
-  // If requesting root on 3001, serve the FitFlow mobile app at /app
-  if (targetPath === '/' || targetPath === '') {
-    targetPath = '/app';
+  // If requesting root on 3001, redirect browser to /app so Next.js router hydrates /app cleanly
+  if (req.url === '/' || req.url === '') {
+    res.writeHead(302, { Location: '/app' });
+    res.end();
+    return;
   }
+  let targetPath = req.url;
 
   const options = {
     hostname: '127.0.0.1',

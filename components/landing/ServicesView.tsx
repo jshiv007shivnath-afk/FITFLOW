@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface ServicesViewProps {
   onNavigateHome: () => void;
@@ -9,549 +9,347 @@ interface ServicesViewProps {
 }
 
 export function ServicesView({ onNavigateHome, onNavigateAbout }: ServicesViewProps) {
-  const [activeTab, setActiveTab] = useState<'strength' | 'hiit' | 'habits'>('strength');
+  const [activeTab, setActiveTab] = useState<'strength' | 'biometrics' | 'hydration' | 'habits'>('strength');
 
-  const tabContent = {
+  const tracks = {
     strength: {
-      heading: 'Strength & Hypertrophy Track',
-      sub: 'Master progressive overload, optimal lifting volume, and balanced push/pull/legs periodization.',
-      seats: '20 / 24 Athletes',
-      percent: '83%',
-      next: 'Next Cycle: Monday',
-      modules: [
-        {
-          id: 'M1',
-          title: 'Compound Movement Biomechanics & RPE',
-          desc: 'Dial in your squat, bench, and deadlift form using video angle benchmarks and real-time fatigue regulation.',
-        },
-        {
-          id: 'M2',
-          title: 'Progressive Overload & Deload Cycles',
-          desc: 'Structure micro-cycles with automated weight increment calculations and scheduled deload recovery weeks.',
-        },
-        {
-          id: 'M3',
-          title: 'Targeted Muscle Isolation & Hypertrophy Sets',
-          desc: 'Optimize time-under-tension and metabolic fatigue with targeted drop sets, rest-pause reps, and supersets.',
-        },
+      tag: 'Track 01 • Core Engineering',
+      title: 'Progressive Overload & Workout Logging',
+      description:
+        'Structure your weekly micro-cycles with automated weight increments, RPE fatigue tracking, and balanced push/pull/legs periodization.',
+      metrics: [
+        { label: 'Tracking Precision', value: 'Per-Set & Rep' },
+        { label: 'Split Templates', value: '5 Preset Routines' },
+        { label: 'Fatigue Protection', value: 'Auto-Deload Weeks' },
       ],
+      features: [
+        'Real-time set logging with weight, reps, and RPE rating.',
+        'Dynamic volume progression graphs across compound lifts.',
+        'Automated rest timers between sets with audio notifications.',
+        'Rest-day logging with symmetric XP rollback defense.',
+      ],
+      phonePreview: {
+        screenTitle: 'Workout Session',
+        exercise: 'Barbell Back Squat',
+        set: 'Set 3 of 4',
+        weight: '100 kg • 8 Reps',
+        status: 'Active Set (RPE 8.5)',
+      },
     },
-    hiit: {
-      heading: 'Metabolic Conditioning & Agility',
-      sub: 'High-intensity interval training designed for cardiovascular endurance, rapid calorie burn, and athletic explosiveness.',
-      seats: '16 / 20 Athletes',
-      percent: '75%',
-      next: 'Next Cycle: Wednesday',
-      modules: [
-        {
-          id: 'M1',
-          title: 'Heart Rate Zone Optimization (Zone 2 to 5)',
-          desc: 'Synchronize your wearable sensors to balance fat oxidation intervals with VO2 max threshold training.',
-        },
-        {
-          id: 'M2',
-          title: 'Plyometrics, Sprint Mechanics & Core Agility',
-          desc: 'Develop elastic power and explosive deceleration mechanics to prevent athletic injuries.',
-        },
-        {
-          id: 'M3',
-          title: 'Active Recovery & Post-Workout Autonomic Reset',
-          desc: 'Breathwork protocols and cold-down mobility routines that bring your sympathetic nervous system back to baseline.',
-        },
+    biometrics: {
+      tag: 'Track 02 • Biometric Telemetry',
+      title: 'Real-Time Sensor & Heart Rate Sync',
+      description:
+        'Synchronize your Bluetooth Low Energy (BLE) chest straps and smartwatches to balance fat-oxidation Zone 2 intervals with peak VO2 max thresholds.',
+      metrics: [
+        { label: 'Sensor Standard', value: 'BLE 5.0 + HealthKit' },
+        { label: 'Latency', value: '14ms Direct Stream' },
+        { label: 'HR Zones', value: 'Zone 1 to 5' },
       ],
+      features: [
+        'Direct connection to standard heart rate monitors via Web Bluetooth.',
+        'Continuous active calorie computation synced with workout intensity.',
+        'Automatic heart rate recovery rate (HRR) calculation post-set.',
+        'Zero cloud latency: biometrics processed locally on your phone.',
+      ],
+      phonePreview: {
+        screenTitle: 'Telemetry Stream',
+        exercise: 'Metabolic Conditioning',
+        set: 'Zone 4 Threshold',
+        weight: '158 BPM (88% Max)',
+        status: 'Active Sync • 480 kcal',
+      },
+    },
+    hydration: {
+      tag: 'Track 03 • Metabolic Balance',
+      title: 'Intelligent Hydration & Macro Pacing',
+      description:
+        'Keep your cellular energy and muscle recovery optimal. FitFlow calculates precise fluid benchmarks adjusted for ambient temperature and training volume.',
+      metrics: [
+        { label: 'Logging Speed', value: 'One-Tap 250ml' },
+        { label: 'Daily Target', value: '3,000 ml Baseline' },
+        { label: 'Notification', value: 'Circadian Pacing' },
+      ],
+      features: [
+        'Dynamic hydration target adjusting for active sweat loss.',
+        'Quick-tap volume buttons (250ml, 500ml, custom glass).',
+        'Daily intake timeline highlighting hydration gaps.',
+        'Subtle circadian reminders timed between workout windows.',
+      ],
+      phonePreview: {
+        screenTitle: 'Hydration Tracker',
+        exercise: 'Daily Water Intake',
+        set: '2,400 / 3,000 ml',
+        weight: '80% of Daily Goal',
+        status: 'Optimal Cellular Balance',
+      },
     },
     habits: {
-      heading: 'Habit Architecture & Nutrition Sync',
-      sub: 'Build unwavering 21-day streaks, hydration benchmarks, and intuitive macro-nutrient tracking habits.',
-      seats: '24 / 24 Full (Waitlist Open)',
-      percent: '100%',
-      next: 'Next Cycle: Nov 1',
-      modules: [
-        {
-          id: 'M1',
-          title: 'Hydration Pacing & Water Intake Milestones',
-          desc: 'Intelligent notification algorithms timed around your workout windows and circadian energy dips.',
-        },
-        {
-          id: 'M2',
-          title: 'Macro Calorie Targets & Whole-Food Fueling',
-          desc: 'Calculate exact protein, complex carbohydrate, and healthy fat splits tailored to your specific body composition.',
-        },
-        {
-          id: 'M3',
-          title: '21-Day Habit Streak Psychology & Gamified XP',
-          desc: 'Harness positive dopamine reinforcement loops, badge unlocks, and community accountability to make fitness a reflex.',
-        },
+      tag: 'Track 04 • Habit Architecture',
+      title: '21-Day Streak Consistency & XP Leveling',
+      description:
+        'Transform physical fitness from an occasional chore into an unshakeable daily reflex using positive reinforcement, streak shields, and tiered XP unlocks.',
+      metrics: [
+        { label: 'Streak Target', value: '21 Days to Habit' },
+        { label: 'Level Cap', value: 'Level 10 Master' },
+        { label: 'Offline Sync', value: '100% PWA Cache' },
       ],
+      features: [
+        'Visual 28-day habit matrix celebrating continuous discipline.',
+        'Symmetric XP engine: 500 XP per level with rollover safeguards.',
+        'Milestone badges for volume, attendance, and streak breakthroughs.',
+        'Offline resilience: all progress is saved locally and synced automatically.',
+      ],
+      phonePreview: {
+        screenTitle: 'Habit Mastery',
+        exercise: 'Current Streak',
+        set: '14 Days Unbroken 🔥',
+        weight: 'Level 3 Athlete (340/500 XP)',
+        status: 'Habit Shield Active',
+      },
     },
   };
 
-  const current = tabContent[activeTab];
+  const current = tracks[activeTab];
 
   return (
-    <div className="w-full flex flex-col bg-white">
-      {/* Services Content Wrapper */}
-      <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 flex flex-col gap-16 md:gap-24 relative overflow-hidden">
-        {/* ============================================== */}
-        {/* HERO SECTION                                   */}
-        {/* ============================================== */}
-        <section className="flex flex-col items-center text-center relative pt-4 pb-6 md:pb-10">
-          {/* Eyebrow Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center gap-3 mb-6"
-          >
-            <div className="px-4 py-1.5 rounded-full bg-[#f2ecf3] text-[#6a527c] text-[13px] font-semibold flex items-center gap-2 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#6a527c]" />
-              <span>What We Do • Fitflow Services</span>
-            </div>
-            <div className="hidden sm:inline-flex px-3 py-1 rounded-full bg-[#ece6ed] text-[#57535A] text-[11px] font-semibold uppercase tracking-wider">
-              Athlete Edition • 2026.04
-            </div>
-          </motion.div>
+    <div className="w-full flex flex-col bg-white text-neutral-900 selection:bg-[#FF5500] selection:text-white">
+      {/* Container */}
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 flex flex-col gap-16 sm:gap-24">
+        
+        {/* ============================================================== */}
+        {/* 1. HERO HEADER                                                 */}
+        {/* ============================================================== */}
+        <section className="flex flex-col items-center text-center max-w-3xl mx-auto pt-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200 text-[#FF5500] text-xs font-semibold mb-6">
+            <span className="w-2 h-2 rounded-full bg-[#FF5500]" />
+            <span>FitFlow Architecture & Services</span>
+          </div>
 
-          {/* Display Heading with Signature Inline Pill */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-['Manrope'] text-[36px] sm:text-[52px] lg:text-[68px] text-[#1c1b1f] max-w-4xl tracking-tight leading-tight font-bold"
-          >
-            Fitness tools for{' '}
-            <span className="inline-flex items-center align-middle mx-1 md:mx-2 px-4 py-1 rounded-full bg-[#ffbd5a] text-[#291800] shadow-sm transform -translate-y-1">
-              <span className="material-symbols-outlined text-[20px] mr-1.5 text-[#291800]">bolt</span>
-              <span className="text-[18px] sm:text-[24px] font-bold">goals</span>
-            </span>{' '}
-            worth reaching{' '}
-            <span className="relative inline-block ml-1">
-              <span>effortlessly</span>
-              <svg
-                className="absolute -bottom-2 left-0 w-full h-3 text-[#846a96]/40 pointer-events-none"
-                fill="none"
-                preserveAspectRatio="none"
-                viewBox="0 0 120 12"
+          <h1 className="font-['Manrope',sans-serif] text-3xl sm:text-5xl lg:text-6xl font-extrabold text-neutral-950 tracking-tight leading-[1.12]">
+            Fitness engineering for{' '}
+            <span className="text-[#FF5500]">serious progress</span>
+          </h1>
+
+          <p className="mt-5 text-base sm:text-lg text-neutral-600 leading-relaxed [text-wrap:pretty]">
+            FitFlow replaces guesswork with structured progressive overload, real-time wearable telemetry, and 21-day habit architecture designed for everyday athletes.
+          </p>
+
+          {/* Quick Metrics Bar */}
+          <div className="mt-10 w-full grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl bg-neutral-50 border border-neutral-200/80 text-left">
+            <div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-neutral-950 font-mono">4</div>
+              <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mt-0.5">Core Tracks</div>
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#FF5500] font-mono">100%</div>
+              <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mt-0.5">Offline-Ready</div>
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-neutral-950 font-mono">14ms</div>
+              <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mt-0.5">BLE Sensor Sync</div>
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-extrabold text-[#FF5500] font-mono">21 Days</div>
+              <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wider mt-0.5">Habit Horizon</div>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* 2. INTERACTIVE TRACK SELECTOR & SHOWCASE                       */}
+        {/* ============================================================== */}
+        <section className="w-full flex flex-col gap-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-neutral-200">
+            <div>
+              <span className="text-xs font-bold text-[#FF5500] uppercase tracking-wider">Methodology & Capabilities</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 mt-1">Explore FitFlow Capabilities</h2>
+            </div>
+            <span className="text-xs sm:text-sm text-neutral-500 font-medium">Select a track to inspect real app telemetry</span>
+          </div>
+
+          {/* Tab Navigation Pill Bar */}
+          <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-neutral-100 border border-neutral-200 w-full sm:w-fit">
+            {[
+              { id: 'strength', label: 'Workout Overload' },
+              { id: 'biometrics', label: 'Sensor & Heart Rate' },
+              { id: 'hydration', label: 'Hydration Pacing' },
+              { id: 'habits', label: '21-Day Streaks' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  activeTab === tab.id
+                    ? 'bg-neutral-950 text-white shadow-sm'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-200/60'
+                }`}
               >
-                <path d="M2 9C35 2 85 2 118 7" stroke="currentColor" strokeLinecap="round" strokeWidth="3" />
-              </svg>
-            </span>
-          </motion.h1>
-
-          {/* Supporting Copy */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mt-6 md:mt-8 max-w-2xl text-[16px] sm:text-[18px] text-[#57535A] leading-relaxed"
-          >
-            High-standard workout splits, biometric synchronization, and 21-day habit architecture designed for individuals who want tangible, visible physical results without burnout.
-          </motion.p>
-
-          {/* Quick Metrics Ribbon */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-12 w-full max-w-3xl flex flex-wrap items-center justify-around gap-6 text-left bg-[#f7f2f8] rounded-3xl p-6 shadow-sm border border-[#E7E2E8]"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#ffddb2] flex items-center justify-center text-[#291800] shadow-sm">
-                <span className="material-symbols-outlined text-[20px]">fitness_center</span>
-              </div>
-              <div>
-                <div className="font-['Manrope'] text-[24px] text-[#1c1b1f] font-bold">12+</div>
-                <div className="text-[11px] text-[#4E4752] uppercase tracking-wider font-bold">Modular Tracks</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#f2daff] flex items-center justify-center text-[#261335] shadow-sm">
-                <span className="material-symbols-outlined text-[20px]">group</span>
-              </div>
-              <div>
-                <div className="font-['Manrope'] text-[24px] text-[#1c1b1f] font-bold">2.4k+</div>
-                <div className="text-[11px] text-[#4E4752] uppercase tracking-wider font-bold">Active Athletes</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#BDA5D0]/30 flex items-center justify-center text-[#6a527c] shadow-sm">
-                <span className="material-symbols-outlined text-[20px]">verified</span>
-              </div>
-              <div>
-                <div className="font-['Manrope'] text-[24px] text-[#1c1b1f] font-bold">98%</div>
-                <div className="text-[11px] text-[#4E4752] uppercase tracking-wider font-bold">Streak Completion</div>
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* ============================================== */}
-        {/* DISCIPLINES WE MASTER (3-COLUMN CARDS)         */}
-        {/* ============================================== */}
-        <section className="flex flex-col gap-8 scroll-mt-24" id="services-grid">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <div className="text-[11px] text-[#6a527c] font-bold uppercase tracking-wider mb-2">
-                Practice & Methodology
-              </div>
-              <h2 className="font-['Manrope'] text-[32px] sm:text-[38px] font-bold text-[#1c1b1f]">
-                Disciplines we master
-              </h2>
-            </div>
-            <p className="text-[15px] text-[#57535A] max-w-md leading-relaxed">
-              Structured progressive splits, live sensor feedback, and biometric tracking designed to bridge theory and physical performance.
-            </p>
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {/* Card 1 */}
-            <motion.article
-              whileHover={{ y: -6 }}
-              className="rounded-[24px] bg-[#FBFAFC] p-6 lg:p-7 flex flex-col justify-between shadow-[0_4px_16px_rgba(49,37,55,0.04)] border border-[#E7E2E8] hover:shadow-[0_18px_36px_rgba(49,37,55,0.1)] transition-all duration-300"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="px-3 py-1 rounded-full bg-[#f2ecf3] text-[#57535A] text-[12px] font-semibold">
-                    Track 01
-                  </span>
-                  <div className="w-10 h-10 rounded-full bg-[#ece6ed] flex items-center justify-center text-[#1c1b1f]">
-                    <span className="material-symbols-outlined text-[18px]">north_east</span>
-                  </div>
-                </div>
-                <h3 className="font-['Manrope'] text-[22px] font-bold text-[#1c1b1f] mb-2.5">
-                  Hypertrophy & Strength Splits
-                </h3>
-                <p className="text-[#57535A] text-[14px] leading-relaxed mb-6">
-                  Build functional muscle mass with scientifically structured push/pull/legs routines and progressive overload tracking.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
-                    Progressive Overload
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
-                    RPE Sets
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
-                    Deload Cycles
-                  </span>
-                </div>
-              </div>
-              <div className="w-full h-44 rounded-[18px] bg-[#7DD9E7]/20 overflow-hidden flex items-center justify-center p-3">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpXkauqOnkce4ydkMgJ4rS3FJcIM3feFvXy2X4zDfvhcVZQEjoUcn0tHU9ESNaJTieQVkO7rBRsfHGFtTkS6-81hRSkQc_j_7wd3B6tDSClDb0ebifx1fmuuL-DnSqh_M8Qu504Hu3t0kLlQ_1EiZidQWeCWvI5ff6cORBkcxITexor2hni23eU0rBn6PZkBH7nfSI0XcH9DOD-HtTkFQYVJXcaO3YISYP851ULD3R"
-                  alt="Strength Split Diagram"
-                  className="w-full h-full object-cover rounded-[14px] shadow-sm"
-                />
-              </div>
-            </motion.article>
-
-            {/* Card 2: Featured Active Card */}
-            <motion.article
-              whileHover={{ y: -6 }}
-              className="rounded-[24px] bg-[#6a527c] text-white p-6 lg:p-7 flex flex-col justify-between shadow-[0_6px_20px_rgba(106,82,124,0.18)] hover:shadow-[0_20px_40px_rgba(106,82,124,0.3)] transition-all duration-300"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="px-3 py-1 rounded-full bg-[#836b93] text-white text-[12px] font-semibold">
-                    Track 02 • Featured
-                  </span>
-                  <div className="w-10 h-10 rounded-full bg-[#ffbd5a] text-[#291800] flex items-center justify-center font-bold">
-                    <span className="material-symbols-outlined text-[18px]">north_east</span>
-                  </div>
-                </div>
-                <h3 className="font-['Manrope'] text-[22px] font-bold text-white mb-2.5">
-                  Kinetic Motion & Form Tracking
-                </h3>
-                <p className="text-[#f2daff] text-[14px] leading-relaxed mb-6">
-                  Master dynamic body mechanics, rep cadence, and live sensor feedback that protects your joints and maximizes efficiency.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#846a96] text-white text-[11px] font-medium">
-                    Rep Cadence
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#846a96] text-white text-[11px] font-medium">
-                    Mobility
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#846a96] text-white text-[11px] font-medium">
-                    Joint Health
-                  </span>
-                </div>
-              </div>
-              <div className="w-full h-44 rounded-[18px] bg-[#ffddb2]/20 overflow-hidden flex items-center justify-center p-3">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0jTd-hSlDD4SnXOkhA1efXEfSAWGxkHhdpNm-y0uEhguc1iQBWYXg_z7OfYNkkEOaGL6N8YnmE_uh2Gc3qrzuoBH3XQHoRLSLrV7AWO7S4ZS7qye8Gghzx-zrcrOobUsGI3VUyLAq-tBm7wXfPH0twuxKkVzvUeBE8Wn_QyecLorQZhEcB5T2m1onNii01IoLo3RO9Ous9pnXRT8-ev5-o8Q8avHNg4_vOUOr8W_B"
-                  alt="Kinetic Tracking Motion"
-                  className="w-full h-full object-cover rounded-[14px] shadow-sm"
-                />
-              </div>
-            </motion.article>
-
-            {/* Card 3 */}
-            <motion.article
-              whileHover={{ y: -6 }}
-              className="rounded-[24px] bg-[#FBFAFC] p-6 lg:p-7 flex flex-col justify-between shadow-[0_4px_16px_rgba(49,37,55,0.04)] border border-[#E7E2E8] hover:shadow-[0_18px_36px_rgba(49,37,55,0.1)] transition-all duration-300"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <span className="px-3 py-1 rounded-full bg-[#f2ecf3] text-[#57535A] text-[12px] font-semibold">
-                    Track 03
-                  </span>
-                  <div className="w-10 h-10 rounded-full bg-[#ece6ed] flex items-center justify-center text-[#1c1b1f]">
-                    <span className="material-symbols-outlined text-[18px]">north_east</span>
-                  </div>
-                </div>
-                <h3 className="font-['Manrope'] text-[22px] font-bold text-[#1c1b1f] mb-2.5">
-                  Biometrics & Hydration Sync
-                </h3>
-                <p className="text-[#57535A] text-[14px] leading-relaxed mb-6">
-                  Intelligent water intake pacing, calorie balance, and recovery score monitoring tuned to your specific metabolism.
-                </p>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
-                    Hydration Log
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
-                    Calorie Math
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-[#f2ecf3] text-[#4E4752] text-[11px] font-semibold">
-                    Sleep Score
-                  </span>
-                </div>
-              </div>
-              <div className="w-full h-44 rounded-[18px] bg-[#F078AD]/20 overflow-hidden flex items-center justify-center p-3">
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAestJaDo2hR_ZmZWnEkGvSTm2dORgcb9bSRitjwE0hoXczGRBSXGvv13mxFxt7402Z4sYIHEHO3IhqUDy663zEcQmMIXxBXdo5UOSPlcWcXZCF1HVlD9p2_ewc8Hjpwy7M4SKSqyQ4YntAKscMhuK4gIZ5QIbXOOe6El9drDDwVPUqBDwz8pv6HKBJr96OhOVcML0cFsnWIemMpOZwq8aNI8tGQ_zxtT9Gh_lu4n0E"
-                  alt="Biometrics and Nutrition"
-                  className="w-full h-full object-cover rounded-[14px] shadow-sm"
-                />
-              </div>
-            </motion.article>
-          </div>
-        </section>
-
-        {/* ============================================== */}
-        {/* METHODOLOGY STEPS (01 - 04)                    */}
-        {/* ============================================== */}
-        <section className="flex flex-col gap-8 bg-[#f7f2f8] rounded-[28px] p-6 sm:p-10 md:p-12 shadow-sm border border-[#E7E2E8]">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <span className="text-[11px] text-[#6a527c] font-bold uppercase tracking-wider">
-                Methodology
+          {/* Active Track Deep-Dive Card (Split Layout) */}
+          <div className="w-full rounded-3xl bg-neutral-50 border border-neutral-200/90 p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center shadow-xs">
+            {/* Left Content (col-span-7) */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left">
+              <span className="text-xs font-mono font-bold text-[#FF5500] uppercase tracking-wider mb-2">
+                {current.tag}
               </span>
-              <h2 className="font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] mt-1">
-                How we guide athletes
-              </h2>
-            </div>
-            <div className="flex items-center gap-2 text-[#57535A] text-[14px]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#ffbd5a]" />
-              <span>Adaptive 4-phase transformation</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
-            <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white shadow-sm border border-[#E7E2E8]">
-              <div className="flex items-center justify-between">
-                <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">01</span>
-                <span className="w-3 h-3 rounded-full bg-[#7DD9E7]" />
-              </div>
-              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Discover</h3>
-              <p className="text-[13px] text-[#57535A] leading-relaxed">
-                Assess current strength baseline, mobility limitations, and daily nutrition patterns.
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mb-4">
+                {current.title}
+              </h3>
+              <p className="text-sm sm:text-base text-neutral-600 leading-relaxed mb-6">
+                {current.description}
               </p>
-            </div>
 
-            <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white shadow-sm border border-[#E7E2E8]">
-              <div className="flex items-center justify-between">
-                <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">02</span>
-                <span className="w-3 h-3 rounded-full bg-[#F078AD]" />
-              </div>
-              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Design</h3>
-              <p className="text-[13px] text-[#57535A] leading-relaxed">
-                Build personalized workout splits and water goals calibrated to your schedule.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white shadow-sm border border-[#E7E2E8]">
-              <div className="flex items-center justify-between">
-                <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">03</span>
-                <span className="w-3 h-3 rounded-full bg-[#ffbd5a]" />
-              </div>
-              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Refine</h3>
-              <p className="text-[13px] text-[#57535A] leading-relaxed">
-                Review weekly lifting metrics, hydration consistency, and micro-progression weights.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white shadow-sm border border-[#E7E2E8]">
-              <div className="flex items-center justify-between">
-                <span className="font-['Manrope'] text-[24px] font-bold text-[#6a527c]">04</span>
-                <span className="w-3 h-3 rounded-full bg-[#BDA5D0]" />
-              </div>
-              <h3 className="font-['Manrope'] text-[18px] text-[#1c1b1f] font-bold">Lock-In</h3>
-              <p className="text-[13px] text-[#57535A] leading-relaxed">
-                Solidify 21-day streaks, level progression, and lifelong healthy physical fitness reflexes.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================== */}
-        {/* INTERACTIVE TRACK PREVIEW DRAWER               */}
-        {/* ============================================== */}
-        <section className="flex flex-col gap-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <span className="text-[11px] text-[#6a527c] font-bold uppercase tracking-wider">
-                Curriculum Preview
-              </span>
-              <h2 className="font-['Manrope'] text-[28px] sm:text-[34px] font-bold text-[#1c1b1f] mt-1">
-                Sneak peek into our coaching programs
-              </h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveTab('strength')}
-                className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${
-                  activeTab === 'strength'
-                    ? 'bg-[#6a527c] text-white shadow-sm'
-                    : 'bg-[#f2ecf3] text-[#57535A] hover:bg-[#ece6ed]'
-                }`}
-              >
-                Strength Mastery
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('hiit')}
-                className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${
-                  activeTab === 'hiit'
-                    ? 'bg-[#6a527c] text-white shadow-sm'
-                    : 'bg-[#f2ecf3] text-[#57535A] hover:bg-[#ece6ed]'
-                }`}
-              >
-                Metabolic HIIT
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('habits')}
-                className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-all cursor-pointer ${
-                  activeTab === 'habits'
-                    ? 'bg-[#6a527c] text-white shadow-sm'
-                    : 'bg-[#f2ecf3] text-[#57535A] hover:bg-[#ece6ed]'
-                }`}
-              >
-                Habit Architecture
-              </button>
-            </div>
-          </div>
-
-          <div className="rounded-[28px] bg-[#FBFAFC] p-6 md:p-10 shadow-sm border border-[#E7E2E8] flex flex-col lg:flex-row gap-8 items-start">
-            {/* Accordion List */}
-            <div className="w-full lg:w-3/5 flex flex-col gap-4">
-              <div className="flex flex-col gap-3">
-                {current.modules.map((mod, idx) => (
-                  <details
-                    key={mod.id}
-                    open={idx === 0}
-                    className="group rounded-2xl bg-[#f7f2f8] p-4 sm:p-5 cursor-pointer transition-all hover:bg-[#f2ecf3]"
-                  >
-                    <summary className="flex items-center justify-between text-[#1c1b1f] font-semibold text-[16px] sm:text-[17px] list-none">
-                      <span className="flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-full bg-[#6a527c]/15 text-[#6a527c] text-[11px] flex items-center justify-center font-bold">
-                          {mod.id}
-                        </span>
-                        <span>{mod.title}</span>
-                      </span>
-                      <span className="material-symbols-outlined text-[#827B86] group-open:rotate-180 transition-transform duration-200">
-                        expand_more
-                      </span>
-                    </summary>
-                    <div className="mt-3.5 pl-10 text-[#57535A] text-[14px] leading-relaxed">
-                      {mod.desc}
-                    </div>
-                  </details>
+              {/* Metric Highlights Row */}
+              <div className="grid grid-cols-3 gap-3 w-full py-4 border-y border-neutral-200 mb-6">
+                {current.metrics.map((m, idx) => (
+                  <div key={idx}>
+                    <div className="text-xs text-neutral-500 font-medium">{m.label}</div>
+                    <div className="text-sm sm:text-base font-bold text-neutral-950 mt-0.5">{m.value}</div>
+                  </div>
                 ))}
               </div>
 
-              <div className="mt-2 flex flex-wrap items-center gap-4 text-[#4E4752] text-[13px] pl-2 font-medium">
-                <span className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-[#6a527c]">schedule</span>
-                  6-week program duration
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-[#6a527c]">videocam</span>
-                  Weekly form breakdown
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-[#6a527c]">assignment_turned_in</span>
-                  Milestone certification
-                </span>
+              {/* Feature Checklist */}
+              <div className="space-y-2.5 w-full">
+                {current.features.map((feat, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
+                    <span className="w-4 h-4 rounded-full bg-orange-100 text-[#FF5500] flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold">
+                      ✓
+                    </span>
+                    <span>{feat}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Dynamic Preview Side-Card */}
-            <div className="w-full lg:w-2/5 rounded-2xl bg-[#f2ecf3] p-6 flex flex-col justify-between self-stretch shadow-sm">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[11px] uppercase tracking-wider text-[#4E4752] font-bold">
-                    Cohort Snapshot
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800] text-[11px] font-bold">
-                    Enrollment Open
-                  </span>
+            {/* Right Phone Mockup (col-span-5) */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="w-full max-w-[280px] rounded-[36px] bg-neutral-950 p-3 shadow-2xl border-4 border-neutral-800 text-white select-none">
+                {/* iPhone Notch */}
+                <div className="w-24 h-4 bg-neutral-900 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <div className="w-2.5 h-2.5 rounded-full bg-neutral-800" />
                 </div>
-                <h3 className="font-['Manrope'] text-[22px] font-bold text-[#1c1b1f] mb-2">
-                  {current.heading}
-                </h3>
-                <p className="text-[#57535A] text-[14px] mb-6 leading-relaxed">
-                  {current.sub}
-                </p>
 
-                <div className="p-4 rounded-xl bg-white mb-6 flex flex-col gap-3 shadow-xs border border-[#E7E2E8]">
-                  <div className="flex items-center justify-between text-[13px] font-semibold text-[#1c1b1f]">
-                    <span>Class Capacity</span>
-                    <span className="text-[#6a527c]">{current.seats}</span>
+                {/* Screen Content */}
+                <div className="bg-neutral-900 rounded-[28px] p-4 flex flex-col gap-3 min-h-[360px] justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-[11px] text-neutral-400 font-mono pb-2 border-b border-neutral-800">
+                      <span>{current.phonePreview.screenTitle}</span>
+                      <span className="text-[#FF5500] font-bold">LIVE</span>
+                    </div>
+
+                    <div className="mt-4">
+                      <div className="text-[11px] text-neutral-400 uppercase font-mono">Current Activity</div>
+                      <div className="text-lg font-bold text-white mt-0.5">{current.phonePreview.exercise}</div>
+                    </div>
+
+                    <div className="mt-3 p-3 rounded-xl bg-neutral-800/80 border border-neutral-700">
+                      <div className="text-xs text-neutral-300 font-mono">{current.phonePreview.set}</div>
+                      <div className="text-base font-extrabold text-[#FF5500] font-mono mt-1">{current.phonePreview.weight}</div>
+                    </div>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-[#ece6ed] overflow-hidden">
-                    <div
-                      className="h-full bg-[#6a527c] rounded-full transition-all duration-500"
-                      style={{ width: current.percent }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#4E4752] font-medium">
-                    <span>{current.next}</span>
-                    <span>Small athlete cohort</span>
+
+                  <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/30 text-[#FF5500] text-xs font-mono font-bold flex items-center justify-between">
+                    <span>{current.phonePreview.status}</span>
+                    <span className="w-2 h-2 rounded-full bg-[#FF5500] animate-pulse" />
                   </div>
                 </div>
               </div>
-
-              <button
-                type="button"
-                onClick={onNavigateAbout}
-                className="w-full h-12 rounded-full bg-[#6a527c] hover:bg-[#5a426c] text-white text-[13px] font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
-              >
-                <span>Read About Our Philosophy</span>
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </button>
             </div>
           </div>
         </section>
 
-        {/* Back to Home CTA */}
-        <div className="flex justify-center pt-6">
-          <button
-            type="button"
-            onClick={onNavigateHome}
-            className="px-8 py-3 rounded-full bg-[#f2ecf3] hover:bg-[#ece6ed] text-[#1c1b1f] font-semibold text-[14px] flex items-center gap-2 transition-all cursor-pointer shadow-sm"
-          >
-            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-            <span>Back to Main Page</span>
-          </button>
-        </div>
+        {/* ============================================================== */}
+        {/* 3. FOUR DISTINCT APPLICATION PILLARS (CLEAN 2x2 GRID)         */}
+        {/* ============================================================== */}
+        <section className="w-full flex flex-col gap-6">
+          <div>
+            <span className="text-xs font-bold text-[#FF5500] uppercase tracking-wider">Engineered For Endurance</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 mt-1">Four Pillars of FitFlow</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Pillar 1 */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-neutral-50 border border-neutral-200/90 text-left">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center font-mono font-extrabold text-base mb-4">
+                01
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-neutral-950 mb-2">Scientific Progressive Overload</h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">
+                Log every set with RPE fatigue benchmarks. FitFlow auto-calculates whether you should add weight, reps, or volume in your next training session to ensure steady progress without injury.
+              </p>
+            </div>
+
+            {/* Pillar 2 */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-neutral-50 border border-neutral-200/90 text-left">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center font-mono font-extrabold text-base mb-4">
+                02
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-neutral-950 mb-2">Offline-First Local Storage</h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">
+                Never lose a workout in basement gym gyms with dead cell reception. All data logs instantly to your device local storage and synchronizes automatically when your signal recovers.
+              </p>
+            </div>
+
+            {/* Pillar 3 */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-neutral-50 border border-neutral-200/90 text-left">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center font-mono font-extrabold text-base mb-4">
+                03
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-neutral-950 mb-2">Dynamic Hydration Equilibrium</h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">
+                Sweat rates vary drastically between strength training and outdoor running. FitFlow calculates real-time hydration adjustments to prevent cramping and maintain central nervous system drive.
+              </p>
+            </div>
+
+            {/* Pillar 4 */}
+            <div className="p-6 sm:p-8 rounded-2xl bg-neutral-50 border border-neutral-200/90 text-left">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center font-mono font-extrabold text-base mb-4">
+                04
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-neutral-950 mb-2">21-Day Habit Reinforcement</h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">
+                Psychologically engineered 21-day milestones with symmetric workout rollback protection. You earn XP only when putting in genuine reps, building authentic athletic consistency.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================== */}
+        {/* 4. CALL TO ACTION FOOTER BANNER                                */}
+        {/* ============================================================== */}
+        <section className="w-full rounded-3xl bg-neutral-950 text-white p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+          <div className="max-w-xl">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to elevate your training?</h3>
+            <p className="mt-2 text-sm sm:text-base text-neutral-400">
+              Download the FitFlow native package today. Zero subscription traps, zero data selling.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <button
+              type="button"
+              onClick={onNavigateHome}
+              className="px-6 py-3 rounded-full bg-[#FF5500] hover:bg-[#ff6a1f] text-white font-bold text-sm transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              Back to Home
+            </button>
+            <button
+              type="button"
+              onClick={onNavigateAbout}
+              className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-sm transition-all border border-white/15 cursor-pointer"
+            >
+              Read About Us
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );
 }
-

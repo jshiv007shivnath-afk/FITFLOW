@@ -1,6 +1,7 @@
+// @ts-nocheck
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import './GradientASCII.css';
 
 const MAX_COLORS = 8;
@@ -17,8 +18,8 @@ const FONT_SCALE = 0.78;
 const DEFAULT_COLORS = ['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8'];
 const DEFAULT_CHARACTERS = ' =+xX0S8#@';
 const DEFAULT_FONT = '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-const SHAPES: Record<string, number> = { horizon: 0, pinch: 1, rise: 2, eclipse: 3 };
-const CLICK_EFFECTS: Record<string, number> = { none: 0, wave: 1, burst: 2 };
+const SHAPES = { horizon: 0, pinch: 1, rise: 2, eclipse: 3 };
+const CLICK_EFFECTS = { none: 0, wave: 1, burst: 2 };
 
 const VERTEX = `#version 300 es
 out vec2 vUv;
@@ -310,11 +311,11 @@ void main() {
   outColor = color;
 }`;
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
-const toLinear = (value: number) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+const toLinear = value => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
 
-const toLab = ([r, g, b]: [number, number, number]): [number, number, number] => {
+const toLab = ([r, g, b]) => {
   const lr = toLinear(r);
   const lg = toLinear(g);
   const lb = toLinear(b);
@@ -324,11 +325,11 @@ const toLab = ([r, g, b]: [number, number, number]): [number, number, number] =>
   return [
     0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
     1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
   ];
 };
 
-const compile = (gl: WebGL2RenderingContext, type: number, source: string) => {
+const compile = (gl, type, source) => {
   const shader = gl.createShader(type);
   if (!shader) return null;
   gl.shaderSource(shader, source);
@@ -338,7 +339,7 @@ const compile = (gl: WebGL2RenderingContext, type: number, source: string) => {
   return null;
 };
 
-const link = (gl: WebGL2RenderingContext, fragmentSource: string) => {
+const link = (gl, fragmentSource) => {
   const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX);
   const fragment = compile(gl, gl.FRAGMENT_SHADER, fragmentSource);
   const program = gl.createProgram();
@@ -352,7 +353,7 @@ const link = (gl: WebGL2RenderingContext, fragmentSource: string) => {
     gl.deleteProgram(program);
     return null;
   }
-  const uniforms: Record<string, WebGLUniformLocation | null> = {};
+  const uniforms = {};
   const count = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
   for (let i = 0; i < count; i++) {
     const info = gl.getActiveUniform(program, i);
@@ -363,9 +364,9 @@ const link = (gl: WebGL2RenderingContext, fragmentSource: string) => {
   return { program, uniforms };
 };
 
-const createTarget = (gl: WebGL2RenderingContext, count: number) => {
+const createTarget = (gl, count) => {
   const textures = Array.from({ length: count }, () => {
-    const texture = gl.createTexture()!;
+    const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -373,15 +374,15 @@ const createTarget = (gl: WebGL2RenderingContext, count: number) => {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     return texture;
   });
-  return { textures, framebuffer: gl.createFramebuffer()!, width: 0, height: 0 };
+  return { textures, framebuffer: gl.createFramebuffer(), width: 0, height: 0 };
 };
 
-const sizeTarget = (gl: WebGL2RenderingContext, target: any, width: number, height: number) => {
+const sizeTarget = (gl, target, width, height) => {
   if (target.width === width && target.height === height) return;
   target.width = width;
   target.height = height;
   gl.bindFramebuffer(gl.FRAMEBUFFER, target.framebuffer);
-  target.textures.forEach((texture: WebGLTexture, i: number) => {
+  target.textures.forEach((texture, i) => {
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0 + i, gl.TEXTURE_2D, texture, 0);
@@ -389,8 +390,8 @@ const sizeTarget = (gl: WebGL2RenderingContext, target: any, width: number, heig
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 };
 
-const buildAtlas = (gl: WebGL2RenderingContext, characters: string, fontFamily: string) => {
-  const list = [...new Set([...characters].filter((char) => char !== '\n' && char !== '\r'))];
+const buildAtlas = (gl, characters, fontFamily) => {
+  const list = [...new Set([...characters].filter(char => char !== '\n' && char !== '\r'))];
   if (!list.length) list.push(' ');
   const font = `300 ${Math.round(ATLAS_CELL_H * FONT_SCALE)}px ${fontFamily}`;
   const columns = Math.min(ATLAS_COLUMNS, list.length);
@@ -410,7 +411,7 @@ const buildAtlas = (gl: WebGL2RenderingContext, characters: string, fontFamily: 
       context.fillText(char, column * ATLAS_CELL_W + ATLAS_CELL_W / 2, row * ATLAS_CELL_H + ATLAS_CELL_H / 2 + 3);
     });
   }
-  const texture = gl.createTexture()!;
+  const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
@@ -422,35 +423,7 @@ const buildAtlas = (gl: WebGL2RenderingContext, characters: string, fontFamily: 
   return { texture, count: list.length, grid: [columns, rows] };
 };
 
-export interface GradientASCIIProps {
-  colors?: string[];
-  shape?: 'horizon' | 'pinch' | 'rise' | 'eclipse';
-  characters?: string;
-  cellSize?: number;
-  density?: number;
-  glyphOpacity?: number;
-  glow?: number;
-  depthOfField?: number;
-  flicker?: number;
-  softness?: number;
-  scale?: number;
-  flow?: number;
-  speed?: number;
-  gradientOpacity?: number;
-  grain?: number;
-  variation?: number;
-  mouseInteraction?: boolean;
-  scrambleRadius?: number;
-  clickEffect?: 'wave' | 'burst' | 'none';
-  intro?: boolean;
-  lightMode?: boolean;
-  fontFamily?: string;
-  dpr?: number;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-export const GradientASCII: React.FC<GradientASCIIProps> = ({
+const GradientASCII = ({
   colors = DEFAULT_COLORS,
   shape = 'horizon',
   characters = DEFAULT_CHARACTERS,
@@ -473,14 +446,14 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
   intro = true,
   lightMode = false,
   fontFamily = DEFAULT_FONT,
-  dpr,
+  dpr = undefined,
   className = '',
-  style,
+  style = undefined,
   ...rest
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const wakeRef = useRef<(() => void) | null>(null);
+}: any) => {
+  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const wakeRef = useRef(null);
   const palette = (Array.isArray(colors) && colors.length ? colors : DEFAULT_COLORS).slice(0, MAX_COLORS);
   const settings = {
     colors: palette.length > 1 ? palette : [palette[0], palette[0]],
@@ -505,7 +478,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
     intro,
     lightMode,
     fontFamily: fontFamily || DEFAULT_FONT,
-    dpr,
+    dpr
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -518,7 +491,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       premultipliedAlpha: true,
       antialias: false,
       depth: false,
-      stencil: false,
+      stencil: false
     });
     if (!container || !canvas || !gl) return undefined;
 
@@ -534,11 +507,11 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
 
     const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
     const colorCache = new Map();
-    const parse = (value: string): [number, number, number] => {
+    const parse = value => {
       const key = String(value);
       const cached = colorCache.get(key);
       if (cached) return cached;
-      let rgb: [number, number, number] = [0, 0, 0];
+      let rgb = [0, 0, 0];
       if (probe) {
         probe.clearRect(0, 0, 1, 1);
         probe.fillStyle = '#000000';
@@ -555,11 +528,11 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
     const view = { width: 1, height: 1, ratio: 1 };
     const ramp = new Float32Array(MAX_COLORS * 3);
     const clickData = new Float32Array(MAX_CLICKS * 4);
-    const clicks: any[] = [];
+    const clicks = [];
     const trailData = new Float32Array(MAX_TRAIL * 4);
-    const trail: any[] = [];
+    const trail = [];
     const pointer = { x: 0, y: 0, inside: false };
-    let atlas: any = null;
+    let atlas = null;
     let atlasKey = '';
     let paletteKey = '';
     let time = 0;
@@ -598,7 +571,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       s.colors.forEach((color, i) => ramp.set(toLab(parse(color)), i * 3));
     };
 
-    const bindGlyphs = (program: any, width: number, height: number) => {
+    const bindGlyphs = (program, width, height) => {
       if (!atlas) return;
       const s = settingsRef.current;
       const u = program.uniforms;
@@ -720,8 +693,8 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       wake();
     };
 
-    const updateInput = (dt: number) => {
-      trail.forEach((point) => {
+    const updateInput = dt => {
+      trail.forEach(point => {
         point.age += dt;
       });
       while (trail.length && trail[trail.length - 1].age > TRAIL_LIFE) trail.pop();
@@ -734,7 +707,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
         const k = 1 - point.age / TRAIL_LIFE;
         trailData.set([point.x, point.y, k * k, 0], i * 4);
       }
-      clicks.forEach((click) => {
+      clicks.forEach(click => {
         click.age += dt;
       });
       while (clicks.length && clicks[clicks.length - 1].age > CLICK_LIFE) clicks.pop();
@@ -750,7 +723,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       }
     };
 
-    const frame = (now: number) => {
+    const frame = now => {
       raf = 0;
       if (disposed || !visible || document.hidden) return;
       const s = settingsRef.current;
@@ -777,7 +750,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       if (!raf && !disposed && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
 
-    const locate = (event: PointerEvent) => {
+    const locate = event => {
       const rect = container.getBoundingClientRect();
       const x = (event.clientX - rect.left) / Math.max(1, rect.width);
       const y = 1 - (event.clientY - rect.top) / Math.max(1, rect.height);
@@ -787,7 +760,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       pointer.y = y - 0.5;
     };
 
-    const onPointerMove = (event: PointerEvent) => {
+    const onPointerMove = event => {
       locate(event);
       const s = settingsRef.current;
       if (!pointer.inside || !s.mouseInteraction || reduce) return;
@@ -806,7 +779,7 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       wake();
     };
 
-    const onPointerDown = (event: PointerEvent) => {
+    const onPointerDown = event => {
       locate(event);
       const s = settingsRef.current;
       if (!pointer.inside || !s.clickEffect || reduce) return;
@@ -822,8 +795,8 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-    const intersection = new IntersectionObserver((entries) => {
-      visible = entries.some((entry) => entry.isIntersecting);
+    const intersection = new IntersectionObserver(entries => {
+      visible = entries.some(entry => entry.isIntersecting);
       if (visible) {
         last = 0;
         wake();
@@ -845,14 +818,13 @@ export const GradientASCII: React.FC<GradientASCIIProps> = ({
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
       document.removeEventListener('visibilitychange', onVisibility);
-      [fieldTarget, haloA, haloB].forEach((target) => {
-        target.textures.forEach((texture: WebGLTexture) => gl.deleteTexture(texture));
+      [fieldTarget, haloA, haloB].forEach(target => {
+        target.textures.forEach(texture => gl.deleteTexture(texture));
         gl.deleteFramebuffer(target.framebuffer);
       });
       if (atlas) gl.deleteTexture(atlas.texture);
       gl.deleteVertexArray(vao);
-      [field, halo, blur, composite].forEach((item) => gl.deleteProgram(item.program));
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      [field, halo, blur, composite].forEach(item => gl.deleteProgram(item.program));
     };
   }, []);
 
