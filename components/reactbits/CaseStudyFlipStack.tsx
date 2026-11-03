@@ -41,8 +41,8 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
     image:
       "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&q=90&auto=format&fit=crop",
     imageAlt: "Athlete training with barbell",
-    background: "#0c0e14",
-    foreground: "#ffffff",
+    background: "#ffffff",
+    foreground: "#0a0a0a",
   },
   {
     eyebrow: "Biometric Telemetry",
@@ -52,8 +52,8 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
     image:
       "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1400&q=90&auto=format&fit=crop",
     imageAlt: "Athlete monitoring biometric heart rate",
-    background: "#18120d",
-    foreground: "#fff7ed",
+    background: "#fcfcfd",
+    foreground: "#0a0a0a",
   },
   {
     eyebrow: "Metabolic Hydration",
@@ -63,8 +63,8 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
     image:
       "https://images.unsplash.com/photo-1550345332-09e3ac987658?w=1400&q=90&auto=format&fit=crop",
     imageAlt: "Hydrated athlete recovering post workout",
-    background: "#0d161a",
-    foreground: "#ecfeff",
+    background: "#ffffff",
+    foreground: "#0a0a0a",
   },
   {
     eyebrow: "Discipline Architecture",
@@ -74,8 +74,8 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
     image:
       "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=1400&q=90&auto=format&fit=crop",
     imageAlt: "Dedicated athlete maintaining daily streak",
-    background: "#11141e",
-    foreground: "#f3f1ff",
+    background: "#f9f9fb",
+    foreground: "#0a0a0a",
   },
 ];
 
@@ -153,10 +153,10 @@ function FlipCard({
       }}
     >
       <motion.div
-        className="grid h-full overflow-hidden rounded-[clamp(18px,2vw,30px)] shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-white/10 sm:grid-cols-[1.15fr_0.85fr]"
+        className="grid h-full overflow-hidden rounded-[clamp(18px,2vw,30px)] shadow-[0_16px_50px_rgba(0,0,0,0.08)] border border-neutral-200/90 sm:grid-cols-[1.15fr_0.85fr]"
         style={{
           backgroundColor: item.background,
-          color: item.foreground ?? "white",
+          color: item.foreground ?? "#0a0a0a",
           y: entryY,
           scale: entryScale,
           transformOrigin: "50% 100%",
@@ -164,25 +164,25 @@ function FlipCard({
       >
         <div className="flex min-w-0 flex-col p-[clamp(24px,3vw,48px)] md:pr-[clamp(22px,3vw,48px)]">
           <div className="flex items-start">
-            <span className="text-[clamp(24px,2.5vw,36px)] font-bold leading-none tracking-[-0.06em] text-[#FF5500]">
+            <span className="text-[clamp(24px,2.5vw,36px)] font-extrabold leading-none tracking-tight text-[#C2410C]">
               {item.number ?? String(index + 1).padStart(2, "0")}
             </span>
           </div>
 
           <div className="mt-auto max-w-[46rem] pt-8">
-            <p className="mb-[clamp(10px,1.5vw,22px)] text-[11px] font-bold uppercase tracking-[0.16em] text-[#FF7A00]">
+            <p className="mb-[clamp(10px,1.5vw,22px)] text-[11px] font-bold uppercase tracking-[0.16em] text-[#9A3412]">
               {item.eyebrow}
             </p>
-            <h3 className="max-w-[16ch] text-balance text-[clamp(26px,3vw,44px)] font-extrabold leading-[1.05] tracking-tight">
+            <h3 className="max-w-[16ch] text-balance text-[clamp(26px,3vw,44px)] font-extrabold leading-[1.05] tracking-tight text-neutral-950">
               {item.title}
             </h3>
-            <p className="mt-[clamp(14px,1.6vw,20px)] max-w-[42rem] text-[clamp(13px,1.1vw,15px)] leading-[1.6] opacity-80 font-normal">
+            <p className="mt-[clamp(14px,1.6vw,20px)] max-w-[42rem] text-[clamp(13px,1.1vw,15px)] leading-[1.6] text-neutral-600 font-normal">
               {item.description}
             </p>
           </div>
         </div>
 
-        <div className="relative m-[clamp(10px,1.2vw,18px)] min-h-[180px] overflow-hidden rounded-[clamp(12px,1.4vw,22px)] sm:ml-0">
+        <div className="relative m-[clamp(10px,1.2vw,18px)] min-h-[180px] overflow-hidden rounded-[clamp(12px,1.4vw,22px)] sm:ml-0 border border-neutral-100">
           <img
             src={item.image}
             alt={item.imageAlt}
@@ -190,7 +190,7 @@ function FlipCard({
             loading={index < 2 ? "eager" : "lazy"}
             draggable={false}
           />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/10" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/10" />
         </div>
       </motion.div>
     </motion.article>
@@ -222,13 +222,13 @@ export function CaseStudyFlipStack({
   return (
     <section
       id="flip-stack"
-      className={cn("relative bg-neutral-950 font-['Manrope',sans-serif] text-white selection:bg-[#FF5500] selection:text-white", className)}
+      className={cn("relative bg-white font-['Manrope',sans-serif] text-neutral-950 selection:bg-[#FF5500] selection:text-white border-t border-neutral-100", className)}
     >
-      <div className="relative h-[65vh] min-h-[500px] overflow-hidden px-5 sm:px-10 flex flex-col justify-center items-center text-center">
-        <div className="flex items-center justify-center gap-3 text-sm font-bold uppercase tracking-widest text-[#FF5500] mb-6">
+      <div className="relative h-[55vh] min-h-[440px] overflow-hidden px-5 sm:px-10 flex flex-col justify-center items-center text-center">
+        <div className="flex items-center justify-center gap-2.5 text-xs font-bold uppercase tracking-widest text-[#9A3412] mb-4 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200">
           <motion.span
             aria-hidden="true"
-            animate={reduceMotion ? undefined : { y: [0, 8, 0] }}
+            animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
             transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
           >
             ↓
@@ -236,7 +236,7 @@ export function CaseStudyFlipStack({
           <span>{hint}</span>
           <motion.span
             aria-hidden="true"
-            animate={reduceMotion ? undefined : { y: [0, 8, 0] }}
+            animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
             transition={{
               duration: 1.4,
               delay: 0.18,
@@ -248,7 +248,7 @@ export function CaseStudyFlipStack({
           </motion.span>
         </div>
 
-        <h2 className="max-w-[20ch] text-center text-[clamp(36px,5vw,72px)] font-extrabold leading-[1.05] tracking-tight text-white [text-wrap:balance]">
+        <h2 className="max-w-[20ch] text-center text-[clamp(32px,4.5vw,64px)] font-extrabold leading-[1.08] tracking-tight text-neutral-950 [text-wrap:balance]">
           {heading}
         </h2>
       </div>
@@ -277,8 +277,8 @@ export function CaseStudyFlipStack({
         </div>
       </div>
 
-      <div className="flex min-h-[60vh] items-center justify-center px-5 sm:px-10 py-20 border-t border-white/10">
-        <p className="text-center text-[clamp(38px,6vw,96px)] font-extrabold leading-none tracking-tight text-white [text-wrap:balance]">
+      <div className="flex min-h-[50vh] items-center justify-center px-5 sm:px-10 py-16 border-t border-neutral-100">
+        <p className="text-center text-[clamp(34px,5.5vw,84px)] font-extrabold leading-none tracking-tight text-neutral-950 [text-wrap:balance]">
           {endLabel}
         </p>
       </div>
