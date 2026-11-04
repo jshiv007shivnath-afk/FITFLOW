@@ -162,21 +162,22 @@ function FlipCard({
           transformOrigin: "50% 100%",
         }}
       >
-        <div className="flex min-w-0 flex-col p-6 sm:p-8 md:p-10 justify-between">
-          <div className="flex items-start">
-            <span className="text-2xl sm:text-3xl font-extrabold leading-none tracking-tight text-[#C2410C]">
+        <div className="flex min-w-0 flex-col justify-center p-6 sm:p-8 md:p-10 gap-3 sm:gap-4 my-auto">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl sm:text-3xl font-black leading-none tracking-tight text-[#FF5500]">
               {item.number ?? String(index + 1).padStart(2, "0")}
             </span>
-          </div>
-
-          <div className="max-w-xl pt-4 sm:pt-6">
-            <p className="mb-2 text-xs font-bold tracking-wide text-[#9A3412]">
+            <span className="h-4 w-px bg-neutral-300" />
+            <p className="text-xs font-bold uppercase tracking-wider text-[#9A3412]">
               {item.eyebrow}
             </p>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-tight tracking-tight text-neutral-950">
+          </div>
+
+          <div className="max-w-xl">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold leading-snug tracking-tight text-neutral-950">
               {item.title}
             </h3>
-            <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm leading-relaxed text-neutral-700 font-normal">
+            <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-relaxed text-neutral-700 font-normal">
               {item.description}
             </p>
           </div>
@@ -184,7 +185,7 @@ function FlipCard({
 
         {/* Large, High-Impact App Screen Preview */}
         <div className="relative h-full min-h-[300px] xs:min-h-[340px] sm:min-h-[420px] p-3 sm:p-5 flex items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100/80 overflow-hidden">
-          <div className="relative w-full max-w-[360px] xs:max-w-[400px] sm:max-w-[460px] h-full max-h-[320px] xs:max-h-[360px] sm:max-h-[440px] rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-neutral-200/90 bg-white">
+          <div className="relative w-full max-w-[320px] xs:max-w-[340px] sm:max-w-[360px] aspect-[440/760] rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-neutral-200/90 bg-white">
             <img
               src={item.image}
               alt={item.imageAlt}

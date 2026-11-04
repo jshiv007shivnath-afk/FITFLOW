@@ -38,6 +38,15 @@ export function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
   }, []);
 
   const handleDownload = async (platform: 'android' | 'ios') => {
+    // Record download event in Supabase backend
+    try {
+      fetch('/api/downloads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ platform, source: 'landing_modal' }),
+      }).catch(() => {});
+    } catch {}
+
     if (deferredPrompt) {
       try {
         await deferredPrompt.prompt();

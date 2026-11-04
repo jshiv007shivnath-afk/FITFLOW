@@ -586,7 +586,14 @@ async function captureHtml(html, outFile) {
           }));
 
           setTimeout(() => {
-            ws.send(JSON.stringify({ id: 2, method: 'Page.captureScreenshot', params: { format: 'png' } }));
+            ws.send(JSON.stringify({
+              id: 2,
+              method: 'Page.captureScreenshot',
+              params: {
+                format: 'png',
+                clip: { x: 0, y: 0, width: 440, height: 760, scale: 1 }
+              }
+            }));
           }, 600);
         };
 

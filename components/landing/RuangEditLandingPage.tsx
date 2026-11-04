@@ -22,6 +22,25 @@ const TILTED_GRID_SCREENS = [
   { src: '/screens/screen_login.png', alt: 'FitFlow Athlete Authentication' },
 ] as const;
 
+const SERVICE_TRACK_SCREENS: Record<'strength' | 'biometrics' | 'hydration' | 'habits', { src: string; alt: string }> = {
+  strength: {
+    src: '/screens/screen_progress.png',
+    alt: 'FitFlow Strength & Heavy Overload Tracking',
+  },
+  biometrics: {
+    src: '/screens/screen_profile.png',
+    alt: 'FitFlow Heart Rate & Biometrics Telemetry',
+  },
+  hydration: {
+    src: '/screens/screen_home.png',
+    alt: 'FitFlow Daily Dashboard & Hydration Target',
+  },
+  habits: {
+    src: '/screens/screen_rewards.png',
+    alt: 'FitFlow 21-Day Habit Streaks & Milestone Vault',
+  },
+};
+
 export function RuangEditLandingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<'home' | 'services' | 'about'>('home');
@@ -228,14 +247,9 @@ export function RuangEditLandingPage() {
               alt="FitFlow Logo"
               className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
             />
-            <div className="flex items-baseline gap-1.5 select-none">
-              <span className="font-extrabold text-white text-base sm:text-xl tracking-tight">
-                FitFlow
-              </span>
-              <span className="text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-md bg-white/10 text-neutral-300 border border-white/10">
-                app
-              </span>
-            </div>
+            <span className="font-extrabold text-white text-base sm:text-xl tracking-tight select-none">
+              FitFlow
+            </span>
           </button>
 
           {/* Nav Links with Animated Active Indicator */}
@@ -514,96 +528,68 @@ export function RuangEditLandingPage() {
               ))}
             </div>
 
-            {/* Track Content Card (Side-by-Side Detail & Live Preview) */}
-            <div className="bg-neutral-50 border border-neutral-200/90 rounded-3xl p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-              {/* Left Column: Track Info & Features */}
-              <div className="lg:col-span-7 flex flex-col gap-6">
-                <div>
-                  <span className="text-xs font-bold text-[#9A3412] tracking-wide">
-                    {currentTrack.tag}
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
-                    {currentTrack.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
-                    {currentTrack.description}
-                  </p>
-                </div>
-
-                {/* 3 Quick Telemetry Metrics */}
-                <div className="grid grid-cols-3 gap-3 py-4 border-y border-neutral-200">
-                  {currentTrack.metrics.map((m, idx) => (
-                    <div key={idx} className="flex flex-col">
-                      <span className="text-xs text-neutral-500 font-semibold">{m.label}</span>
-                      <span className="text-xs sm:text-sm font-bold text-neutral-950 mt-0.5">{m.value}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Feature Bullet Checklist */}
-                <ul className="flex flex-col gap-2.5">
-                  {currentTrack.features.map((feat, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
-                      <span aria-hidden="true" className="w-4 h-4 rounded-full bg-orange-100 text-[#9A3412] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                        ✓
+            {/* Track Content Card with Onboarding-Style Slide Transition & Real Phone Mockup */}
+            <div className="relative min-h-[460px] sm:min-h-[500px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeServiceTab}
+                  initial={{ opacity: 0, x: 28, scale: 0.99 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -28, scale: 0.99 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  className="bg-neutral-50 border border-neutral-200/90 rounded-3xl p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+                >
+                  {/* Left Column: Track Info & Features */}
+                  <div className="lg:col-span-7 flex flex-col gap-6">
+                    <div>
+                      <span className="text-xs font-bold text-[#9A3412] tracking-wide uppercase">
+                        {currentTrack.tag}
                       </span>
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Right Column: High-Craft Live Phone Telemetry Preview (Large & Clear) */}
-              <div className="lg:col-span-5 flex justify-center">
-                <div className="w-full max-w-[380px] sm:max-w-[420px] rounded-3xl bg-neutral-950 text-white p-6 sm:p-7 shadow-2xl border border-neutral-800 flex flex-col gap-5">
-                  
-                  {/* Phone Header Bar */}
-                  <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#FF5500] animate-pulse" />
-                      <span className="text-xs font-mono font-bold tracking-tight text-white">
-                        {currentTrack.phonePreview.screenTitle}
-                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
+                        {currentTrack.title}
+                      </h3>
+                      <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
+                        {currentTrack.description}
+                      </p>
                     </div>
-                    <span className="text-xs font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-500/20 text-[#FF7A00] border border-orange-500/30">
-                      {currentTrack.phonePreview.badge}
-                    </span>
+
+                    {/* 3 Quick Telemetry Metrics */}
+                    <div className="grid grid-cols-3 gap-3 py-4 border-y border-neutral-200">
+                      {currentTrack.metrics.map((m, idx) => (
+                        <div key={idx} className="flex flex-col">
+                          <span className="text-xs text-neutral-500 font-semibold">{m.label}</span>
+                          <span className="text-xs sm:text-sm font-bold text-neutral-950 mt-0.5">{m.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Feature Bullet Checklist */}
+                    <ul className="flex flex-col gap-2.5">
+                      {currentTrack.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
+                          <span aria-hidden="true" className="w-4 h-4 rounded-full bg-orange-100 text-[#9A3412] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
+                            ✓
+                          </span>
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  {/* Active Exercise Metric Card */}
-                  <div className="rounded-2xl bg-neutral-900 border border-neutral-800 p-4 flex flex-col gap-2">
-                    <span className="text-xs text-neutral-400 font-medium">Active Telemetry</span>
-                    <span className="text-lg font-extrabold text-white tracking-tight">
-                      {currentTrack.phonePreview.exercise}
-                    </span>
-                    <div className="flex items-center justify-between text-xs text-neutral-300 font-mono mt-1">
-                      <span>{currentTrack.phonePreview.set}</span>
-                      <span className="font-bold text-[#FF5500]">{currentTrack.phonePreview.weight}</span>
+                  {/* Right Column: High-Craft Live Phone Mockup with Real App Screen */}
+                  <div className="lg:col-span-5 flex justify-center">
+                    <div className="relative w-full max-w-[280px] xs:max-w-[300px] sm:max-w-[320px] aspect-[440/760] rounded-[32px] p-2 bg-neutral-950 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border-4 border-neutral-900 overflow-hidden flex items-center justify-center">
+                      <div className="w-full h-full rounded-[24px] overflow-hidden bg-[#F8F8F6]">
+                        <img
+                          src={SERVICE_TRACK_SCREENS[activeServiceTab].src}
+                          alt={SERVICE_TRACK_SCREENS[activeServiceTab].alt}
+                          className="w-full h-full object-cover object-top select-none"
+                        />
+                      </div>
                     </div>
                   </div>
-
-                  {/* Progress Bar & Status */}
-                  <div className="rounded-2xl bg-neutral-900/60 border border-neutral-800/80 p-3.5 flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-xs text-neutral-300">
-                      <span>Status</span>
-                      <span className="text-emerald-400 font-semibold">{currentTrack.phonePreview.status}</span>
-                    </div>
-                    <div className="w-full h-2 rounded-full bg-neutral-800 overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-[#FF5500] to-orange-400 rounded-full w-4/5 animate-pulse" />
-                    </div>
-                  </div>
-
-                  {/* Bottom Action */}
-                  <button
-                    type="button"
-                    onClick={() => setIsDownloadModalOpen(true)}
-                    className="w-full h-10 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-xs text-center transition-all cursor-pointer shadow-sm flex items-center justify-center"
-                  >
-                    Launch on Phone ↗
-                  </button>
-                </div>
-              </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
           </AnimatedContent>
         </div>
