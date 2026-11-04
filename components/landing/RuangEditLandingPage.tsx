@@ -9,7 +9,17 @@ import AnimatedContent from '@/components/reactbits/AnimatedContent';
 import CountUp from '@/components/reactbits/CountUp';
 import GradualBlur from '@/components/reactbits/GradualBlur';
 import { CaseStudyFlipStack } from '@/components/reactbits/CaseStudyFlipStack';
+import { ScrollTiltedGrid } from '@/components/reactbits/ScrollTiltedGrid';
 import { DownloadModal } from '@/components/landing/DownloadModal';
+
+const TILTED_GRID_SCREENS = [
+  { src: '/screens/screen_home.png', alt: 'FitFlow Dashboard and Active Burn' },
+  { src: '/screens/screen_progress.png', alt: 'FitFlow Telemetry and Workout Progress' },
+  { src: '/screens/screen_rewards.png', alt: 'FitFlow Streaks and Milestone Vault' },
+  { src: '/screens/screen_profile.png', alt: 'FitFlow Biometric Profile & Recovery' },
+  { src: '/screens/screen_add.png', alt: 'FitFlow Quick Session Logger' },
+  { src: '/screens/screen_login.png', alt: 'FitFlow Athlete Authentication' },
+] as const;
 
 export function RuangEditLandingPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -48,45 +58,45 @@ export function RuangEditLandingPage() {
     }
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const serviceTracks = {
     strength: {
-      tag: 'Track 01 • Core Engineering',
-      title: 'Progressive Overload & Workout Logging',
+      tag: 'Track 01 • Heavy Compound Progression',
+      title: 'Automated Overload & Fatigue Limits',
       description:
-        'Structure your weekly micro-cycles with automated weight increments, RPE fatigue tracking, and balanced push/pull/legs periodization.',
+        'Log sets and reps with zero latency. FitFlow tracks weight progression, sets per muscle group, and prompts rest intervals without friction.',
       metrics: [
-        { label: 'Tracking Precision', value: 'Per-Set & Rep' },
-        { label: 'Split Templates', value: '5 Preset Routines' },
-        { label: 'Fatigue Protection', value: 'Auto-Deload Weeks' },
+        { label: 'Tracking Speed', value: 'Instant One-Tap' },
+        { label: 'Volume Math', value: 'Auto-Aggregated' },
+        { label: 'Deload Alert', value: 'Fatigue Threshold' },
       ],
       features: [
-        'Real-time set logging with weight, reps, and RPE fatigue rating',
-        'Dynamic volume progression charts across all compound lifts',
-        'Automated rest timers between sets with audio & haptic alerts',
-        'Symmetric XP rollback: unchecking a set reverses XP honestly',
+        'Precise set, rep, weight and RPE tracking with millisecond reaction',
+        'Automatic volume computation per muscle group with weekly targets',
+        'Built-in rest countdown with subtle haptic signals when ready',
+        'Intelligent deload suggestions when recovery volume spikes',
       ],
       phonePreview: {
         screenTitle: 'Workout Session',
         exercise: 'Barbell Back Squat',
-        set: 'Set 3 of 4',
-        weight: '100 kg • 8 Reps',
-        status: 'Active Set (RPE 8.5)',
-        badge: 'Strength Core',
+        set: 'Set 3 of 4 • 140 kg × 5 reps',
+        weight: 'RPE 8.5 • Optimal Overload',
+        status: 'Rest Timer: 01:45',
+        badge: 'Session Active',
       },
     },
     biometrics: {
-      tag: 'Track 02 • Biometric Telemetry',
-      title: 'Real-Time Sensor & Heart Rate Sync',
+      tag: 'Track 02 • Cardiac & Calorie Telemetry',
+      title: 'Zero-Lag BLE Sensor Streaming',
       description:
-        'Synchronize Bluetooth Low Energy (BLE) chest straps and smartwatches to balance fat-oxidation Zone 2 intervals with peak VO2 max thresholds.',
+        'Sync heart-rate zones directly from your Bluetooth strap or smartwatch. Live heart-rate variability and calorie burn without cloud dependencies.',
       metrics: [
-        { label: 'Sensor Standard', value: 'BLE 5.0 + HealthKit' },
-        { label: 'Latency', value: '14ms Direct Stream' },
-        { label: 'HR Zones', value: 'Zone 1 to 5' },
+        { label: 'Stream Delay', value: '< 14ms BLE' },
+        { label: 'Target Zones', value: '5-Tier Cardio' },
+        { label: 'Battery Impact', value: '0.4% per hour' },
       ],
       features: [
         'Direct connection to standard heart rate monitors via Web Bluetooth',
@@ -203,7 +213,7 @@ export function RuangEditLandingPage() {
             y: isScrolled ? -2 : 0,
           }}
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="w-full mx-auto rounded-full bg-black/90 backdrop-blur-2xl border border-white/20 px-4 sm:px-7 py-2.5 sm:py-3 shadow-[0_12px_40px_rgba(0,0,0,0.65)] flex items-center justify-between gap-2 sm:gap-4 pointer-events-auto"
+          className="w-full mx-auto rounded-full bg-neutral-950 backdrop-blur-2xl border border-white/20 px-3.5 sm:px-7 py-2.5 sm:py-3 shadow-[0_12px_40px_rgba(0,0,0,0.65)] flex items-center justify-between gap-2 sm:gap-4 pointer-events-auto"
         >
           {/* Brand Logo & Name */}
           <button
@@ -232,7 +242,7 @@ export function RuangEditLandingPage() {
                   type="button"
                   onClick={() => scrollToSection(sectionId)}
                   className={`relative px-3 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold transition-colors duration-200 rounded-full cursor-pointer ${
-                    isActive ? 'text-neutral-950 font-bold' : 'text-slate-300 hover:text-white'
+                    isActive ? 'text-neutral-950 font-bold' : 'text-neutral-300 hover:text-white'
                   }`}
                 >
                   {isActive && (
@@ -255,7 +265,7 @@ export function RuangEditLandingPage() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsDownloadModalOpen(true)}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 text-xs sm:text-sm font-bold transition-all group cursor-pointer shadow-sm"
+              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 h-10 px-4 sm:px-6 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 text-xs sm:text-sm font-bold transition-all group cursor-pointer shadow-sm"
             >
               <svg aria-hidden="true" className="w-3.5 h-3.5 text-neutral-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -366,7 +376,7 @@ export function RuangEditLandingPage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-xl mx-auto text-sm sm:text-base text-slate-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium leading-relaxed mt-3 [text-wrap:pretty]"
+            className="max-w-xl mx-auto text-sm sm:text-base text-neutral-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium leading-relaxed mt-3 [text-wrap:pretty]"
           >
             Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
           </motion.p>
@@ -383,7 +393,7 @@ export function RuangEditLandingPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => setIsDownloadModalOpen(true)}
-              className="inline-flex items-center justify-center gap-3 h-13 sm:h-14 px-8 sm:px-11 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm sm:text-base shadow-[0_0_36px_rgba(255,255,255,0.3)] transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-3 h-12 sm:h-14 px-8 sm:px-11 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm sm:text-base shadow-[0_0_36px_rgba(255,255,255,0.3)] transition-all cursor-pointer"
             >
               <svg aria-hidden="true" className="w-5 h-5 text-neutral-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -428,7 +438,7 @@ export function RuangEditLandingPage() {
             <button
               type="button"
               onClick={() => setIsDownloadModalOpen(true)}
-              className="px-6 py-2.5 rounded-full bg-white text-neutral-950 font-bold text-sm hover:brightness-105 active:scale-95 transition-all shadow-md cursor-pointer"
+              className="inline-flex items-center justify-center h-11 px-7 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm transition-all shadow-md cursor-pointer"
             >
               Download FitFlow ↗
             </button>
@@ -440,21 +450,25 @@ export function RuangEditLandingPage() {
       {/* 3.5. CASE STUDY FLIP STACK (DIRECTLY BELOW SCROLL-EXPAND)      */}
       {/* ============================================================== */}
       <CaseStudyFlipStack
-        hint="Scroll To Flip"
         heading="Tactile Engineering That Delivers"
         endLabel="Train With Precision"
       />
 
       {/* ============================================================== */}
+      {/* 3.6. SCROLL TILTED GRID (DIRECTLY BELOW CASE STUDY FLIP STACK) */}
+      {/* ============================================================== */}
+      <ScrollTiltedGrid images={TILTED_GRID_SCREENS} />
+
+      {/* ============================================================== */}
       {/* 4. BALANCED SERVICES SECTION (HOME PAGE • WHITE + ORANGE THEME)*/}
       {/* ============================================================== */}
-      <section id="services" className="w-full bg-white py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-neutral-100">
-        <div className="max-w-6xl mx-auto flex flex-col gap-12 sm:gap-16">
+      <section id="services" className="w-full bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100">
+        <div className="max-w-6xl mx-auto flex flex-col gap-10 sm:gap-14">
           
           {/* Section Header with AnimatedContent */}
           <AnimatedContent distance={30} direction="vertical" duration={0.8} ease="power2.out">
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold uppercase tracking-wider mb-3">
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
                 Core Capabilities
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-950 tracking-tight leading-tight [text-wrap:balance]">
@@ -482,7 +496,7 @@ export function RuangEditLandingPage() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveServiceTab(tab.id)}
-                  className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                     activeServiceTab === tab.id
                       ? 'bg-white text-neutral-950 shadow-sm'
                       : 'text-neutral-600 hover:text-neutral-950'
@@ -499,7 +513,7 @@ export function RuangEditLandingPage() {
               {/* Left Column: Track Info & Features */}
               <div className="lg:col-span-7 flex flex-col gap-6">
                 <div>
-                  <span className="text-xs font-bold text-[#9A3412] uppercase tracking-wider">
+                  <span className="text-xs font-bold text-[#9A3412] tracking-wide">
                     {currentTrack.tag}
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
@@ -545,7 +559,7 @@ export function RuangEditLandingPage() {
                         {currentTrack.phonePreview.screenTitle}
                       </span>
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-500/20 text-[#FF7A00] border border-orange-500/30">
+                    <span className="text-xs font-bold tracking-wider px-2 py-0.5 rounded-full bg-orange-500/20 text-[#FF7A00] border border-orange-500/30">
                       {currentTrack.phonePreview.badge}
                     </span>
                   </div>
@@ -556,7 +570,7 @@ export function RuangEditLandingPage() {
                     <span className="text-lg font-extrabold text-white tracking-tight">
                       {currentTrack.phonePreview.exercise}
                     </span>
-                    <div className="flex items-center justify-between text-xs text-slate-300 font-mono mt-1">
+                    <div className="flex items-center justify-between text-xs text-neutral-300 font-mono mt-1">
                       <span>{currentTrack.phonePreview.set}</span>
                       <span className="font-bold text-[#FF5500]">{currentTrack.phonePreview.weight}</span>
                     </div>
@@ -577,7 +591,7 @@ export function RuangEditLandingPage() {
                   <button
                     type="button"
                     onClick={() => setIsDownloadModalOpen(true)}
-                    className="w-full py-2.5 rounded-xl bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-xs text-center transition-all cursor-pointer shadow-sm"
+                    className="w-full h-10 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-xs text-center transition-all cursor-pointer shadow-sm flex items-center justify-center"
                   >
                     Launch on Phone ↗
                   </button>
@@ -591,13 +605,13 @@ export function RuangEditLandingPage() {
       {/* ============================================================== */}
       {/* 5. BALANCED ABOUT SECTION (HOME PAGE • WHITE + ORANGE THEME)   */}
       {/* ============================================================== */}
-      <section id="about" className="w-full bg-white py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-neutral-100">
-        <div className="max-w-5xl mx-auto flex flex-col gap-12 sm:gap-16">
+      <section id="about" className="w-full bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100">
+        <div className="max-w-5xl mx-auto flex flex-col gap-10 sm:gap-14">
           
           {/* Section Header with AnimatedContent */}
           <AnimatedContent distance={30} direction="vertical" duration={0.8} ease="power2.out">
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold uppercase tracking-wider mb-3">
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
                 The FitFlow Manifesto
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-950 tracking-tight leading-tight [text-wrap:balance]">
@@ -613,7 +627,7 @@ export function RuangEditLandingPage() {
           <AnimatedContent distance={35} direction="vertical" duration={0.85} delay={0.1} ease="power2.out">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 py-8 border-y border-neutral-200">
               <div className="flex flex-col">
-                <span className="text-xs font-bold text-[#9A3412] uppercase tracking-wider">
+                <span className="text-xs font-bold text-[#9A3412] tracking-wide">
                   The Problem
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
@@ -625,7 +639,7 @@ export function RuangEditLandingPage() {
               </div>
 
               <div className="flex flex-col">
-                <span className="text-xs font-bold text-[#9A3412] uppercase tracking-wider">
+                <span className="text-xs font-bold text-[#9A3412] tracking-wide">
                   Our Antidote
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
@@ -699,7 +713,7 @@ export function RuangEditLandingPage() {
             <button
               type="button"
               onClick={() => setIsDownloadModalOpen(true)}
-              className="px-8 py-3.5 rounded-full bg-white text-neutral-950 font-bold text-sm hover:bg-neutral-100 transition-all shrink-0 cursor-pointer shadow-md"
+              className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm transition-all shrink-0 cursor-pointer shadow-md"
             >
               Get Started Free ↗
             </button>
@@ -718,63 +732,35 @@ export function RuangEditLandingPage() {
               <img
                 src="/icon.png"
                 alt="FitFlow Logo"
-                className="w-7 h-7 rounded-lg object-contain shadow-xs"
+                className="w-6 h-6 rounded-full object-contain"
               />
-              <span className="font-bold text-neutral-900 text-base tracking-tight">
-                Fitflow app
-              </span>
+              <span className="font-bold text-neutral-950 text-sm tracking-tight">FitFlow</span>
             </div>
-            <span className="text-neutral-500 text-xs sm:ml-3">
-              © 2026 Fitflow. All rights reserved.
-            </span>
+            <span className="hidden sm:inline text-neutral-300">•</span>
+            <span className="text-xs text-neutral-500">Autonomous athlete companion & telemetry client</span>
           </div>
 
-          <div className="flex items-center gap-6 text-xs font-semibold text-neutral-600">
-            <button
-              type="button"
-              onClick={() => scrollToSection('home')}
-              className="hover:text-neutral-950 transition-colors cursor-pointer"
-            >
-              Home
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection('services')}
-              className="hover:text-neutral-950 transition-colors cursor-pointer"
-            >
-              Services
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection('about')}
-              className="hover:text-neutral-950 transition-colors cursor-pointer"
-            >
-              About
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsDownloadModalOpen(true)}
-              className="text-neutral-950 font-bold hover:underline cursor-pointer"
-            >
-              Download App
-            </button>
+          <div className="flex items-center gap-6 text-xs text-neutral-500 font-medium">
+            <span>Local-First</span>
+            <span>Zero Trackers</span>
+            <span>Offline Sovereignty</span>
+            <span>© {new Date().getFullYear()} FitFlow</span>
           </div>
         </div>
+
+        {/* Gradual Blur on footer */}
+        <GradualBlur
+          position="bottom"
+          height="3rem"
+          blurAmount="4px"
+          color="rgba(255, 255, 255, 0.4)"
+          className="z-0"
+        />
       </footer>
 
-      {/* Luxury Gradual Blur across page bottom */}
-      <GradualBlur
-        position="bottom"
-        target="page"
-        height="4rem"
-        strength={2}
-        layers={8}
-        curve="bezier"
-        zIndex={40}
-        tint="rgba(255, 255, 255, 0.2)"
-      />
-
-      {/* Global Download Modal */}
+      {/* ============================================================== */}
+      {/* 7. APP DOWNLOAD MODAL DIALOG                                   */}
+      {/* ============================================================== */}
       <DownloadModal
         isOpen={isDownloadModalOpen}
         onClose={() => setIsDownloadModalOpen(false)}
