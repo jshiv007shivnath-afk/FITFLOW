@@ -126,7 +126,7 @@ function GalleryTile({
   return (
     <figure
       ref={tileRef}
-      className={cn("m-0", side > 0 && "pt-8 sm:pt-16")}
+      className={cn("m-0 w-full max-w-[420px] sm:max-w-none mx-auto", side > 0 && "sm:pt-16")}
       style={variables}
     >
       <div
@@ -161,10 +161,10 @@ export function ScrollTiltedGrid({
   smoothScroll = false,
   aspectRatio = "9 / 16",
   perspective = 1000,
-  maxTilt = 32,
-  maxBlur = 4,
-  rounded = "1.25rem",
-  sectionPadding = "6vh",
+  maxTilt = 20,
+  maxBlur = 3,
+  rounded = "1.5rem",
+  sectionPadding = "4vh",
   className,
 }: ScrollTiltedGridProps) {
   const reduceMotion = useReducedMotion() ?? false;
@@ -215,7 +215,7 @@ export function ScrollTiltedGrid({
       </div>
 
       <div
-        className="mx-auto grid w-full max-w-5xl grid-cols-2 items-start gap-x-4 gap-y-8 px-4 sm:gap-x-10 sm:gap-y-16 sm:px-10 lg:gap-x-14"
+        className="mx-auto grid w-full max-w-md sm:max-w-5xl lg:max-w-6xl grid-cols-1 sm:grid-cols-2 items-start gap-y-12 sm:gap-x-10 sm:gap-y-16 px-4 sm:px-8 lg:gap-x-16"
         style={{ paddingBlock: sectionPadding }}
       >
         {tiles.map(({ cycle, image, index }) => (

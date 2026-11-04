@@ -141,7 +141,7 @@ function FlipCard({
 
   return (
     <motion.article
-      className="absolute inset-x-0 top-0 aspect-[4/5] will-change-transform sm:aspect-[1.8/1]"
+      className="absolute inset-x-0 top-0 w-full min-h-[560px] xs:min-h-[600px] sm:min-h-[440px] sm:aspect-[2/1] will-change-transform"
       style={{
         y: exitY,
         rotateX,
@@ -153,7 +153,7 @@ function FlipCard({
       }}
     >
       <motion.div
-        className="grid h-full overflow-hidden rounded-3xl shadow-[0_16px_50px_rgba(0,0,0,0.08)] border border-neutral-200/90 sm:grid-cols-[1.1fr_0.9fr] bg-white"
+        className="grid h-full overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.09)] border border-neutral-200/90 grid-cols-1 sm:grid-cols-[0.9fr_1.1fr] bg-white"
         style={{
           backgroundColor: item.background,
           color: item.foreground ?? "#0a0a0a",
@@ -162,14 +162,14 @@ function FlipCard({
           transformOrigin: "50% 100%",
         }}
       >
-        <div className="flex min-w-0 flex-col p-6 sm:p-8 md:p-10">
+        <div className="flex min-w-0 flex-col p-6 sm:p-8 md:p-10 justify-between">
           <div className="flex items-start">
             <span className="text-2xl sm:text-3xl font-extrabold leading-none tracking-tight text-[#C2410C]">
               {item.number ?? String(index + 1).padStart(2, "0")}
             </span>
           </div>
 
-          <div className="mt-auto max-w-xl pt-4 sm:pt-6">
+          <div className="max-w-xl pt-4 sm:pt-6">
             <p className="mb-2 text-xs font-bold tracking-wide text-[#9A3412]">
               {item.eyebrow}
             </p>
@@ -182,8 +182,9 @@ function FlipCard({
           </div>
         </div>
 
-        <div className="relative m-3 sm:m-4 min-h-[180px] overflow-hidden rounded-2xl border border-neutral-200/80 bg-neutral-100 flex items-center justify-center p-2 sm:p-3">
-          <div className="w-full max-w-[280px] sm:max-w-[340px] h-full overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-neutral-200/90 bg-white">
+        {/* Large, High-Impact App Screen Preview */}
+        <div className="relative h-full min-h-[300px] xs:min-h-[340px] sm:min-h-[420px] p-3 sm:p-5 flex items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100/80 overflow-hidden">
+          <div className="relative w-full max-w-[360px] xs:max-w-[400px] sm:max-w-[460px] h-full max-h-[320px] xs:max-h-[360px] sm:max-h-[440px] rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.12)] border border-neutral-200/90 bg-white">
             <img
               src={item.image}
               alt={item.imageAlt}
@@ -240,8 +241,8 @@ export function CaseStudyFlipStack({
         className="relative"
         style={{ height: `${Math.max(safeItems.length - 0.5, 1) * 48}vh` }}
       >
-        <div className="sticky top-0 flex h-[78vh] sm:h-[84vh] flex-col justify-center overflow-hidden px-4 sm:px-8 py-2">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[840px] [perspective:800px] sm:aspect-[1.8/1]">
+        <div className="sticky top-0 flex h-[88vh] sm:h-[84vh] flex-col justify-center overflow-hidden px-4 sm:px-8 py-2">
+          <div className="relative mx-auto w-full max-w-[1000px] lg:max-w-5xl min-h-[560px] xs:min-h-[600px] sm:min-h-[440px] sm:aspect-[2/1] [perspective:800px]">
             {[...safeItems].reverse().map((item, reverseIndex) => {
               const index = safeItems.length - reverseIndex - 1;
               return (

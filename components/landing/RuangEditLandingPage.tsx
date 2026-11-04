@@ -217,20 +217,25 @@ export function RuangEditLandingPage() {
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
           className="w-full mx-auto rounded-full bg-neutral-950 backdrop-blur-2xl border border-white/20 px-3.5 sm:px-7 py-2.5 sm:py-3 shadow-[0_12px_40px_rgba(0,0,0,0.65)] flex items-center justify-between gap-2 sm:gap-4 pointer-events-auto"
         >
-          {/* Brand Logo & Name */}
+          {/* Brand Logo & Name (Clean, Bold, Large, and Prominent) */}
           <button
             type="button"
             onClick={() => scrollToSection('home')}
-            className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 group cursor-pointer shrink-0"
           >
             <img
               src="/icon.png"
               alt="FitFlow Logo"
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
             />
-            <span className="font-bold text-white text-sm sm:text-base tracking-tight">
-              Fitflow app
-            </span>
+            <div className="flex items-baseline gap-1.5 select-none">
+              <span className="font-extrabold text-white text-base sm:text-xl tracking-tight">
+                FitFlow
+              </span>
+              <span className="text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded-md bg-white/10 text-neutral-300 border border-white/10">
+                app
+              </span>
+            </div>
           </button>
 
           {/* Nav Links with Animated Active Indicator */}
@@ -549,9 +554,9 @@ export function RuangEditLandingPage() {
                 </ul>
               </div>
 
-              {/* Right Column: High-Craft Live Phone Telemetry Preview */}
+              {/* Right Column: High-Craft Live Phone Telemetry Preview (Large & Clear) */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="w-full max-w-[320px] rounded-3xl bg-neutral-950 text-white p-5 shadow-2xl border border-neutral-800 flex flex-col gap-4">
+                <div className="w-full max-w-[380px] sm:max-w-[420px] rounded-3xl bg-neutral-950 text-white p-6 sm:p-7 shadow-2xl border border-neutral-800 flex flex-col gap-5">
                   
                   {/* Phone Header Bar */}
                   <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
