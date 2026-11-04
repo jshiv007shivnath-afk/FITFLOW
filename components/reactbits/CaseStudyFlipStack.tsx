@@ -182,15 +182,16 @@ function FlipCard({
           </div>
         </div>
 
-        <div className="relative m-3 sm:m-4 min-h-[160px] overflow-hidden rounded-2xl border border-neutral-200/80 bg-neutral-100 flex items-center justify-center">
-          <img
-            src={item.image}
-            alt={item.imageAlt}
-            className="h-full w-full object-cover object-top"
-            loading={index < 2 ? "eager" : "lazy"}
-            draggable={false}
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-white/10" />
+        <div className="relative m-3 sm:m-4 min-h-[180px] overflow-hidden rounded-2xl border border-neutral-200/80 bg-neutral-100 flex items-center justify-center p-2 sm:p-3">
+          <div className="w-full max-w-[280px] sm:max-w-[340px] h-full overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-neutral-200/90 bg-white">
+            <img
+              src={item.image}
+              alt={item.imageAlt}
+              className="h-full w-full object-cover object-top"
+              loading={index < 2 ? "eager" : "lazy"}
+              draggable={false}
+            />
+          </div>
         </div>
       </motion.div>
     </motion.article>
@@ -258,15 +259,15 @@ export function CaseStudyFlipStack({
         </div>
       </div>
 
-      {/* PURE BLACK Banner Section for Image 2 ("Train With Precision") */}
-      <div className="w-full bg-black text-white py-14 sm:py-20 px-4 sm:px-8 border-t border-neutral-900 flex flex-col items-center justify-center text-center">
-        <span className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-3">
+      {/* Clean White Banner Section for Image 2 ("Train With Precision") */}
+      <div className="w-full bg-white text-neutral-950 py-12 sm:py-16 px-4 sm:px-8 border-t border-neutral-100 flex flex-col items-center justify-center text-center">
+        <span className="text-xs font-bold text-[#9A3412] tracking-wider mb-2">
           Zero Distractions
         </span>
-        <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-white max-w-3xl [text-wrap:balance]">
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-neutral-950 max-w-3xl [text-wrap:balance]">
           {endLabel}
         </h2>
-        <p className="mt-3 text-xs sm:text-base text-neutral-400 max-w-md">
+        <p className="mt-2 text-xs sm:text-base text-neutral-600 max-w-md">
           Track workouts without lag, complex spreadsheets, or battery drain.
         </p>
       </div>

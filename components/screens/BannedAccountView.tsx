@@ -62,7 +62,7 @@ export function BannedAccountView({ email, onTryOtherEmail }: BannedAccountViewP
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={onTryOtherEmail}
-          className="w-full h-12 rounded-2xl bg-[#111312] hover:bg-black text-[#B8F45A] hover:text-white font-bold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
+          className="w-full h-12 rounded-2xl bg-[#111312] hover:bg-black text-white font-bold text-sm tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
         >
           <span>Try with other email</span>
         </motion.button>

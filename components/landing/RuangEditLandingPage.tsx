@@ -11,6 +11,7 @@ import GradualBlur from '@/components/reactbits/GradualBlur';
 import { CaseStudyFlipStack } from '@/components/reactbits/CaseStudyFlipStack';
 import { ScrollTiltedGrid } from '@/components/reactbits/ScrollTiltedGrid';
 import { DownloadModal } from '@/components/landing/DownloadModal';
+import ReactLenis from 'lenis/react';
 
 const TILTED_GRID_SCREENS = [
   { src: '/screens/screen_home.png', alt: 'FitFlow Dashboard and Active Burn' },
@@ -168,7 +169,8 @@ export function RuangEditLandingPage() {
   const currentTrack = serviceTracks[activeServiceTab];
 
   return (
-    <div className="bg-white min-h-screen text-neutral-900 antialiased font-['Manrope',sans-serif] selection:bg-[#FF5500] selection:text-white overflow-x-clip">
+    <ReactLenis root options={{ autoRaf: true, lerp: 0.05, wheelMultiplier: 0.65, touchMultiplier: 1.0 }}>
+      <div className="bg-white min-h-screen text-neutral-900 antialiased font-['Manrope',sans-serif] selection:bg-[#FF5500] selection:text-white overflow-x-clip">
       {/* ============================================================== */}
       {/* 0. INTRO PRELOADER WITH COUNTUP COMPONENT (PURE BLACK, MINIMAL)*/}
       {/* ============================================================== */}
@@ -766,5 +768,6 @@ export function RuangEditLandingPage() {
         onClose={() => setIsDownloadModalOpen(false)}
       />
     </div>
+  </ReactLenis>
   );
 }

@@ -26,12 +26,12 @@ export function OtpVerificationView() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
-  const [otpExpirySeconds, setOtpExpirySeconds] = useState(120); // 2 minutes strict expiry
+  const [otpExpirySeconds, setOtpExpirySeconds] = useState(60); // 1 minute strict expiry
   const [showSuccessTick, setShowSuccessTick] = useState(false);
 
   const isExpired = otpExpirySeconds <= 0;
 
-  // 2-minute OTP validity countdown timer
+  // 1-minute OTP validity countdown timer
   useEffect(() => {
     if (otpExpirySeconds <= 0) return;
     const interval = setInterval(() => {
@@ -68,7 +68,7 @@ export function OtpVerificationView() {
 
   const handleVerifyCommit = async (): Promise<boolean> => {
     if (isExpired) {
-      const msg = 'Code expired (2 minutes elapsed). Please request a new code.';
+      const msg = 'Code expired (1 minute elapsed). Please request a new code.';
       setErrorMessage(msg);
       showToast(msg);
       throw new Error(msg);
@@ -140,7 +140,7 @@ export function OtpVerificationView() {
   const handleResend = async () => {
     if (resendTimer > 0 && !isExpired) return;
     setResendTimer(60);
-    setOtpExpirySeconds(120); // Reset 2 minutes validity
+    setOtpExpirySeconds(60); // Reset 1 minute validity
     setCode('');
     setStatus('idle');
     setErrorMessage(null);
@@ -222,30 +222,7 @@ export function OtpVerificationView() {
               </button>
             </p>
 
-            {/* 2-Minute Expiry Countdown Pill */}
-            <div className="flex items-center gap-2 mt-1">
-              <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
-                  isExpired
-                    ? 'bg-red-50 text-red-600 border-red-200'
-                    : otpExpirySeconds < 30
-                    ? 'bg-amber-50 text-amber-700 border-amber-200'
-                    : 'bg-[#F2F4F1] text-[#111312] border-[#E1E4DF]'
-                }`}
-              >
-                <span
-                  className={`w-2 h-2 rounded-full ${
-                    isExpired ? 'bg-red-500' : 'bg-[#15803D] animate-pulse'
-                  }`}
-                />
-                <span>
-                  {isExpired
-                    ? 'Code expired (2 min)'
-                    : `Expires in ${formatTime(otpExpirySeconds)}`}
-                </span>
-              </span>
             </div>
-          </div>
 
           {/* Account Lockout Banner */}
           {isLocked && (
@@ -261,7 +238,7 @@ export function OtpVerificationView() {
             <div className="w-full p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-center flex flex-col items-center gap-1 mb-2 shadow-xs">
               <span className="text-xl">⌛</span>
               <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
-                Code Expired (2 minutes elapsed)
+                Code Expired (1 minute elapsed)
               </span>
               <span className="text-xs text-amber-900 leading-relaxed">
                 You can no longer enter this code. Please tap &quot;Resend code&quot; to receive a new code.
@@ -316,7 +293,7 @@ export function OtpVerificationView() {
                   className="px-4 py-2 rounded-xl bg-[#111312] hover:bg-black text-[#B8F45A] font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
                 >
                   <Refresh size={13} />
-                  <span>Resend code (2 min)</span>
+                  <span>Resend code (1 min)</span>
                 </button>
               ) : (
                 <>

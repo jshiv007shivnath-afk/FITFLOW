@@ -131,7 +131,7 @@ function GalleryTile({
     >
       <div
         className={cn(
-          "relative w-full overflow-hidden border border-neutral-200/80 bg-neutral-900 shadow-[0_20px_60px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-neutral-950 dark:shadow-[0_24px_90px_rgba(0,0,0,0.5)]",
+          "relative w-full overflow-hidden border border-neutral-200/90 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)]",
           !reduceMotion &&
             "[filter:blur(var(--tile-blur))_brightness(var(--tile-brightness))_saturate(var(--tile-saturation))] [transform:var(--tile-transform)] [transform-style:preserve-3d]",
         )}
@@ -199,17 +199,17 @@ export function ScrollTiltedGrid({
 
   const gallery = (
     <section
-      className={cn("relative w-full overflow-hidden bg-black py-12 sm:py-20 text-white", className)}
+      className={cn("relative w-full overflow-hidden bg-white py-12 sm:py-20 text-neutral-950 border-t border-neutral-100", className)}
       aria-label="Scroll-reactive image gallery"
     >
       <div className="mx-auto max-w-4xl px-4 text-center mb-8 sm:mb-12">
-        <span className="inline-block px-3.5 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-orange-400 text-xs font-bold uppercase tracking-wider mb-3">
+        <span className="inline-block px-3.5 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
           App Interface
         </span>
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-950">
           Every Screen Designed For Athletes
         </h2>
-        <p className="mt-3 text-neutral-400 text-sm sm:text-base max-w-lg mx-auto">
+        <p className="mt-3 text-neutral-600 text-sm sm:text-base max-w-lg mx-auto">
           High-contrast telemetry, distraction-free rest timers, and biometric health feeds built for your wrist and pocket.
         </p>
       </div>
