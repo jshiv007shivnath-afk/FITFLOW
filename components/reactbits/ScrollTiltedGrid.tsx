@@ -161,8 +161,8 @@ export function ScrollTiltedGrid({
   smoothScroll = false,
   aspectRatio = "9 / 16",
   perspective = 1000,
-  maxTilt = 0,
-  maxBlur = 0,
+  maxTilt = 20,
+  maxBlur = 3,
   rounded = "1.5rem",
   sectionPadding = "4vh",
   className,
@@ -199,15 +199,18 @@ export function ScrollTiltedGrid({
 
   const gallery = (
     <section
-      className={cn("relative w-full overflow-hidden bg-white py-14 sm:py-20 text-neutral-950 border-t border-neutral-100", className)}
+      className={cn("relative w-full overflow-hidden bg-white py-12 sm:py-20 text-neutral-950 border-t border-neutral-100", className)}
       aria-label="Scroll-reactive image gallery"
     >
-      <div className="mx-auto max-w-4xl px-4 text-center mb-10 sm:mb-14">
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-neutral-950 [text-wrap:balance]">
-          Designed for Your Pocket & Wrist
+      <div className="mx-auto max-w-4xl px-4 text-center mb-8 sm:mb-12">
+        <span className="inline-block px-3.5 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
+          App Interface
+        </span>
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-950">
+          Every Screen Designed For Athletes
         </h2>
         <p className="mt-3 text-neutral-600 text-sm sm:text-base max-w-lg mx-auto">
-          High-contrast numbers, instant rest timers, and biometric logs you can read across the gym floor without squinting.
+          High-contrast telemetry, distraction-free rest timers, and biometric health feeds built for your wrist and pocket.
         </p>
       </div>
 
@@ -235,6 +238,14 @@ export function ScrollTiltedGrid({
     </section>
   );
 
-  // Return gallery directly so the root ReactLenis on the page handles natural, snappy scrolling
-  return gallery;
+  return smoothScroll && !reduceMotion ? (
+    <ReactLenis
+      root
+      options={{ autoRaf: true, lerp: 0.075, wheelMultiplier: 0.85 }}
+    >
+      {gallery}
+    </ReactLenis>
+  ) : (
+    gallery
+  );
 }

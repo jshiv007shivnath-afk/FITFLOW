@@ -34,10 +34,10 @@ interface CaseStudyFlipStackProps {
 const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
   {
     number: "01",
-    eyebrow: "Daily Dashboard",
-    title: "Everything you need in one quick glance",
+    eyebrow: "Daily Dashboard & Activity",
+    title: "Real-time calorie burn and step telemetry at a glance",
     description:
-      "Track daily calories, step count, and hydration benchmarks. Clean cards, zero clutter, and instantaneous local loading.",
+      "Monitor daily energy expenditure, active movement streaks, and ambient hydration targets with instant syncing directly from your device.",
     image: "/screens/screen_home.png",
     imageAlt: "FitFlow Dashboard with daily progress, calorie burn, and step tracking",
     background: "#ffffff",
@@ -45,10 +45,10 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
   },
   {
     number: "02",
-    eyebrow: "Strength & Overload",
-    title: "Log heavy compound sets in two taps",
+    eyebrow: "Workout Tracking & Overload",
+    title: "Structured periodization with automated RPE fatigue limits",
     description:
-      "Record weight, reps, and RPE with automated rest countdowns. FitFlow tracks weekly progressive overload so you never guess your next load.",
+      "Log every set, rep, and load with intelligent rest intervals and progressive overload volume suggestions designed for serious lifters.",
     image: "/screens/screen_progress.png",
     imageAlt: "FitFlow Workout Progress with load metrics and training volume",
     background: "#ffffff",
@@ -56,10 +56,10 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
   },
   {
     number: "03",
-    eyebrow: "Discipline Vault",
-    title: "Build consistent 21-day training streaks",
+    eyebrow: "Habit Streaks & Milestone Badges",
+    title: "Symmetric XP and discipline rewards that build consistency",
     description:
-      "Transform workouts into an unshakeable reflex. Earn verified athlete XP that accurately rewards real exertion without gimmick streaks.",
+      "Level up your athlete profile with real streak shields, milestone trophies, and verified training records without fake AI guilt.",
     image: "/screens/screen_rewards.png",
     imageAlt: "FitFlow Rewards and Streaks interface showing badges and athlete XP",
     background: "#ffffff",
@@ -67,10 +67,10 @@ const DEFAULT_ITEMS: CaseStudyFlipItem[] = [
   },
   {
     number: "04",
-    eyebrow: "Heart Rate & Recovery",
-    title: "Direct Bluetooth telemetry from your sensor",
+    eyebrow: "Circadian Recovery & Sleep Sync",
+    title: "Biometric heart rate zones and recovery readiness",
     description:
-      "Connect your heart-rate chest strap or watch with zero cloud delay. Track Zone 4 threshold, resting pulse, and nervous system recovery.",
+      "Sub-14ms Bluetooth telemetry pairs with your chest strap or wearable to map HRV, resting pulse, and circadian recovery windows.",
     image: "/screens/screen_profile.png",
     imageAlt: "FitFlow Profile and biometric recovery analytics",
     background: "#ffffff",
@@ -202,7 +202,7 @@ function FlipCard({
 export function CaseStudyFlipStack({
   items = DEFAULT_ITEMS,
   className,
-  heading = "Built for Real Training",
+  heading = "Tactile Engineering That Delivers",
   endLabel = "Train With Precision",
 }: CaseStudyFlipStackProps) {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -225,17 +225,17 @@ export function CaseStudyFlipStack({
       id="flip-stack"
       className={cn("relative bg-white font-['Manrope',sans-serif] text-neutral-950 selection:bg-[#FF5500] selection:text-white border-t border-neutral-100", className)}
     >
-      {/* Tight, Clean Section Header (No pill badge, No fluff) */}
-      <div className="pt-14 pb-8 px-4 sm:px-8 text-center max-w-3xl mx-auto">
-        <h2 className="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight text-neutral-950 [text-wrap:balance]">
+      {/* Tight, Clean Section Header (No massive empty gap, No "Scroll to flip" badge) */}
+      <div className="pt-12 pb-6 px-4 sm:px-8 text-center max-w-3xl mx-auto">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-neutral-950 [text-wrap:balance]">
           {heading}
         </h2>
-        <p className="mt-3 text-sm sm:text-base text-neutral-600 max-w-lg mx-auto">
-          Every screen built for speed, focus, and local-first athletic reliability.
+        <p className="mt-3 text-xs sm:text-base text-neutral-600 max-w-md mx-auto">
+          Every screen built for speed, focus, and local-first reliability.
         </p>
       </div>
 
-      {/* Cards Pinned Container */}
+      {/* Cards Pinned Container: Tight 48vh-per-item scroll travel without dead white space */}
       <div
         ref={stackRef}
         className="relative"
@@ -260,12 +260,15 @@ export function CaseStudyFlipStack({
         </div>
       </div>
 
-      {/* Clean White Transition Section */}
+      {/* Clean White Banner Section for Image 2 ("Train With Precision") */}
       <div className="w-full bg-white text-neutral-950 py-12 sm:py-16 px-4 sm:px-8 border-t border-neutral-100 flex flex-col items-center justify-center text-center">
-        <h2 className="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight text-neutral-950 max-w-3xl [text-wrap:balance]">
+        <span className="text-xs font-bold text-[#9A3412] tracking-wider mb-2">
+          Zero Distractions
+        </span>
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-neutral-950 max-w-3xl [text-wrap:balance]">
           {endLabel}
         </h2>
-        <p className="mt-2 text-sm sm:text-base text-neutral-600 max-w-md">
+        <p className="mt-2 text-xs sm:text-base text-neutral-600 max-w-md">
           Track workouts without lag, complex spreadsheets, or battery drain.
         </p>
       </div>

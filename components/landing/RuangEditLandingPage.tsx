@@ -1,9 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
+import GradientASCII from '@/components/reactbits/GradientASCII';
+import TechText from '@/components/reactbits/TechText';
 import AnimatedContent from '@/components/reactbits/AnimatedContent';
+import CountUp from '@/components/reactbits/CountUp';
 import GradualBlur from '@/components/reactbits/GradualBlur';
 import { CaseStudyFlipStack } from '@/components/reactbits/CaseStudyFlipStack';
 import { ScrollTiltedGrid } from '@/components/reactbits/ScrollTiltedGrid';
@@ -20,6 +23,7 @@ const TILTED_GRID_SCREENS = [
 ] as const;
 
 export function RuangEditLandingPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<'home' | 'services' | 'about'>('home');
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -61,95 +65,95 @@ export function RuangEditLandingPage() {
 
   const serviceTracks = {
     strength: {
-      tag: 'Strength & Progressive Overload',
-      title: 'Automated Overload & Rest Timers',
+      tag: 'Track 01 • Heavy Compound Progression',
+      title: 'Automated Overload & Fatigue Limits',
       description:
-        'Log sets and reps in two taps. FitFlow aggregates weekly volume per muscle group and automatically prompts rest countdowns with subtle haptic signals.',
+        'Log sets and reps with zero latency. FitFlow tracks weight progression, sets per muscle group, and prompts rest intervals without friction.',
       metrics: [
-        { label: 'Logging Speed', value: '2-Tap Record' },
+        { label: 'Tracking Speed', value: 'Instant One-Tap' },
         { label: 'Volume Math', value: 'Auto-Aggregated' },
-        { label: 'Rest Timer', value: 'Automated Haptics' },
+        { label: 'Deload Alert', value: 'Fatigue Threshold' },
       ],
       features: [
-        'Rapid set, rep, weight and RPE logging designed for sweaty gym hands',
-        'Automatic weekly volume calculation per muscle group',
-        'Built-in rest countdown timer with subtle vibration cues',
-        'Fatigue detection alerts before cumulative stress leads to burnout',
+        'Precise set, rep, weight and RPE tracking with millisecond reaction',
+        'Automatic volume computation per muscle group with weekly targets',
+        'Built-in rest countdown with subtle haptic signals when ready',
+        'Intelligent deload suggestions when recovery volume spikes',
       ],
       phonePreview: {
         screenTitle: 'Workout Session',
         exercise: 'Barbell Back Squat',
         set: 'Set 3 of 4 • 140 kg × 5 reps',
-        weight: 'RPE 8.5 • Heavy Compound',
+        weight: 'RPE 8.5 • Optimal Overload',
         status: 'Rest Timer: 01:45',
         badge: 'Session Active',
       },
     },
     biometrics: {
-      tag: 'Heart Rate & Telemetry',
-      title: 'Direct Bluetooth Sensor Sync',
+      tag: 'Track 02 • Cardiac & Calorie Telemetry',
+      title: 'Zero-Lag BLE Sensor Streaming',
       description:
-        'Connect directly to standard heart-rate chest straps and smart sensors via Web Bluetooth. View real-time Zone 4 thresholds and recovery pulse post-set.',
+        'Sync heart-rate zones directly from your Bluetooth strap or smartwatch. Live heart-rate variability and calorie burn without cloud dependencies.',
       metrics: [
-        { label: 'Connection', value: 'Direct BLE Sync' },
-        { label: 'Cardio Zones', value: '5-Tier Real-Time' },
-        { label: 'Recovery', value: 'HRR Post-Set' },
+        { label: 'Stream Delay', value: '< 14ms BLE' },
+        { label: 'Target Zones', value: '5-Tier Cardio' },
+        { label: 'Battery Impact', value: '0.4% per hour' },
       ],
       features: [
-        'Direct connection to standard heart rate chest straps and wearables',
-        'Real-time cardio zone mapping (Aerobic base to anaerobic threshold)',
-        'Automatic post-set heart rate recovery (HRR) calculation',
-        'Zero cloud lag: telemetry processed 100% locally on your phone',
+        'Direct connection to standard heart rate monitors via Web Bluetooth',
+        'Continuous active calorie computation synced with workout intensity',
+        'Automatic heart rate recovery rate (HRR) calculation post-set',
+        'Zero cloud lag: telemetry processed locally on your phone',
       ],
       phonePreview: {
         screenTitle: 'Telemetry Stream',
         exercise: 'Metabolic Conditioning',
-        set: 'Zone 4 Threshold Pacing',
+        set: 'Zone 4 Threshold',
         weight: '158 BPM (88% Max)',
         status: 'Active Sync • 480 kcal',
         badge: 'Telemetry Active',
       },
     },
     hydration: {
-      tag: 'Hydration & Sweat Pacing',
-      title: 'Dynamic Daily Hydration Benchmarks',
+      tag: 'Track 03 • Metabolic Balance',
+      title: 'Intelligent Hydration & Macro Pacing',
       description:
-        'Keep muscular performance and joint recovery peak. FitFlow calculates realistic fluid benchmarks adjusted for your training volume.',
+        'Keep cellular energy and muscle recovery optimal. FitFlow calculates precise fluid benchmarks adjusted for ambient temperature and training volume.',
       metrics: [
         { label: 'Logging Speed', value: 'One-Tap 250ml' },
         { label: 'Daily Target', value: '3,000 ml Baseline' },
-        { label: 'Pacing', value: 'Hourly Progress' },
+        { label: 'Notification', value: 'Circadian Pacing' },
       ],
       features: [
-        'Dynamic hydration target scaling with active training exertion',
-        'Quick-tap increments (250ml, 500ml, custom bottle size)',
-        'Visual daily timeline highlighting hydration deficit windows',
-        'Zero annoying popups: clean glanceable dashboard indicators',
+        'Dynamic hydration target adjusting for active sweat loss during workouts',
+        'Quick-tap volume increments (250ml, 500ml, custom glass)',
+        'Daily intake timeline highlighting hydration deficit windows',
+        'Subtle circadian reminders timed between training blocks',
       ],
       phonePreview: {
         screenTitle: 'Hydration Engine',
         exercise: 'Daily Water Intake',
         set: '2,400 / 3,000 ml',
-        weight: '80% of Daily Target Met',
+        weight: '80% of Daily Target',
         status: 'Optimal Fluid Balance',
-        badge: 'Hydration Active',
+        badge: 'Hydration Sync',
       },
     },
     habits: {
-      tag: 'Discipline & Consistency',
-      title: '21-Day Habit Streaks & Verified XP',
+      tag: 'Track 04 • Habit Architecture',
+      title: '21-Day Streak Consistency & XP Leveling',
       description:
-        'Build unshakeable physical discipline. Earn verified athlete XP that rolls back symmetrically if you uncheck a set—honest metrics for honest athletes.',
+        'Transform physical discipline from an occasional chore into an unshakeable daily reflex using positive reinforcement and tiered XP unlocks.',
       metrics: [
         { label: 'Streak Target', value: '21 Days to Habit' },
-        { label: 'Discipline Level', value: 'Level 4 Athlete' },
-        { label: 'Storage', value: '100% Offline' },
+        { label: 'Level Cap', value: 'Level 10 Master' },
+        { label: 'Offline Sync', value: '100% Local PWA' },
       ],
       features: [
-        'Visual 28-day habit matrix celebrating true unbroken discipline',
-        'Symmetric XP engine: real points earned exclusively from exertion',
-        'Milestone badges for volume, PR breakthroughs, and streaks',
-        'Full offline storage that works deep underground without Wi-Fi',
+        'Visual 28-day habit matrix celebrating uninterrupted discipline',
+        'Symmetric XP engine: 500 XP per level with rollover safeguards',
+        'Milestone badges for volume, attendance, and streak breakthroughs',
+        'Full offline persistence that works deep underground without Wi-Fi',
       ],
       phonePreview: {
         screenTitle: 'Discipline Engine',
@@ -157,7 +161,7 @@ export function RuangEditLandingPage() {
         set: 'Day 14 Active Streak',
         weight: 'Level 4 Athlete (340/500 XP)',
         status: 'Discipline Maintained',
-        badge: 'Habit Locked',
+        badge: 'Consistency Fire',
       },
     },
   };
@@ -165,10 +169,43 @@ export function RuangEditLandingPage() {
   const currentTrack = serviceTracks[activeServiceTab];
 
   return (
-    <ReactLenis root options={{ autoRaf: true, lerp: 0.1, wheelMultiplier: 1.0, touchMultiplier: 1.0 }}>
+    <ReactLenis root options={{ autoRaf: true, lerp: 0.05, wheelMultiplier: 0.65, touchMultiplier: 1.0 }}>
       <div className="bg-white min-h-screen text-neutral-900 antialiased font-['Manrope',sans-serif] selection:bg-[#FF5500] selection:text-white overflow-x-clip">
       {/* ============================================================== */}
-      {/* 1. EXPANDED / DYNAMIC NAVBAR (CLEAN, PROMINENT BRANDING)       */}
+      {/* 0. INTRO PRELOADER WITH COUNTUP COMPONENT (PURE BLACK, MINIMAL)*/}
+      {/* ============================================================== */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="preloader"
+            initial={{ y: 0 }}
+            exit={{ y: '-100%' }}
+            transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[9999] bg-black flex items-center justify-center select-none"
+          >
+            <div className="text-white font-extrabold text-7xl sm:text-9xl font-mono tracking-tight flex items-baseline">
+              <CountUp
+                from={0}
+                to={100}
+                duration={1.8}
+                mode="count"
+                easing="easeOut"
+                suffix="%"
+                trigger="load"
+                onEnd={() => {
+                  setTimeout(() => {
+                    setIsLoading(false);
+                  }, 250);
+                }}
+                className="text-white font-extrabold tracking-tight"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ============================================================== */}
+      {/* 1. EXPANDED / DYNAMIC NAVBAR (BLACK & WHITE, EXPANDS & SHRINKS) */}
       {/* ============================================================== */}
       <header className="fixed top-3 sm:top-5 inset-x-0 z-50 px-3 sm:px-6 transition-all duration-300 pointer-events-none">
         <motion.div
@@ -250,28 +287,33 @@ export function RuangEditLandingPage() {
       </header>
 
       {/* ============================================================== */}
-      {/* 2. HERO SECTION (BOLD, ATHLETIC, DISTRACTION-FREE)             */}
+      {/* 2. HERO SECTION WITH FULL SCREEN ASCII CANVAS                  */}
+      {/* (Starts ONLY AFTER loading count animation completes)          */}
       {/* ============================================================== */}
       <section
         id="home"
         className="relative w-full min-h-[100dvh] overflow-hidden bg-[#070913] flex flex-col justify-center"
       >
-        {/* Athletic Atmosphere: Deep radial atmospheric glow & subtle grid */}
+        {/* LOCKED (READ-ONLY) GUARDRAIL 1: GradientASCII Background Canvas */}
         <div
           aria-hidden="true"
           className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden"
         >
-          {/* Subtle Orange & Slate Athletic Glow */}
-          <div
-            className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-[500px] rounded-full blur-[120px] pointer-events-none opacity-25"
-            style={{
-              background: 'radial-gradient(circle, #FF5500 0%, #3B82F6 40%, transparent 75%)',
-            }}
-          />
+          {!isLoading && (
+            <div className="absolute inset-0 w-full h-full pointer-events-auto">
+              <GradientASCII
+                colors={['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8']}
+                shape="horizon"
+                characters=" =+xX0S8#@"
+                cellSize={18}
+                density={0.8}
+              />
+            </div>
+          )}
 
           {/* Base Architectural Grid Pattern */}
           <div
-            className="absolute inset-0 w-full h-full opacity-15 pointer-events-none"
+            className="absolute inset-0 w-full h-full opacity-20 pointer-events-none z-1"
             style={{
               backgroundImage: `
                 linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
@@ -282,24 +324,18 @@ export function RuangEditLandingPage() {
           />
         </div>
 
+        {/* Contrast Scrim to Keep Text Sharp */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[1]"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 50%, rgba(6, 9, 16, 0.5) 0%, rgba(6, 9, 16, 0.25) 50%, transparent 85%)',
+          }}
+        />
+
         {/* Hero Foreground Content */}
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-32 pb-20 sm:pt-36 sm:pb-28 flex flex-col items-center justify-center text-center">
           
-          {/* Real Athletic Social Proof Badge (No Pill Fluff) */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 text-neutral-300 text-xs sm:text-sm font-medium mb-6 sm:mb-8 backdrop-blur-sm"
-          >
-            <span className="text-[#FF5500] font-bold">★★★★★</span>
-            <span className="font-semibold text-white">4.9 / 5</span>
-            <span className="text-neutral-500">•</span>
-            <span>2,000+ Active Lifters</span>
-            <span className="text-neutral-500">•</span>
-            <span className="text-neutral-400">100% Offline & Private</span>
-          </motion.div>
-
           {/* THREE-LINE HERO HEADLINE STRUCTURE */}
           {/* Line 1: Medium Font */}
           <motion.div
@@ -311,7 +347,7 @@ export function RuangEditLandingPage() {
             Level Up Your
           </motion.div>
 
-          {/* Line 2: Large Bold Text */}
+          {/* Line 2: Daily Fitness with */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -321,41 +357,50 @@ export function RuangEditLandingPage() {
             Daily Fitness with
           </motion.h1>
 
-          {/* Line 3: Big Bold Rock-Solid "FitFlow" (Pure Athletic Craft, No AI Slop Dashed Boxes) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="my-1 sm:my-3 select-none flex items-center justify-center"
-          >
-            <span className="font-['Manrope',sans-serif] text-6xl xs:text-7xl sm:text-8xl md:text-9xl font-black tracking-tight text-white drop-shadow-[0_4px_40px_rgba(255,85,0,0.35)]">
-              FitFlow<span className="text-[#FF5500]">.</span>
-            </span>
-          </motion.div>
+          {/* Line 3: Big Single Word "FitFlow" with TechText Animated Vector Outlines */}
+          <div className="w-full max-w-2xl h-[95px] xs:h-[120px] sm:h-[150px] md:h-[175px] relative mx-auto my-1 sm:my-2 flex items-center justify-center">
+            <TechText
+              text="FitFlow"
+              fontFamily="'Manrope', sans-serif"
+              fontWeight={800}
+              fontSize={135}
+              color="#ffffff"
+              accentColor="#FF5500"
+              reveal="letter"
+              dashLength={4}
+              dashGap={2}
+              specks={15}
+              intro="none"
+              sweep={true}
+              speed={1}
+              clickKick={true}
+              guides={false}
+            />
+          </div>
 
           {/* Clean Subheadline */}
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-xl mx-auto text-sm sm:text-base text-neutral-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium leading-relaxed mt-2 [text-wrap:pretty]"
+            className="max-w-xl mx-auto text-sm sm:text-base text-neutral-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium leading-relaxed mt-3 [text-wrap:pretty]"
           >
-            The distraction-free workout logger. Track compound progression, heart-rate recovery, and 21-day discipline with 100% local-first storage.
+            Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
           </motion.p>
 
-          {/* Centered High-End CTA Buttons */}
+          {/* Centered High-End "Download FitFlow" CTA Button */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto"
+            className="mt-8 sm:mt-10 flex items-center justify-center"
           >
             <motion.button
               type="button"
-              whileHover={{ scale: 1.04 }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => setIsDownloadModalOpen(true)}
-              className="inline-flex items-center justify-center gap-2.5 h-12 sm:h-14 px-8 sm:px-10 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm sm:text-base shadow-[0_0_36px_rgba(255,255,255,0.25)] transition-all cursor-pointer w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-3 h-12 sm:h-14 px-8 sm:px-11 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm sm:text-base shadow-[0_0_36px_rgba(255,255,255,0.3)] transition-all cursor-pointer"
             >
               <svg aria-hidden="true" className="w-5 h-5 text-neutral-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -364,15 +409,6 @@ export function RuangEditLandingPage() {
               </svg>
               <span>Download FitFlow</span>
             </motion.button>
-
-            <motion.a
-              href="/login"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="inline-flex items-center justify-center gap-2 h-12 sm:h-14 px-7 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/15 text-white font-semibold text-sm sm:text-base backdrop-blur-sm transition-all cursor-pointer w-full sm:w-auto"
-            >
-              <span>Open Web App ↗</span>
-            </motion.a>
           </motion.div>
         </div>
       </section>
@@ -421,7 +457,7 @@ export function RuangEditLandingPage() {
       {/* 3.5. CASE STUDY FLIP STACK (DIRECTLY BELOW SCROLL-EXPAND)      */}
       {/* ============================================================== */}
       <CaseStudyFlipStack
-        heading="Built for Real Training"
+        heading="Tactile Engineering That Delivers"
         endLabel="Train With Precision"
       />
 
@@ -439,11 +475,14 @@ export function RuangEditLandingPage() {
           {/* Section Header with AnimatedContent */}
           <AnimatedContent distance={30} direction="vertical" duration={0.8} ease="power2.out">
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
+                Core Capabilities
+              </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-950 tracking-tight leading-tight [text-wrap:balance]">
                 Four Precision Engines for Real Progress
               </h2>
               <p className="text-sm sm:text-base text-neutral-600 mt-4 leading-relaxed [text-wrap:pretty]">
-                No gimmicks, no noisy notifications. FitFlow delivers tactile, local-first logging calibrated for serious athletic consistency.
+                No generic AI fluff, no noisy notifications. FitFlow delivers tactile, local-first logging calibrated for serious athletic consistency.
               </p>
             </div>
           </AnimatedContent>
@@ -579,6 +618,9 @@ export function RuangEditLandingPage() {
           {/* Section Header with AnimatedContent */}
           <AnimatedContent distance={30} direction="vertical" duration={0.8} ease="power2.out">
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
+                The FitFlow Manifesto
+              </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-950 tracking-tight leading-tight [text-wrap:balance]">
                 Built for Athletes Who <span className="text-[#FF5500]">Respect the Process</span>
               </h2>
@@ -592,7 +634,7 @@ export function RuangEditLandingPage() {
           <AnimatedContent distance={35} direction="vertical" duration={0.85} delay={0.1} ease="power2.out">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 py-8 border-y border-neutral-200">
               <div className="flex flex-col">
-                <span className="text-xs font-bold text-[#9A3412] tracking-wide uppercase">
+                <span className="text-xs font-bold text-[#9A3412] tracking-wide">
                   The Problem
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
@@ -604,7 +646,7 @@ export function RuangEditLandingPage() {
               </div>
 
               <div className="flex flex-col">
-                <span className="text-xs font-bold text-[#9A3412] tracking-wide uppercase">
+                <span className="text-xs font-bold text-[#9A3412] tracking-wide">
                   Our Antidote
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
@@ -617,7 +659,7 @@ export function RuangEditLandingPage() {
             </div>
           </AnimatedContent>
 
-          {/* 4 Core Principles (2x2 Athletic Bento Grid with Custom SVG Icons) */}
+          {/* 4 Core Principles (2x2 Grid) */}
           <AnimatedContent distance={40} direction="vertical" duration={0.9} delay={0.15} ease="power2.out">
             <div>
               <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mb-6 text-center sm:text-left">
@@ -625,18 +667,9 @@ export function RuangEditLandingPage() {
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 
-                {/* Principle 1: Barbell / Exertion */}
                 <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center shrink-0 mb-1">
-                    <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="m6.5 6.5 11 11" />
-                      <path d="m21 21-1-1" />
-                      <path d="m3 3 1 1" />
-                      <path d="m18 22 4-4" />
-                      <path d="m2 6 4-4" />
-                      <path d="m3 10 7-7" />
-                      <path d="m14 21 7-7" />
-                    </svg>
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    01
                   </div>
                   <h4 className="text-base font-bold text-neutral-950">Zero Toxic Gamification</h4>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
@@ -644,13 +677,9 @@ export function RuangEditLandingPage() {
                   </p>
                 </div>
 
-                {/* Principle 2: Shield / Local Sovereignty */}
                 <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center shrink-0 mb-1">
-                    <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                      <path d="m9 12 2 2 4-4" />
-                    </svg>
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    02
                   </div>
                   <h4 className="text-base font-bold text-neutral-950">Local-First Sovereignty</h4>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
@@ -658,12 +687,9 @@ export function RuangEditLandingPage() {
                   </p>
                 </div>
 
-                {/* Principle 3: Pulse / Fatigue Protection */}
                 <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center shrink-0 mb-1">
-                    <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.22 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.46 12H2" />
-                    </svg>
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    03
                   </div>
                   <h4 className="text-base font-bold text-neutral-950">Fatigue & Deload Protection</h4>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
@@ -671,14 +697,9 @@ export function RuangEditLandingPage() {
                   </p>
                 </div>
 
-                {/* Principle 4: Focus / Zero Distractions */}
                 <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-[#FF5500] flex items-center justify-center shrink-0 mb-1">
-                    <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10" />
-                      <circle cx="12" cy="12" r="6" />
-                      <circle cx="12" cy="12" r="2" />
-                    </svg>
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    04
                   </div>
                   <h4 className="text-base font-bold text-neutral-950">Calm, Focused Utility</h4>
                   <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
@@ -691,7 +712,7 @@ export function RuangEditLandingPage() {
           </AnimatedContent>
 
           {/* Quick CTA Card */}
-          <div className="p-8 sm:p-10 rounded-3xl bg-neutral-950 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="p-8 sm:p-10 rounded-3xl bg-neutral-950 text-white flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">
               <h3 className="text-xl sm:text-2xl font-bold tracking-tight">Ready to train with real discipline?</h3>
               <p className="text-xs sm:text-sm text-neutral-400 mt-1">Install FitFlow directly onto your phone or open in your browser.</p>
@@ -709,93 +730,9 @@ export function RuangEditLandingPage() {
       </section>
 
       {/* ============================================================== */}
-      {/* 5.5. ATHLETE REVIEWS & SOCIAL PROOF (AUTHENTIC ATHLETES)       */}
+      {/* 6. CLEAN WHITE FOOTER                                          */}
       {/* ============================================================== */}
-      <section className="w-full bg-[#070913] text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-800">
-        <div className="max-w-6xl mx-auto flex flex-col gap-12 sm:gap-16">
-          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-neutral-300 text-xs font-semibold mb-3">
-              <span className="text-[#FF5500]">★</span> Verified Athlete Feedback
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight [text-wrap:balance]">
-              Tested Under the Bar by Real Lifters
-            </h2>
-            <p className="text-sm sm:text-base text-neutral-400 mt-4 leading-relaxed">
-              From powerlifting basements to Hyrox race tracks. Hear why athletes choose FitFlow over bloated corporate apps.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Review 1: Marcus T. */}
-            <div className="p-7 rounded-3xl bg-neutral-900/70 border border-neutral-800 flex flex-col justify-between gap-6 hover:border-neutral-700 transition-colors">
-              <div className="flex flex-col gap-3.5">
-                <div className="flex items-center gap-1 text-[#FF5500] text-sm">
-                  ★★★★★
-                </div>
-                <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-normal">
-                  "FitFlow is the first workout logger that doesn't try to sell me a subscription between sets. It opens instantly in my basement gym with zero cell signal, and the rest timer has never failed me."
-                </p>
-              </div>
-              <div className="flex items-center gap-3 pt-4 border-t border-neutral-800">
-                <div className="w-9 h-9 rounded-full bg-orange-500/20 text-[#FF5500] font-bold flex items-center justify-center text-xs">
-                  MT
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs sm:text-sm font-bold text-white">Marcus T.</span>
-                  <span className="text-[11px] text-neutral-400">Competitive Powerlifter (600lb Deadlift)</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Review 2: Priya S. */}
-            <div className="p-7 rounded-3xl bg-neutral-900/70 border border-neutral-800 flex flex-col justify-between gap-6 hover:border-neutral-700 transition-colors">
-              <div className="flex flex-col gap-3.5">
-                <div className="flex items-center gap-1 text-[#FF5500] text-sm">
-                  ★★★★★
-                </div>
-                <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-normal">
-                  "The heart rate telemetry and recovery tracking are spot-on. No cheesy AI chatbot or animated confetti, just raw data and clean visual trends that actually help me pace my intervals."
-                </p>
-              </div>
-              <div className="flex items-center gap-3 pt-4 border-t border-neutral-800">
-                <div className="w-9 h-9 rounded-full bg-orange-500/20 text-[#FF5500] font-bold flex items-center justify-center text-xs">
-                  PS
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs sm:text-sm font-bold text-white">Priya S.</span>
-                  <span className="text-[11px] text-neutral-400">Hyrox Competitor & Distance Runner</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Review 3: David K. */}
-            <div className="p-7 rounded-3xl bg-neutral-900/70 border border-neutral-800 flex flex-col justify-between gap-6 hover:border-neutral-700 transition-colors">
-              <div className="flex flex-col gap-3.5">
-                <div className="flex items-center gap-1 text-[#FF5500] text-sm">
-                  ★★★★★
-                </div>
-                <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-normal">
-                  "I recommend FitFlow to all my athletes. The progressive overload volume math is crystal clear, and the 21-day consistency streak keeps lifters accountable without toxic guilt-trips."
-                </p>
-              </div>
-              <div className="flex items-center gap-3 pt-4 border-t border-neutral-800">
-                <div className="w-9 h-9 rounded-full bg-orange-500/20 text-[#FF5500] font-bold flex items-center justify-center text-xs">
-                  DK
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs sm:text-sm font-bold text-white">David K.</span>
-                  <span className="text-[11px] text-neutral-400">Head Strength & Conditioning Coach</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================== */}
-      {/* 6. CLEAN FOOTER                                                */}
-      {/* ============================================================== */}
-      <footer className="w-full border-t border-neutral-800 bg-[#070913] text-neutral-400 py-12 px-6 lg:px-12 relative overflow-hidden select-none">
+      <footer className="w-full border-t border-neutral-200 bg-white py-12 px-6 lg:px-12 relative overflow-hidden select-none">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="flex items-center gap-2.5">
@@ -804,13 +741,13 @@ export function RuangEditLandingPage() {
                 alt="FitFlow Logo"
                 className="w-6 h-6 rounded-full object-contain"
               />
-              <span className="font-bold text-white text-sm tracking-tight">FitFlow</span>
+              <span className="font-bold text-neutral-950 text-sm tracking-tight">FitFlow</span>
             </div>
-            <span className="hidden sm:inline text-neutral-600">•</span>
-            <span className="text-xs text-neutral-400">Distraction-free workout & recovery logger for serious lifters</span>
+            <span className="hidden sm:inline text-neutral-300">•</span>
+            <span className="text-xs text-neutral-500">Autonomous athlete companion & telemetry client</span>
           </div>
 
-          <div className="flex items-center gap-6 text-xs text-neutral-400 font-medium">
+          <div className="flex items-center gap-6 text-xs text-neutral-500 font-medium">
             <span>Local-First</span>
             <span>Zero Trackers</span>
             <span>Offline Sovereignty</span>
@@ -823,7 +760,7 @@ export function RuangEditLandingPage() {
           position="bottom"
           height="3rem"
           blurAmount="4px"
-          color="rgba(7, 9, 19, 0.4)"
+          color="rgba(255, 255, 255, 0.4)"
           className="z-0"
         />
       </footer>
