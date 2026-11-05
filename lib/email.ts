@@ -14,7 +14,8 @@ export function createTransporter() {
     secure,
     auth: user && pass ? { user, pass } : undefined,
     tls: {
-      rejectUnauthorized: false,
+      // In production, strictly reject unauthorized TLS certificates to prevent MITM attacks
+      rejectUnauthorized: process.env.NODE_ENV === 'production',
     },
   });
 }
@@ -165,7 +166,9 @@ export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ succ
     return { success: true };
   } catch (err: any) {
     console.warn(`[Email] SMTP delivery failed to ${toEmail} (${err?.message || err}). Development fallback active.`);
-    console.log(`[Email DEV FALLBACK] To: ${toEmail} | OTP: ${otp}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[Email DEV FALLBACK] To: ${toEmail} | Verification code dispatched.`);
+    }
     return { success: true, error: err?.message };
   }
 }
