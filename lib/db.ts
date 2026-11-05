@@ -4,6 +4,12 @@ const connectionString =
   process.env.DATABASE_URL ||
   'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
 
+const isRemoteDb =
+  connectionString.includes('supabase.co') ||
+  connectionString.includes('supabase.com') ||
+  connectionString.includes('pooler') ||
+  process.env.NODE_ENV === 'production';
+
 declare global {
   // eslint-disable-next-line no-var
   var __fitflowDbPool: Pool | undefined;
@@ -17,6 +23,7 @@ export const pool =
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 5000,
+    ssl: isRemoteDb ? { rejectUnauthorized: false } : undefined,
   });
 
 if (process.env.NODE_ENV !== 'production') {
