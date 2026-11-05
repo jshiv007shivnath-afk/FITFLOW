@@ -3,7 +3,8 @@
   function sendParentMessage(screenKey) {
     try {
       if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: 'STITCH_NAVIGATE', screen: screenKey }, '*');
+        const targetOrigin = window.location.origin && window.location.origin !== 'null' ? window.location.origin : '*';
+        window.parent.postMessage({ type: 'STITCH_NAVIGATE', screen: screenKey }, targetOrigin);
       }
     } catch (e) {
       // Ignore cross-origin error if any
