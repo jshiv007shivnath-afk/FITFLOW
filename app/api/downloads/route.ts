@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error('Error tracking download:', err);
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: err.message || 'Internal server error' },
       { status: 500 }
     );
   }
@@ -74,7 +74,7 @@ export async function GET() {
   } catch (err: any) {
     console.error('Error fetching downloads:', err);
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: err.message || 'Internal server error' },
       { status: 500 }
     );
   }
