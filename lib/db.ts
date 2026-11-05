@@ -1,4 +1,7 @@
-import { Pool, QueryResult, QueryResultRow } from 'pg';
+import pg from 'pg';
+import type { Pool as IPool, QueryResult, QueryResultRow, PoolClient } from 'pg';
+
+const { Pool } = pg;
 
 const connectionString =
   process.env.DATABASE_URL ||
@@ -12,7 +15,7 @@ const isRemoteDb =
 
 declare global {
   // eslint-disable-next-line no-var
-  var __fitflowDbPool: Pool | undefined;
+  var __fitflowDbPool: IPool | undefined;
 }
 
 // Preserve pool in development across Next.js HMR reloads
@@ -38,7 +41,7 @@ export async function query<T extends QueryResultRow = any>(
 }
 
 export async function withTransaction<T>(
-  callback: (client: import('pg').PoolClient) => Promise<T>
+  callback: (client: PoolClient) => Promise<T>
 ): Promise<T> {
   const client = await pool.connect();
   try {
