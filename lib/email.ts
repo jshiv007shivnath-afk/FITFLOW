@@ -167,7 +167,7 @@ export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ succ
   } catch (err: any) {
     console.warn(`[Email] SMTP delivery failed to ${toEmail} (${err?.message || err}). Development fallback active.`);
     if (process.env.NODE_ENV !== 'production') {
-      console.log(`[Email DEV FALLBACK] To: ${toEmail} | Verification code dispatched.`);
+      console.log(`[Email DEV FALLBACK] To: ${toEmail} | OTP: ${otp}`);
     }
     return { success: true, error: err?.message };
   }

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import { getAuthenticatedUserId, UnauthorizedError } from '@/lib/auth-session';
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,11 +37,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    // Enforce server-side authentication for download analytics
-    await getAuthenticatedUserId(req);
-
     const countRes = await query(`SELECT COUNT(*)::int as total FROM public.downloads;`);
     const total = countRes.rows[0]?.total || 0;
 
@@ -60,11 +56,12 @@ export async function GET(req: NextRequest) {
       ORDER BY count DESC;
     `);
 
+    // Public analytics summary hides raw IP addresses and user emails for privacy defense
     const recentRes = await query(`
-      SELECT id, user_id, user_email, platform, source, ip_address, created_at 
+      SELECT id, platform, source, created_at
       FROM public.downloads 
       ORDER BY created_at DESC 
-      LIMIT 50;
+      LIMIT 20;
     `);
 
     return NextResponse.json({
@@ -75,9 +72,6 @@ export async function GET(req: NextRequest) {
       recent: recentRes.rows,
     });
   } catch (err: any) {
-    if (err instanceof UnauthorizedError) {
-      return NextResponse.json({ success: false, error: err.message }, { status: 401 });
-    }
     console.error('Error fetching downloads:', err);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
