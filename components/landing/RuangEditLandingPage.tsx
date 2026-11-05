@@ -1,741 +1,764 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ScrollExpand from '@/components/reactbits/ScrollExpand';
 import GradientASCII from '@/components/reactbits/GradientASCII';
-import { ServicesView } from '@/components/landing/ServicesView';
-import { AboutView } from '@/components/landing/AboutView';
+import TechText from '@/components/reactbits/TechText';
+import AnimatedContent from '@/components/reactbits/AnimatedContent';
+import CountUp from '@/components/reactbits/CountUp';
+import GradualBlur from '@/components/reactbits/GradualBlur';
+import { CaseStudyFlipStack } from '@/components/reactbits/CaseStudyFlipStack';
+import { ScrollTiltedGrid } from '@/components/reactbits/ScrollTiltedGrid';
 import { DownloadModal } from '@/components/landing/DownloadModal';
+import ReactLenis from 'lenis/react';
+
+const TILTED_GRID_SCREENS = [
+  { src: '/screens/screen_home.png', alt: 'FitFlow Dashboard and Active Burn' },
+  { src: '/screens/screen_progress.png', alt: 'FitFlow Telemetry and Workout Progress' },
+  { src: '/screens/screen_rewards.png', alt: 'FitFlow Streaks and Milestone Vault' },
+  { src: '/screens/screen_profile.png', alt: 'FitFlow Biometric Profile & Recovery' },
+  { src: '/screens/screen_add.png', alt: 'FitFlow Quick Session Logger' },
+  { src: '/screens/screen_login.png', alt: 'FitFlow Athlete Authentication' },
+] as const;
+
+const SERVICE_TRACK_SCREENS: Record<'strength' | 'biometrics' | 'hydration' | 'habits', { src: string; alt: string }> = {
+  strength: {
+    src: '/screens/screen_progress.png',
+    alt: 'FitFlow Strength & Heavy Overload Tracking',
+  },
+  biometrics: {
+    src: '/screens/screen_profile.png',
+    alt: 'FitFlow Heart Rate & Biometrics Telemetry',
+  },
+  hydration: {
+    src: '/screens/screen_home.png',
+    alt: 'FitFlow Daily Dashboard & Hydration Target',
+  },
+  habits: {
+    src: '/screens/screen_rewards.png',
+    alt: 'FitFlow 21-Day Habit Streaks & Milestone Vault',
+  },
+};
 
 export function RuangEditLandingPage() {
-  const [currentView, setCurrentView] = useState<'home' | 'services' | 'about'>('home');
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeSection, setActiveSection] = useState<'home' | 'services' | 'about'>('home');
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeServiceTab, setActiveServiceTab] = useState<'strength' | 'biometrics' | 'hydration' | 'habits'>('strength');
 
-  const navigateTo = (view: 'home' | 'services' | 'about') => {
-    setCurrentView(view);
-    if (typeof window !== 'undefined') {
+  // Track scroll position for dynamic navbar width and active section indicator
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 60);
+
+      const servicesEl = document.getElementById('services');
+      const aboutEl = document.getElementById('about');
+
+      if (aboutEl && scrollY >= aboutEl.offsetTop - 300) {
+        setActiveSection('about');
+      } else if (servicesEl && scrollY >= servicesEl.offsetTop - 300) {
+        setActiveSection('services');
+      } else {
+        setActiveSection('home');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id: 'home' | 'services' | 'about') => {
+    setActiveSection(id);
+    if (id === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
+  const serviceTracks = {
+    strength: {
+      tag: 'Track 01 • Heavy Compound Progression',
+      title: 'Automated Overload & Fatigue Limits',
+      description:
+        'Log sets and reps with zero latency. FitFlow tracks weight progression, sets per muscle group, and prompts rest intervals without friction.',
+      metrics: [
+        { label: 'Tracking Speed', value: 'Instant One-Tap' },
+        { label: 'Volume Math', value: 'Auto-Aggregated' },
+        { label: 'Deload Alert', value: 'Fatigue Threshold' },
+      ],
+      features: [
+        'Precise set, rep, weight and RPE tracking with millisecond reaction',
+        'Automatic volume computation per muscle group with weekly targets',
+        'Built-in rest countdown with subtle haptic signals when ready',
+        'Intelligent deload suggestions when recovery volume spikes',
+      ],
+      phonePreview: {
+        screenTitle: 'Workout Session',
+        exercise: 'Barbell Back Squat',
+        set: 'Set 3 of 4 • 140 kg × 5 reps',
+        weight: 'RPE 8.5 • Optimal Overload',
+        status: 'Rest Timer: 01:45',
+        badge: 'Session Active',
+      },
+    },
+    biometrics: {
+      tag: 'Track 02 • Cardiac & Calorie Telemetry',
+      title: 'Zero-Lag BLE Sensor Streaming',
+      description:
+        'Sync heart-rate zones directly from your Bluetooth strap or smartwatch. Live heart-rate variability and calorie burn without cloud dependencies.',
+      metrics: [
+        { label: 'Stream Delay', value: '< 14ms BLE' },
+        { label: 'Target Zones', value: '5-Tier Cardio' },
+        { label: 'Battery Impact', value: '0.4% per hour' },
+      ],
+      features: [
+        'Direct connection to standard heart rate monitors via Web Bluetooth',
+        'Continuous active calorie computation synced with workout intensity',
+        'Automatic heart rate recovery rate (HRR) calculation post-set',
+        'Zero cloud lag: telemetry processed locally on your phone',
+      ],
+      phonePreview: {
+        screenTitle: 'Telemetry Stream',
+        exercise: 'Metabolic Conditioning',
+        set: 'Zone 4 Threshold',
+        weight: '158 BPM (88% Max)',
+        status: 'Active Sync • 480 kcal',
+        badge: 'Telemetry Active',
+      },
+    },
+    hydration: {
+      tag: 'Track 03 • Metabolic Balance',
+      title: 'Intelligent Hydration & Macro Pacing',
+      description:
+        'Keep cellular energy and muscle recovery optimal. FitFlow calculates precise fluid benchmarks adjusted for ambient temperature and training volume.',
+      metrics: [
+        { label: 'Logging Speed', value: 'One-Tap 250ml' },
+        { label: 'Daily Target', value: '3,000 ml Baseline' },
+        { label: 'Notification', value: 'Circadian Pacing' },
+      ],
+      features: [
+        'Dynamic hydration target adjusting for active sweat loss during workouts',
+        'Quick-tap volume increments (250ml, 500ml, custom glass)',
+        'Daily intake timeline highlighting hydration deficit windows',
+        'Subtle circadian reminders timed between training blocks',
+      ],
+      phonePreview: {
+        screenTitle: 'Hydration Engine',
+        exercise: 'Daily Water Intake',
+        set: '2,400 / 3,000 ml',
+        weight: '80% of Daily Target',
+        status: 'Optimal Fluid Balance',
+        badge: 'Hydration Sync',
+      },
+    },
+    habits: {
+      tag: 'Track 04 • Habit Architecture',
+      title: '21-Day Streak Consistency & XP Leveling',
+      description:
+        'Transform physical discipline from an occasional chore into an unshakeable daily reflex using positive reinforcement and tiered XP unlocks.',
+      metrics: [
+        { label: 'Streak Target', value: '21 Days to Habit' },
+        { label: 'Level Cap', value: 'Level 10 Master' },
+        { label: 'Offline Sync', value: '100% Local PWA' },
+      ],
+      features: [
+        'Visual 28-day habit matrix celebrating uninterrupted discipline',
+        'Symmetric XP engine: 500 XP per level with rollover safeguards',
+        'Milestone badges for volume, attendance, and streak breakthroughs',
+        'Full offline persistence that works deep underground without Wi-Fi',
+      ],
+      phonePreview: {
+        screenTitle: 'Discipline Engine',
+        exercise: '21-Day Habit Streak',
+        set: 'Day 14 Active Streak',
+        weight: 'Level 4 Athlete (340/500 XP)',
+        status: 'Discipline Maintained',
+        badge: 'Consistency Fire',
+      },
+    },
+  };
+
+  const currentTrack = serviceTracks[activeServiceTab];
+
   return (
-    <div className="bg-white min-h-screen text-[#1c1b1f] antialiased font-['Manrope',sans-serif] selection:bg-[#ffbd5a] selection:text-[#291800] overflow-x-clip">
-      <div className="w-full bg-white flex flex-col">
-        {/* ============================================== */}
-        {/* HEADER WITH REFINED CAPSULE NAVBAR             */}
-        {/* ============================================== */}
-        <header className="w-full h-[64px] sm:h-[80px] border-b border-[#E7E2E8] bg-white/95 backdrop-blur-md sticky top-0 z-50 px-4 sm:px-8 lg:px-12">
-          <div className="max-w-[1240px] mx-auto h-full flex items-center justify-between gap-2 sm:gap-4">
-            {/* Left: Brand + Nav Capsule */}
-            <div className="flex items-center gap-3 sm:gap-6">
-              <button
-                type="button"
-                onClick={() => navigateTo('home')}
-                className="flex items-center gap-2 sm:gap-2.5 group cursor-pointer"
-              >
-                <img
-                  src="/icon.png"
-                  alt="FitFlow Logo"
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
-                />
-                <span className="font-semibold text-neutral-900 text-[16px] sm:text-[18px] tracking-tight">
-                  Fitflow app
-                </span>
-              </button>
-
-              {/* Nav Capsule */}
-              <nav className="hidden sm:inline-flex items-center bg-neutral-100/90 border border-neutral-200/60 p-1.5 rounded-full backdrop-blur-sm gap-1">
-                {(['home', 'services', 'about'] as const).map((view) => {
-                  const label = view.charAt(0).toUpperCase() + view.slice(1);
-                  const isActive = currentView === view;
-                  return (
-                    <button
-                      key={view}
-                      type="button"
-                      onClick={() => navigateTo(view)}
-                      className={`relative px-4 py-1.5 text-[13px] font-semibold transition-all duration-200 rounded-full cursor-pointer ${
-                        isActive
-                          ? 'bg-white text-neutral-900 shadow-sm'
-                          : 'text-neutral-600 hover:text-neutral-900'
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </nav>
+    <ReactLenis root options={{ autoRaf: true, lerp: 0.05, wheelMultiplier: 0.65, touchMultiplier: 1.0 }}>
+      <div className="bg-white min-h-screen text-neutral-900 antialiased font-['Manrope',sans-serif] selection:bg-[#FF5500] selection:text-white overflow-x-clip">
+      {/* ============================================================== */}
+      {/* 0. INTRO PRELOADER WITH COUNTUP COMPONENT (PURE BLACK, MINIMAL)*/}
+      {/* ============================================================== */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="preloader"
+            initial={{ y: 0 }}
+            exit={{ y: '-100%' }}
+            transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[9999] bg-black flex items-center justify-center select-none"
+          >
+            <div className="text-white font-extrabold text-7xl sm:text-9xl font-mono tracking-tight flex items-baseline">
+              <CountUp
+                from={0}
+                to={100}
+                duration={1.8}
+                mode="count"
+                easing="easeOut"
+                suffix="%"
+                trigger="load"
+                onEnd={() => {
+                  setTimeout(() => {
+                    setIsLoading(false);
+                  }, 250);
+                }}
+                className="text-white font-extrabold tracking-tight"
+              />
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Right Action CTA: Download App */}
-            <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setIsDownloadModalOpen(true)}
-                className="inline-flex items-center gap-2 h-[36px] sm:h-[42px] px-3.5 sm:px-5 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white text-[12px] sm:text-[13px] font-semibold transition-colors group cursor-pointer shadow-sm"
-              >
-                <svg aria-hidden="true" className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                <span>Download App</span>
-              </motion.button>
-            </div>
+      {/* ============================================================== */}
+      {/* 1. EXPANDED / DYNAMIC NAVBAR (BLACK & WHITE, EXPANDS & SHRINKS) */}
+      {/* ============================================================== */}
+      <header className="fixed top-3 sm:top-5 inset-x-0 z-50 px-3 sm:px-6 transition-all duration-300 pointer-events-none">
+        <motion.div
+          animate={{
+            maxWidth: isScrolled ? '860px' : '1180px',
+            scale: isScrolled ? 0.98 : 1,
+            y: isScrolled ? -2 : 0,
+          }}
+          transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+          className="w-full mx-auto rounded-full bg-neutral-950 backdrop-blur-2xl border border-white/20 px-3.5 sm:px-7 py-2.5 sm:py-3 shadow-[0_12px_40px_rgba(0,0,0,0.65)] flex items-center justify-between gap-2 sm:gap-4 pointer-events-auto"
+        >
+          {/* Brand Logo & Name (Clean, Bold, Large, and Prominent) */}
+          <button
+            type="button"
+            onClick={() => scrollToSection('home')}
+            className="flex items-center gap-2.5 sm:gap-3 group cursor-pointer shrink-0"
+          >
+            <img
+              src="/icon.png"
+              alt="FitFlow Logo"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-contain shadow-xs group-hover:scale-105 transition-transform"
+            />
+            <span className="font-extrabold text-white text-base sm:text-xl tracking-tight select-none">
+              FitFlow
+            </span>
+          </button>
+
+          {/* Nav Links with Animated Active Indicator */}
+          <nav className="inline-flex items-center bg-white/[0.08] border border-white/15 p-1 rounded-full backdrop-blur-sm gap-1">
+            {(['home', 'services', 'about'] as const).map((sectionId) => {
+              const label = sectionId.charAt(0).toUpperCase() + sectionId.slice(1);
+              const isActive = activeSection === sectionId;
+              return (
+                <button
+                  key={sectionId}
+                  type="button"
+                  onClick={() => scrollToSection(sectionId)}
+                  className={`relative px-3 sm:px-5 py-1.5 text-xs sm:text-sm font-semibold transition-colors duration-200 rounded-full cursor-pointer ${
+                    isActive ? 'text-neutral-950 font-bold' : 'text-neutral-300 hover:text-white'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-nav-pill"
+                      className="absolute inset-0 bg-white rounded-full shadow-sm"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right Action: Download App CTA */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsDownloadModalOpen(true)}
+              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 h-10 px-4 sm:px-6 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 text-xs sm:text-sm font-bold transition-all group cursor-pointer shadow-sm"
+            >
+              <svg aria-hidden="true" className="w-3.5 h-3.5 text-neutral-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span className="hidden xs:inline">Download App</span>
+              <span className="xs:hidden">Get App</span>
+            </motion.button>
           </div>
-        </header>
+        </motion.div>
+      </header>
 
-        {/* ============================================== */}
-        {/* CONDITIONAL PAGE VIEWS (Home, Services, About) */}
-        {/* ============================================== */}
-        <AnimatePresence mode="wait">
-          {currentView === 'services' && (
-            <motion.div
-              key="services-page"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.35 }}
-            >
-              <ServicesView
-                onNavigateHome={() => navigateTo('home')}
-                onNavigateAbout={() => navigateTo('about')}
+      {/* ============================================================== */}
+      {/* 2. HERO SECTION WITH FULL SCREEN ASCII CANVAS                  */}
+      {/* (Starts ONLY AFTER loading count animation completes)          */}
+      {/* ============================================================== */}
+      <section
+        id="home"
+        className="relative w-full min-h-[100dvh] overflow-hidden bg-[#070913] flex flex-col justify-center"
+      >
+        {/* LOCKED (READ-ONLY) GUARDRAIL 1: GradientASCII Background Canvas */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden"
+        >
+          {!isLoading && (
+            <div className="absolute inset-0 w-full h-full pointer-events-auto">
+              <GradientASCII
+                colors={['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8']}
+                shape="horizon"
+                characters=" =+xX0S8#@"
+                cellSize={18}
+                density={0.8}
               />
-            </motion.div>
+            </div>
           )}
 
-          {currentView === 'about' && (
-            <motion.div
-              key="about-page"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.35 }}
-            >
-              <AboutView
-                onNavigateHome={() => navigateTo('home')}
-                onNavigateServices={() => navigateTo('services')}
-              />
-            </motion.div>
-          )}
+          {/* Base Architectural Grid Pattern */}
+          <div
+            className="absolute inset-0 w-full h-full opacity-20 pointer-events-none z-1"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+              `,
+              backgroundSize: '48px 48px',
+            }}
+          />
+        </div>
 
-          {currentView === 'home' && (
-            <motion.main
-              key="home-page"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
-              className="flex-1 w-full bg-white relative"
+        {/* Contrast Scrim to Keep Text Sharp */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[1]"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 50%, rgba(6, 9, 16, 0.5) 0%, rgba(6, 9, 16, 0.25) 50%, transparent 85%)',
+          }}
+        />
+
+        {/* Hero Foreground Content */}
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-32 pb-20 sm:pt-36 sm:pb-28 flex flex-col items-center justify-center text-center">
+          
+          {/* THREE-LINE HERO HEADLINE STRUCTURE */}
+          {/* Line 1: Medium Font */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="font-['Manrope',sans-serif] text-lg sm:text-2xl md:text-3xl text-neutral-300 font-bold tracking-tight select-none"
+          >
+            Level Up Your
+          </motion.div>
+
+          {/* Line 2: Daily Fitness with */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-['Manrope',sans-serif] text-3xl sm:text-5xl md:text-6xl text-white font-extrabold tracking-tight select-none mt-1 sm:mt-2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]"
+          >
+            Daily Fitness with
+          </motion.h1>
+
+          {/* Line 3: Big Single Word "FitFlow" with TechText Animated Vector Outlines */}
+          <div className="w-full max-w-2xl h-[95px] xs:h-[120px] sm:h-[150px] md:h-[175px] relative mx-auto my-1 sm:my-2 flex items-center justify-center">
+            <TechText
+              text="FitFlow"
+              fontFamily="'Manrope', sans-serif"
+              fontWeight={800}
+              fontSize={135}
+              color="#ffffff"
+              accentColor="#FF5500"
+              reveal="letter"
+              dashLength={4}
+              dashGap={2}
+              specks={15}
+              intro="none"
+              sweep={true}
+              speed={1}
+              clickKick={true}
+              guides={false}
+            />
+          </div>
+
+          {/* Clean Subheadline */}
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-xl mx-auto text-sm sm:text-base text-neutral-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium leading-relaxed mt-3 [text-wrap:pretty]"
+          >
+            Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
+          </motion.p>
+
+          {/* Centered High-End "Download FitFlow" CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-8 sm:mt-10 flex items-center justify-center"
+          >
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => setIsDownloadModalOpen(true)}
+              className="inline-flex items-center justify-center gap-3 h-12 sm:h-14 px-8 sm:px-11 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm sm:text-base shadow-[0_0_36px_rgba(255,255,255,0.3)] transition-all cursor-pointer"
             >
-              {/* ============================================== */}
-              {/* 1. BACKGROUND GRADIENT ASCII & ARCHITECTURAL GRID */}
-              {/* ============================================== */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-[#FAF9F6]"
-              >
-                {/* React Bits GradientASCII Component in Hero Background */}
-                <div className="absolute top-0 left-0 w-full h-[650px] sm:h-[800px] pointer-events-auto opacity-75">
-                  <GradientASCII
-                    colors={['#f97316', '#ffedd5', '#fed7aa', '#ea580c']}
-                    shape="horizon"
-                    characters=" =+xX0S8#@"
-                    cellSize={18}
-                    density={0.7}
-                    lightMode={true}
-                    gradientOpacity={0.4}
-                    glyphOpacity={0.32}
-                    mouseInteraction={true}
-                  />
+              <svg aria-hidden="true" className="w-5 h-5 text-neutral-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Download FitFlow</span>
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 3. LOCKED GUARDRAIL 2: SCROLL-EXPAND VIDEO SECTION             */}
+      {/* ============================================================== */}
+      <section className="w-full relative bg-white" id="section-scroll-expand">
+        <ScrollExpand
+          className="!bg-white"
+          src="/flow_video.mp4"
+          mediaType="video"
+          poster="/runner_hero.jpg"
+          alt="FitFlow Athletic Runner Video"
+          title="Track Every Motion"
+          scrollHint="SCROLL"
+          startWidth={42}
+          startHeight={56}
+          startRadius={28}
+          endRadius={0}
+          mediaZoom={1.2}
+          overlayScrim={0.4}
+        >
+          <div className="max-w-xl text-white px-4 flex flex-col items-center">
+            <span className="px-3.5 py-1 rounded-full bg-[#FF5500] text-white text-xs font-bold tracking-normal mb-3 shadow-md">
+              Smart Fitness Engine
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-bold text-white drop-shadow-md leading-tight mb-3 [text-wrap:balance]">
+              Every Rep, Every Milestone
+            </h2>
+            <p className="text-sm sm:text-base text-white/90 leading-relaxed mb-6 max-w-md [text-wrap:pretty]">
+              FitFlow tracks your workouts, water, calories, and daily streaks in one simple place.
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsDownloadModalOpen(true)}
+              className="inline-flex items-center justify-center h-11 px-7 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm transition-all shadow-md cursor-pointer"
+            >
+              Download FitFlow ↗
+            </button>
+          </div>
+        </ScrollExpand>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 3.5. CASE STUDY FLIP STACK (DIRECTLY BELOW SCROLL-EXPAND)      */}
+      {/* ============================================================== */}
+      <CaseStudyFlipStack
+        heading="Tactile Engineering That Delivers"
+        endLabel="Train With Precision"
+      />
+
+      {/* ============================================================== */}
+      {/* 3.6. SCROLL TILTED GRID (DIRECTLY BELOW CASE STUDY FLIP STACK) */}
+      {/* ============================================================== */}
+      <ScrollTiltedGrid images={TILTED_GRID_SCREENS} />
+
+      {/* ============================================================== */}
+      {/* 4. BALANCED SERVICES SECTION (HOME PAGE • WHITE + ORANGE THEME)*/}
+      {/* ============================================================== */}
+      <section id="services" className="w-full bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100">
+        <div className="max-w-6xl mx-auto flex flex-col gap-10 sm:gap-14">
+          
+          {/* Section Header with AnimatedContent */}
+          <AnimatedContent distance={30} direction="vertical" duration={0.8} ease="power2.out">
+            <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
+                Core Capabilities
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-950 tracking-tight leading-tight [text-wrap:balance]">
+                Four Precision Engines for Real Progress
+              </h2>
+              <p className="text-sm sm:text-base text-neutral-600 mt-4 leading-relaxed [text-wrap:pretty]">
+                No generic AI fluff, no noisy notifications. FitFlow delivers tactile, local-first logging calibrated for serious athletic consistency.
+              </p>
+            </div>
+          </AnimatedContent>
+
+          {/* Interactive 4-Track System */}
+          <AnimatedContent distance={40} direction="vertical" duration={0.9} delay={0.1} ease="power2.out">
+            {/* Track Selector Tabs */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-1.5 bg-neutral-100 rounded-2xl max-w-3xl mx-auto mb-8 sm:mb-12">
+              {(
+                [
+                  { id: 'strength', label: 'Strength Logging' },
+                  { id: 'biometrics', label: 'Biometrics Sync' },
+                  { id: 'hydration', label: 'Hydration Target' },
+                  { id: 'habits', label: 'Habit Streaks' },
+                ] as const
+              ).map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveServiceTab(tab.id)}
+                  className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    activeServiceTab === tab.id
+                      ? 'bg-white text-neutral-950 shadow-sm'
+                      : 'text-neutral-600 hover:text-neutral-950'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Track Content Card with Onboarding-Style Slide Transition & Real Phone Mockup */}
+            <div className="relative min-h-[460px] sm:min-h-[500px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeServiceTab}
+                  initial={{ opacity: 0, x: 28, scale: 0.99 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -28, scale: 0.99 }}
+                  transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                  className="bg-neutral-50 border border-neutral-200/90 rounded-3xl p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center"
+                >
+                  {/* Left Column: Track Info & Features */}
+                  <div className="lg:col-span-7 flex flex-col gap-6">
+                    <div>
+                      <span className="text-xs font-bold text-[#9A3412] tracking-wide uppercase">
+                        {currentTrack.tag}
+                      </span>
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
+                        {currentTrack.title}
+                      </h3>
+                      <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
+                        {currentTrack.description}
+                      </p>
+                    </div>
+
+                    {/* 3 Quick Telemetry Metrics */}
+                    <div className="grid grid-cols-3 gap-3 py-4 border-y border-neutral-200">
+                      {currentTrack.metrics.map((m, idx) => (
+                        <div key={idx} className="flex flex-col">
+                          <span className="text-xs text-neutral-500 font-semibold">{m.label}</span>
+                          <span className="text-xs sm:text-sm font-bold text-neutral-950 mt-0.5">{m.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Feature Bullet Checklist */}
+                    <ul className="flex flex-col gap-2.5">
+                      {currentTrack.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
+                          <span aria-hidden="true" className="w-4 h-4 rounded-full bg-orange-100 text-[#9A3412] flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
+                            ✓
+                          </span>
+                          <span>{feat}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Right Column: High-Craft Live Phone Mockup with Real App Screen */}
+                  <div className="lg:col-span-5 flex justify-center">
+                    <div className="relative w-full max-w-[280px] xs:max-w-[300px] sm:max-w-[320px] aspect-[440/760] rounded-[32px] p-2 bg-neutral-950 shadow-[0_20px_50px_rgba(0,0,0,0.18)] border-4 border-neutral-900 overflow-hidden flex items-center justify-center">
+                      <div className="w-full h-full rounded-[24px] overflow-hidden bg-[#F8F8F6]">
+                        <img
+                          src={SERVICE_TRACK_SCREENS[activeServiceTab].src}
+                          alt={SERVICE_TRACK_SCREENS[activeServiceTab].alt}
+                          className="w-full h-full object-cover object-top select-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </AnimatedContent>
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 5. BALANCED ABOUT SECTION (HOME PAGE • WHITE + ORANGE THEME)   */}
+      {/* ============================================================== */}
+      <section id="about" className="w-full bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100">
+        <div className="max-w-5xl mx-auto flex flex-col gap-10 sm:gap-14">
+          
+          {/* Section Header with AnimatedContent */}
+          <AnimatedContent distance={30} direction="vertical" duration={0.8} ease="power2.out">
+            <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+              <span className="px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-[#9A3412] text-xs font-bold tracking-wide mb-3">
+                The FitFlow Manifesto
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-950 tracking-tight leading-tight [text-wrap:balance]">
+                Built for Athletes Who <span className="text-[#FF5500]">Respect the Process</span>
+              </h2>
+              <p className="text-sm sm:text-base text-neutral-600 mt-4 leading-relaxed [text-wrap:pretty]">
+                FitFlow was born out of frustration with noisy notification loops, toxic gym culture, and unrealistic 7-day shred routines that lead to burnout and injury.
+              </p>
+            </div>
+          </AnimatedContent>
+
+          {/* 2-Column Editorial Conviction */}
+          <AnimatedContent distance={35} direction="vertical" duration={0.85} delay={0.1} ease="power2.out">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 py-8 border-y border-neutral-200">
+              <div className="flex flex-col">
+                <span className="text-xs font-bold text-[#9A3412] tracking-wide">
+                  The Problem
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
+                  Modern fitness apps are engineered for engagement, not progress.
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                  Most digital workout apps bombard you with fake AI chatbots, aggressive renewal popups, and algorithmic guilt trips when you miss a session. They want you addicted to their app, not thriving in your body.
+                </p>
+              </div>
+
+              <div className="flex flex-col">
+                <span className="text-xs font-bold text-[#9A3412] tracking-wide">
+                  Our Antidote
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mt-1 mb-3">
+                  A calm, distraction-free sanctuary for physical discipline.
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                  FitFlow is built like precision sporting equipment. Clean typography, local-first storage that works deep underground with zero Wi-Fi, and honest metrics that celebrate true consistency: progressive overload, hydration, and 21-day streaks.
+                </p>
+              </div>
+            </div>
+          </AnimatedContent>
+
+          {/* 4 Core Principles (2x2 Grid) */}
+          <AnimatedContent distance={40} direction="vertical" duration={0.9} delay={0.15} ease="power2.out">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-neutral-950 tracking-tight mb-6 text-center sm:text-left">
+                Foundational Principles
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                
+                <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    01
+                  </div>
+                  <h4 className="text-base font-bold text-neutral-950">Zero Toxic Gamification</h4>
+                  <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                    XP is earned only through verified physical exertion. If you uncheck a set, your XP rolls back symmetrically. We value truth over artificial scores.
+                  </p>
                 </div>
 
-                {/* Base Architectural Grid Pattern */}
-                <div
-                  className="absolute inset-0 w-full h-full opacity-50 pointer-events-none"
-                  style={{
-                    backgroundImage: `
-                      linear-gradient(to right, rgba(23, 23, 23, 0.045) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(23, 23, 23, 0.045) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '48px 48px',
-                    maskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, black 60%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 45%, black 60%, transparent 100%)',
-                  }}
-                />
-
-                {/* Center Warm Radial Aura */}
-                <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[360px] rounded-full bg-radial from-amber-400/15 via-orange-400/5 to-transparent blur-[90px] pointer-events-none" />
-              </div>
-
-              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10" id="home">
-                {/* ============================================== */}
-                {/* HERO SECTION                                   */}
-                {/* ============================================== */}
-                <section className="w-full pt-8 sm:pt-14 md:pt-20 pb-10 sm:pb-16 md:pb-20 min-h-[auto] sm:min-h-[calc(80dvh-80px)] flex flex-col items-center justify-center relative">
-                  {/* Centered Editorial Display Headline with Floating Frosted-Glass Micro-Widgets */}
-                  <div className="relative w-full max-w-5xl text-center select-none z-10">
-                    
-                    {/* Left Floating Frosted-Glass Widget: Active Burn (Positioned Outside Text Bounds) */}
-                    <motion.div
-                      initial={{ opacity: 0, x: -20, rotate: -3 }}
-                      animate={{
-                        opacity: 1,
-                        x: 0,
-                        y: [0, -6, 0],
-                        rotate: -3,
-                      }}
-                      whileHover={{ scale: 1.04, rotate: 0 }}
-                      transition={{
-                        opacity: { duration: 0.8, delay: 0.35 },
-                        x: { duration: 0.8, delay: 0.35 },
-                        y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-                        scale: { duration: 0.2 },
-                        rotate: { duration: 0.2 },
-                      }}
-                      className="hidden lg:flex items-center gap-3 absolute top-2 xl:top-4 -left-6 xl:-left-12 2xl:-left-20 -rotate-3 z-30 backdrop-blur-md bg-white/95 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-52 select-none cursor-pointer transition-shadow"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
-                        <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0 text-left">
-                        <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1">
-                          <span className="truncate">Active Burn</span>
-                          <span className="text-orange-700 font-mono font-bold">640 kcal</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-neutral-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* Right Floating Frosted-Glass Widget: Habit Streak (Shifted Under 'our' Word, Outside Text Bounds) */}
-                    <motion.div
-                      initial={{ opacity: 0, x: 20, rotate: 3 }}
-                      animate={{
-                        opacity: 1,
-                        x: 0,
-                        y: [0, -7, 0],
-                        rotate: 3,
-                      }}
-                      whileHover={{ scale: 1.04, rotate: 0 }}
-                      transition={{
-                        opacity: { duration: 0.8, delay: 0.45 },
-                        x: { duration: 0.8, delay: 0.45 },
-                        y: { duration: 4.6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 },
-                        scale: { duration: 0.2 },
-                        rotate: { duration: 0.2 },
-                      }}
-                      className="hidden lg:flex items-center gap-3 absolute top-[52%] xl:top-[56%] -right-4 xl:-right-10 2xl:-right-16 rotate-3 z-30 backdrop-blur-md bg-white/95 border border-neutral-200/80 shadow-md hover:shadow-lg rounded-2xl p-3 w-56 select-none cursor-pointer transition-shadow"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
-                        <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0 text-left">
-                        <div className="flex items-center justify-between text-[11px] font-bold text-neutral-800 mb-1.5">
-                          <span className="truncate">Habit Streak</span>
-                          <span className="text-amber-700 font-mono font-bold">14 Days 🔥</span>
-                        </div>
-                        {/* 7 Orange Streak Activity Indicators */}
-                        <div className="flex items-center gap-1.5">
-                          {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
-                            <div
-                              key={idx}
-                              className="w-3.5 h-2 rounded-full bg-amber-500 shadow-xs"
-                              title={`${day}: Active`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* Headline */}
-                    <h1 className="font-['Manrope'] text-[26px] xs:text-[32px] sm:text-[46px] lg:text-[58px] xl:text-[66px] text-[#1c1b1f] tracking-tight font-bold leading-[1.18] sm:leading-[1.08] mb-3 flex flex-col items-center">
-                      <motion.span
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-                        className="block"
-                      >
-                        Level Up Your
-                      </motion.span>
-
-                      <motion.span
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                        className="inline-flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-1"
-                      >
-                        <span>Fitness</span>
-
-                        {/* Interactive Orange Capsule Pill with Continuous ECG Waveform & "Active Sync" Badge */}
-                        <div className="relative inline-flex items-center group mx-1 sm:mx-2 md:mx-3 align-middle">
-                          {/* "Active Sync" Floating Micro-Badge */}
-                          <motion.div
-                            animate={{ y: [0, -2, 0] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute scale-90 sm:scale-100 -top-3 sm:-top-3.5 right-0 sm:right-1 z-30 px-2 sm:px-2.5 py-0.5 rounded-full bg-white/95 backdrop-blur-sm border border-orange-200/80 shadow-[0_4px_10px_rgba(0,0,0,0.06)] flex items-center gap-1.5 select-none pointer-events-none"
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]" />
-                            <span className="text-[10px] sm:text-[11px] font-semibold tracking-tight text-neutral-800 whitespace-nowrap">
-                              Active Sync
-                            </span>
-                          </motion.div>
-
-                          {/* Hover Tooltip Badge */}
-                          <div className="absolute -top-11 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-top-12 transition-all duration-200 pointer-events-none z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-900/95 text-white text-[11px] font-semibold whitespace-nowrap shadow-lg backdrop-blur-xs border border-white/10 select-none">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            <span>142 BPM • Live Sync</span>
-                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-neutral-900 rotate-45" />
-                          </div>
-
-                          {/* Orange Capsule Base */}
-                          <motion.span
-                            initial={{ opacity: 0, scale: 0.88 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            whileHover={{ scale: 1.06 }}
-                            whileTap={{ scale: 0.95 }}
-                            transition={{ opacity: { duration: 0.7, delay: 0.28 }, scale: { duration: 0.3 } }}
-                            className="relative inline-flex items-center justify-center w-16 xs:w-20 sm:w-26 md:w-[108px] h-8 sm:h-11 md:h-[54px] rounded-full bg-gradient-to-b from-[#FFB340] to-[#F97316] shadow-[0_12px_28px_-6px_rgba(249,115,22,0.55),inset_0_2px_4px_rgba(255,255,255,0.45)] px-2 sm:px-3 overflow-hidden cursor-pointer shrink-0"
-                          >
-                            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full pointer-events-none" />
-                            <svg
-                              className="w-10 sm:w-14 md:w-16 h-5 sm:h-7 text-white drop-shadow-sm overflow-visible"
-                              viewBox="0 0 64 24"
-                              fill="none"
-                              stroke="#FFFFFF"
-                              strokeWidth="2.2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <motion.path
-                                d="M2 12h12l3-7 5 14 5-11 4 7 3-3h18"
-                                strokeDasharray="64"
-                                animate={{ strokeDashoffset: [64, 0, -64] }}
-                                transition={{
-                                  duration: 2.2,
-                                  repeat: Infinity,
-                                  ease: 'linear',
-                                }}
-                              />
-                            </svg>
-                            <span className="absolute right-2 top-2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#ffffff]" />
-                          </motion.span>
-                        </div>
-
-                        <span>with Our</span>
-                      </motion.span>
-
-                      {/* Editorial FitFlow app with Hand-Crafted Double-Stroke Underline */}
-                      <motion.span
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.32 }}
-                        className="relative inline-block mt-2 font-['Instrument_Serif',Georgia,serif] italic font-normal tracking-normal text-[#1c1b1f] text-[1.12em]"
-                      >
-                        <span>FitFlow app</span>
-                        {/* Double-Stroke Hand-Crafted SVG Underline */}
-                        <svg
-                          className="absolute -bottom-3 left-0 w-full h-[14px] pointer-events-none overflow-visible"
-                          viewBox="0 0 320 16"
-                          fill="none"
-                        >
-                          <motion.path
-                            d="M 4 9 Q 160 3 316 8"
-                            stroke="#171717"
-                            strokeWidth="2.4"
-                            strokeLinecap="round"
-                            fill="none"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-                          />
-                          <motion.path
-                            d="M 28 13 Q 165 9 292 12"
-                            stroke="#171717"
-                            strokeWidth="1.4"
-                            strokeLinecap="round"
-                            strokeOpacity="0.75"
-                            fill="none"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 0.8, delay: 0.45, ease: 'easeOut' }}
-                          />
-                        </svg>
-                      </motion.span>
-                    </h1>
-
-                    <motion.p
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.38 }}
-                      className="max-w-xl mx-auto text-sm sm:text-base md:text-[17px] text-[#57535A] font-normal leading-relaxed mt-4 sm:mt-5 [text-wrap:pretty]"
-                    >
-                      Built for everyday athletes. Sync your reps, heart-rate zones, and daily recovery in one fluid workspace.
-                    </motion.p>
-
-                    {/* Mobile/Tablet Floating Interactive Cards Row (Visible on < lg screens, fully responsive) */}
-                    <div className="grid grid-cols-2 lg:hidden gap-2 sm:gap-3 mt-6 sm:mt-7 select-none px-2 z-20 w-full max-w-[340px] xs:max-w-[360px] mx-auto">
-                      {/* Left Floating Card: Active Burn */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{
-                          opacity: 1,
-                          y: [0, -5, 0],
-                        }}
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
-                        transition={{
-                          opacity: { duration: 0.6, delay: 0.4 },
-                          y: { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
-                          scale: { duration: 0.2 },
-                        }}
-                        className="flex items-center gap-2 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 cursor-pointer"
-                      >
-                        <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center shrink-0 text-orange-600 shadow-xs">
-                          <svg aria-hidden="true" className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 min-w-0 text-left">
-                          <div className="text-[10px] font-bold text-neutral-800 leading-tight">
-                            Active Burn
-                          </div>
-                          <div className="text-orange-700 font-mono font-bold text-[10px] mb-1">
-                            640 kcal
-                          </div>
-                          <div className="w-full h-1 bg-neutral-100 rounded-full overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full w-[78%]" />
-                          </div>
-                        </div>
-                      </motion.div>
-
-                      {/* Right Floating Card: Habit Streak */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{
-                          opacity: 1,
-                          y: [0, -6, 0],
-                        }}
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
-                        transition={{
-                          opacity: { duration: 0.6, delay: 0.5 },
-                          y: { duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 },
-                          scale: { duration: 0.2 },
-                        }}
-                        className="flex items-center gap-2 backdrop-blur-md bg-white/90 border border-neutral-200/80 shadow-md rounded-2xl p-2.5 cursor-pointer"
-                      >
-                        <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 text-amber-600 shadow-xs">
-                          <svg aria-hidden="true" className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 23c-4.97 0-9-4.03-9-9 0-4.08 3.05-7.44 7-8.77V7c0 1.66 1.34 3 3 3 2.76 0 5-2.24 5-5 0-.71-.15-1.39-.42-2 3.66 1.83 6.42 5.58 6.42 10 0 5.52-4.48 10-10 10z" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 min-w-0 text-left">
-                          <div className="text-[10px] font-bold text-neutral-800 leading-tight">
-                            Habit Streak
-                          </div>
-                          <div className="text-amber-700 font-mono font-bold text-[10px] mb-1">
-                            14 Days 🔥
-                          </div>
-                          {/* 7 Orange Streak Activity Indicators */}
-                          <div className="flex items-center gap-0.5">
-                            {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
-                              <div
-                                key={idx}
-                                className="w-2.5 h-1 rounded-full bg-amber-500 shadow-xs"
-                                title={`${day}: Active`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
+                <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    02
                   </div>
+                  <h4 className="text-base font-bold text-neutral-950">Local-First Sovereignty</h4>
+                  <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                    Your workout logs, PRs, and biometric charts stay on your device. Instant offline loading with zero mandatory cloud sync or tracking pixels.
+                  </p>
+                </div>
 
-                  {/* Hero Social Proof Split Row: Stacked Avatars + Rating (Left) & Actions (Right) */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.44 }}
-                    className="max-w-5xl mx-auto w-full flex flex-col sm:flex-row items-center sm:items-end justify-between mt-8 sm:mt-14 md:mt-20 px-4 sm:px-6 gap-6 sm:gap-0"
-                  >
-                    {/* Social Proof Block */}
-                    <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-                      <div
-                        className="flex items-center gap-1.5 mb-2 whitespace-nowrap"
-                        role="img"
-                        aria-label="Rated 4.9 out of 5 stars based on 850+ reviews"
-                      >
-                        <div className="flex text-amber-500 text-xs sm:text-sm tracking-tight" aria-hidden="true">
-                          <span aria-hidden="true">★</span>
-                          <span aria-hidden="true">★</span>
-                          <span aria-hidden="true">★</span>
-                          <span aria-hidden="true">★</span>
-                          <span aria-hidden="true">★</span>
-                        </div>
-                        <span className="text-xs font-bold text-[#1c1b1f] ml-1">4.9</span>
-                        <span className="text-xs text-[#423E45] font-medium ml-1">Rating (850+ reviews)</span>
-                      </div>
-
-                      <div className="flex items-center gap-3 sm:gap-3.5">
-                        <div className="flex -space-x-2 sm:-space-x-2.5 overflow-hidden py-0.5 shrink-0">
-                          {[
-                            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces',
-                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces',
-                            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces',
-                            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces',
-                          ].map((avatarUrl, i) => (
-                            <img
-                              key={i}
-                              src={avatarUrl}
-                              alt="Active Athlete Member"
-                              className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-white object-cover shadow-xs"
-                            />
-                          ))}
-                        </div>
-                        <div className="flex flex-col text-left">
-                          <span className="text-lg sm:text-2xl font-bold text-[#1c1b1f] tracking-tight leading-none">
-                            2K+ MEMBERS
-                          </span>
-                          <span className="text-xs font-semibold text-[#423E45] mt-1 whitespace-nowrap">
-                            500+ Guided Fitness Tutorials
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom-Right CTA Actions Cluster */}
-                    <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 shrink-0">
-                      {/* Secondary Interactive Pill Button: Watch 45s Demo */}
-                      <motion.button
-                        type="button"
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          const el = document.getElementById('section-scroll-expand');
-                          if (el) el.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className="group inline-flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-full bg-white hover:bg-neutral-50 shadow-sm border border-neutral-200/80 hover:border-neutral-300 transition-all duration-200 cursor-pointer"
-                      >
-                        <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 shadow-xs ring-1 ring-black/5 bg-neutral-900 flex items-center justify-center">
-                          <video
-                            src="/flow_video.mp4"
-                            muted
-                            loop
-                            autoPlay
-                            playsInline
-                            aria-label="FitFlow 45-second preview demo video"
-                            className="w-full h-full object-cover scale-150 opacity-80"
-                          >
-                            <track kind="captions" src="data:text/vtt,WEBVTT" label="No speech" default />
-                          </video>
-                          <div className="absolute inset-0 bg-black/25 flex items-center justify-center pointer-events-none">
-                            <svg aria-hidden="true" className="w-3.5 h-3.5 text-white fill-current translate-x-0.5" viewBox="0 0 24 24">
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <span className="text-xs sm:text-sm text-neutral-800 font-semibold tracking-tight">
-                          Watch 45s Demo
-                        </span>
-                      </motion.button>
-
-                      {/* Install FitFlow on Phone Button (Kept prominent, triggers modal) */}
-                      <motion.button
-                        type="button"
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setIsDownloadModalOpen(true)}
-                        className="group inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white shadow-sm transition-colors cursor-pointer"
-                      >
-                        <svg aria-hidden="true" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="7 10 12 15 17 10" />
-                          <line x1="12" y1="15" x2="12" y2="3" />
-                        </svg>
-                        <span className="text-xs sm:text-sm font-semibold tracking-tight">
-                          Install FitFlow on Phone
-                        </span>
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                </section>
-              </div>
-
-              {/* ========================================================= */}
-              {/* 2. SCROLL-EXPAND VIDEO / MEDIA SECTION                    */}
-              {/* ========================================================= */}
-              <section className="w-full relative mt-12 sm:mt-16 md:mt-20" id="section-scroll-expand">
-                <ScrollExpand
-                  src="/flow_video.mp4"
-                  mediaType="video"
-                  poster="/runner_hero.jpg"
-                  alt="FitFlow Athletic Runner Video"
-                  title="Track Every Motion"
-                  scrollHint="SCROLL"
-                  startWidth={42}
-                  startHeight={56}
-                  startRadius={28}
-                  endRadius={0}
-                  mediaZoom={1.2}
-                  overlayScrim={0.4}
-                >
-                  <div className="max-w-xl text-white px-4 flex flex-col items-center">
-                    <span className="px-3.5 py-1 rounded-full bg-[#ffbd5a] text-[#291800] text-xs font-bold tracking-normal mb-3 shadow-md">
-                      Smart Fitness Engine
-                    </span>
-                    <h2 className="text-2xl sm:text-4xl font-bold text-white drop-shadow-md leading-tight mb-3 [text-wrap:balance]">
-                      Every Rep, Every Milestone
-                    </h2>
-                    <p className="text-sm sm:text-base text-white/90 leading-relaxed mb-6 max-w-md [text-wrap:pretty]">
-                      FitFlow tracks your workouts, water, calories, and daily streaks in one simple place.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setIsDownloadModalOpen(true)}
-                      className="px-6 py-2.5 rounded-full bg-[#ffbd5a] text-[#291800] font-bold text-sm hover:brightness-105 active:scale-95 transition-all shadow-md cursor-pointer"
-                    >
-                      Install FitFlow on Phone ↗
-                    </button>
+                <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    03
                   </div>
-                </ScrollExpand>
-              </section>
+                  <h4 className="text-base font-bold text-neutral-950">Fatigue & Deload Protection</h4>
+                  <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                    Auto-regulated deload warnings notify you before cumulative fatigue turns into chronic injury. Long-term durability always beats short-term burn.
+                  </p>
+                </div>
 
-              {/* ========================================================= */}
-              {/* 3. ATHLETIC COMMUNITY SECTION                             */}
-              {/* ========================================================= */}
-              <div className="w-full max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-                <section className="w-full my-10 sm:my-16" id="section-community">
-                  <div className="w-full bg-white rounded-[32px] px-6 py-12 sm:px-12 sm:py-16 border border-[#E7E2E8] shadow-[0_8px_24px_rgba(49,37,55,0.05)] text-center relative overflow-hidden flex flex-col items-center">
-                    <span className="text-xs font-bold text-[#4c355d] tracking-wider uppercase mb-3 px-3.5 py-1 rounded-full bg-[#f2ecf3]">
-                      Athletic Community
-                    </span>
-
-                    <h2 className="max-w-2xl font-['Manrope'] text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1c1b1f] tracking-tight leading-snug mb-4 [text-wrap:balance]">
-                      Built for athletes committed to{' '}
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#ffddb2] text-[#291800]">
-                        progressive
-                      </span>{' '}
-                      discipline
-                    </h2>
-
-                    <p className="max-w-md text-sm sm:text-base text-[#423E45] leading-relaxed mb-8 [text-wrap:pretty]">
-                      Join 2,000+ athletes who track workouts, share progress, and stay motivated together every day.
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={() => setIsDownloadModalOpen(true)}
-                      className="px-7 py-3 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-sm transition-colors shadow-md cursor-pointer mb-8"
-                    >
-                      Download Mobile App
-                    </button>
-
-                    <div className="w-full pt-8 border-t border-[#E7E2E8] flex flex-col sm:flex-row items-center justify-between gap-4 text-[#423E45]">
-                      <span className="text-sm font-medium text-[#423E45]">FitFlow Athlete Network</span>
-
-                      <div className="flex items-center gap-4 text-[#423E45]">
-                        <motion.a
-                          whileHover={{ scale: 1.15 }}
-                          href="mailto:contact@fitflow.app"
-                          className="hover:text-[#6a527c] transition-colors p-1"
-                          aria-label="Email Contact"
-                        >
-                          <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect width="20" height="16" x="2" y="4" rx="2" />
-                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                          </svg>
-                        </motion.a>
-                        <motion.a
-                          whileHover={{ scale: 1.15 }}
-                          href="#home"
-                          className="hover:text-[#6a527c] transition-colors p-1"
-                          aria-label="Instagram Channel"
-                        >
-                          <svg aria-hidden="true" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                          </svg>
-                        </motion.a>
-                      </div>
-
-                      <span className="text-xs text-[#423E45] font-medium">
-                        FitFlow Collective • 2026
-                      </span>
-                    </div>
+                <div className="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/80 flex flex-col gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#9A3412] font-mono font-bold flex items-center justify-center text-sm mb-1">
+                    04
                   </div>
-                </section>
-              </div>
-            </motion.main>
-          )}
-        </AnimatePresence>
+                  <h4 className="text-base font-bold text-neutral-950">Calm, Focused Utility</h4>
+                  <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
+                    Zero interstitial ads, zero sponsored fitness influencers. Open the app, record your sets with haptic feedback, and get back to your workout.
+                  </p>
+                </div>
 
-        {/* ============================================== */}
-        {/* FOOTER                                         */}
-        {/* ============================================== */}
-        <footer className="w-full border-t border-[#E7E2E8] bg-white py-10 px-6 lg:px-12">
-          <div className="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
+              </div>
+            </div>
+          </AnimatedContent>
+
+          {/* Quick CTA Card */}
+          <div className="p-8 sm:p-10 rounded-3xl bg-neutral-950 text-white flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-center sm:text-left">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight">Ready to train with real discipline?</h3>
+              <p className="text-xs sm:text-sm text-neutral-400 mt-1">Install FitFlow directly onto your phone or open in your browser.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsDownloadModalOpen(true)}
+              className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-sm transition-all shrink-0 cursor-pointer shadow-md"
+            >
+              Get Started Free ↗
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ============================================================== */}
+      {/* 6. CLEAN WHITE FOOTER                                          */}
+      {/* ============================================================== */}
+      <footer className="w-full border-t border-neutral-200 bg-white py-12 px-6 lg:px-12 relative overflow-hidden select-none">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <img
                 src="/icon.png"
                 alt="FitFlow Logo"
-                className="w-7 h-7 rounded-lg object-contain shadow-sm"
+                className="w-6 h-6 rounded-full object-contain"
               />
-              <span className="font-['Manrope'] text-[17px] text-[#1c1b1f] font-bold">
-                Fitflow app
-              </span>
-              <span className="text-[#57535A] text-[13px] ml-2 font-medium">
-                © 2026 Fitflow. All rights reserved.
-              </span>
+              <span className="font-bold text-neutral-950 text-sm tracking-tight">FitFlow</span>
             </div>
-
-            <div className="flex items-center gap-6 text-[13px] font-semibold text-[#57535A]">
-              <button
-                type="button"
-                onClick={() => navigateTo('home')}
-                className="hover:text-[#1c1b1f] transition-colors cursor-pointer"
-              >
-                Home
-              </button>
-              <button
-                type="button"
-                onClick={() => navigateTo('services')}
-                className="hover:text-[#1c1b1f] transition-colors cursor-pointer"
-              >
-                Services
-              </button>
-              <button
-                type="button"
-                onClick={() => navigateTo('about')}
-                className="hover:text-[#1c1b1f] transition-colors cursor-pointer"
-              >
-                About
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsDownloadModalOpen(true)}
-                className="text-neutral-900 font-bold hover:underline cursor-pointer"
-              >
-                Download App
-              </button>
-            </div>
+            <span className="hidden sm:inline text-neutral-300">•</span>
+            <span className="text-xs text-neutral-500">Autonomous athlete companion & telemetry client</span>
           </div>
-        </footer>
-      </div>
 
-      {/* Global Download Modal */}
+          <div className="flex items-center gap-6 text-xs text-neutral-500 font-medium">
+            <span>Local-First</span>
+            <span>Zero Trackers</span>
+            <span>Offline Sovereignty</span>
+            <span>© {new Date().getFullYear()} FitFlow</span>
+          </div>
+        </div>
+
+        {/* Gradual Blur on footer */}
+        <GradualBlur
+          position="bottom"
+          height="3rem"
+          blurAmount="4px"
+          color="rgba(255, 255, 255, 0.4)"
+          className="z-0"
+        />
+      </footer>
+
+      {/* ============================================================== */}
+      {/* 7. APP DOWNLOAD MODAL DIALOG                                   */}
+      {/* ============================================================== */}
       <DownloadModal
         isOpen={isDownloadModalOpen}
         onClose={() => setIsDownloadModalOpen(false)}
       />
     </div>
+  </ReactLenis>
   );
 }

@@ -102,6 +102,20 @@ export async function POST(req: NextRequest) {
             [now, email]
           );
         } catch {}
+
+        // 5. Record user active/download count in public.downloads
+        try {
+          const userAgent = req.headers.get('user-agent') || 'app_client';
+          const forwarded = req.headers.get('x-forwarded-for');
+          const clientIp = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
+          await query(
+            `INSERT INTO public.downloads (user_id, user_email, platform, source, user_agent, ip_address)
+             VALUES ($1, $2, 'app', 'app_login', $3, $4)`,
+            [finalUserId, email, userAgent, clientIp]
+          );
+        } catch (dlErr) {
+          console.warn('[API /auth/otp/verify] Downloads tracking error:', dlErr);
+        }
       } catch (dbErr) {
         console.warn('[API /auth/otp/verify] DB session creation error:', dbErr);
       }
