@@ -8,13 +8,18 @@ const secure = process.env.SMTP_SECURE === 'true' || port === 465;
 const from = process.env.EMAIL_FROM || 'FitFlow <no-reply@fitflow.app>';
 
 export function createTransporter() {
+  const currentHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const currentPort = Number(process.env.SMTP_PORT || '465');
+  const currentUser = process.env.SMTP_USER;
+  const currentPass = process.env.SMTP_PASS;
+  const currentSecure = process.env.SMTP_SECURE === 'true' || currentPort === 465;
+
   return nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth: user && pass ? { user, pass } : undefined,
+    host: currentHost,
+    port: currentPort,
+    secure: currentSecure,
+    auth: currentUser && currentPass ? { user: currentUser, pass: currentPass } : undefined,
     tls: {
-      // In production, strictly reject unauthorized TLS certificates to prevent MITM attacks
       rejectUnauthorized: process.env.NODE_ENV === 'production',
     },
   });
@@ -121,7 +126,28 @@ export function renderOtpEmailHtml(otp: string): string {
 export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ success: boolean; error?: string }> {
   const html = renderOtpEmailHtml(otp);
 
-  // 0. Direct Brevo API Delivery (Daily 300 free emails to any address worldwide)
+  // 1. Direct Official Gmail SMTP Delivery (Primary - 500 emails/day directly to Primary Inbox)
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  if (smtpUser && smtpPass) {
+    try {
+      const transporter = createTransporter();
+      const mailFrom = process.env.EMAIL_FROM || `FitFlow <${smtpUser}>`;
+      const info = await transporter.sendMail({
+        from: mailFrom,
+        to: toEmail,
+        subject: `Your FitFlow Verification Code: ${otp}`,
+        text: `Your FitFlow verification code is ${otp}. It expires in 2 minutes.`,
+        html,
+      });
+      console.log(`[Gmail SMTP] OTP delivered successfully to ${toEmail}. Message ID: ${info.messageId}`);
+      return { success: true };
+    } catch (smtpErr) {
+      console.error(`[Gmail SMTP] Delivery failed to ${toEmail}:`, smtpErr?.message || smtpErr);
+    }
+  }
+
+  // 2. Direct Brevo API Delivery (Fallback - 300 free emails/day)
   const brevoApiKey = process.env.BREVO_API_KEY;
   if (brevoApiKey) {
     try {
