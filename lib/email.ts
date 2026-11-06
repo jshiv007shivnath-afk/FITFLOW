@@ -121,7 +121,59 @@ export function renderOtpEmailHtml(otp: string): string {
 export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ success: boolean; error?: string }> {
   const html = renderOtpEmailHtml(otp);
 
-  // 1. Production Delivery via Resend (if RESEND_API_KEY is configured in Vercel or .env)
+  // 0. Direct Brevo API Delivery (Daily 300 free emails to any address worldwide)
+  const brevoApiKey = process.env.BREVO_API_KEY;
+  if (brevoApiKey) {
+    try {
+      const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER || 'support@fitflow.app';
+      const senderName = process.env.BREVO_SENDER_NAME || 'FitFlow';
+      const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoApiKey,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          sender: { name: senderName, email: senderEmail },
+          to: [{ email: toEmail }],
+          subject: `Your FitFlow Verification Code: ${otp}`,
+          htmlContent: html,
+          textContent: `Your FitFlow verification code is ${otp}. It expires in 2 minutes.`,
+        }),
+      });
+
+      const brevoData = await brevoRes.json().catch(() => ({}));
+      if (brevoRes.ok && (brevoData.messageId || brevoData.messageIds)) {
+        console.log(`[Brevo] OTP sent successfully to ${toEmail}. Message ID: ${brevoData.messageId || brevoData.messageIds[0]}`);
+        return { success: true };
+      }
+      console.warn('[Brevo] Delivery returned error:', brevoData);
+    } catch (brevoErr) {
+      console.error('[Brevo] Connection error:', brevoErr);
+    }
+  }
+
+  // 1. Direct SMTP Delivery (e.g. Brevo SMTP / Gmail SMTP)
+  // When configured, this sends real OTPs to ANY email address in the world without restrictions
+  if (user && pass) {
+    try {
+      const transporter = createTransporter();
+      const info = await transporter.sendMail({
+        from: from || `FitFlow <${user}>`,
+        to: toEmail,
+        subject: `Your FitFlow Verification Code: ${otp}`,
+        text: `Your FitFlow verification code is ${otp}. It expires in 2 minutes.`,
+        html,
+      });
+      console.log(`[SMTP] OTP sent successfully to ${toEmail}. Message ID: ${info.messageId}`);
+      return { success: true };
+    } catch (smtpErr) {
+      console.error(`[SMTP] Delivery error to ${toEmail}:`, smtpErr?.message || smtpErr);
+    }
+  }
+
+  // 2. Production Delivery via Resend (fallback)
   const resendApiKey = process.env.RESEND_API_KEY;
   if (resendApiKey) {
     try {

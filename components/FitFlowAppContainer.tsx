@@ -147,7 +147,7 @@ export function FitFlowAppContainer() {
     : activeTab;
 
   return (
-    <div className="relative min-h-screen bg-neutral-950 flex items-center justify-center">
+    <div className="relative min-h-[100dvh] w-full bg-[#F8F8F6] sm:bg-neutral-950 flex items-center justify-center overflow-x-hidden">
       <PhoneSimulator
         bottomNav={!hideNav ? <BottomNav /> : null}
         topToast={
