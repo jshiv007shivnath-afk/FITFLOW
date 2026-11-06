@@ -62,6 +62,27 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* PWA Service Worker Registration */}
+        <Script
+          id="pwa-service-worker"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(
+                    function(reg) {
+                      console.log('FitFlow PWA ServiceWorker active:', reg.scope);
+                    },
+                    function(err) {
+                      console.warn('FitFlow ServiceWorker error:', err);
+                    }
+                  );
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className="antialiased bg-[#0f1011] text-[#1a1c1b] min-h-screen">
         <FitFlowProvider>{children}</FitFlowProvider>
