@@ -135,9 +135,10 @@ export async function sendOtpEmail(toEmail: string, otp: string): Promise<{ succ
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          sender: { name: senderName, email: senderEmail },
+          sender: { name: senderName || 'FitFlow Security', email: senderEmail },
           to: [{ email: toEmail }],
-          subject: `Your FitFlow Verification Code: ${otp}`,
+          replyTo: { name: senderName || 'FitFlow Security', email: senderEmail },
+          subject: `${otp} is your FitFlow verification code`,
           htmlContent: html,
           textContent: `Your FitFlow verification code is ${otp}. It expires in 2 minutes.`,
         }),
