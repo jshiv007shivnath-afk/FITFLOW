@@ -26,7 +26,7 @@ export function OtpVerificationView() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
-  const [otpExpirySeconds, setOtpExpirySeconds] = useState(60); // 1 minute strict expiry
+  const [otpExpirySeconds, setOtpExpirySeconds] = useState(600); // 10 minutes validity
   const [showSuccessTick, setShowSuccessTick] = useState(false);
 
   const isExpired = otpExpirySeconds <= 0;
@@ -68,7 +68,7 @@ export function OtpVerificationView() {
 
   const handleVerifyCommit = async (): Promise<boolean> => {
     if (isExpired) {
-      const msg = 'Code expired (1 minute elapsed). Please request a new code.';
+      const msg = 'Code expired. Please request a new code.';
       setErrorMessage(msg);
       showToast(msg);
       throw new Error(msg);
@@ -140,7 +140,7 @@ export function OtpVerificationView() {
   const handleResend = async () => {
     if (resendTimer > 0 && !isExpired) return;
     setResendTimer(60);
-    setOtpExpirySeconds(60); // Reset 1 minute validity
+    setOtpExpirySeconds(600); // Reset 10 minutes validity
     setCode('');
     setStatus('idle');
     setErrorMessage(null);
@@ -269,7 +269,7 @@ export function OtpVerificationView() {
               settle={0.3}
               rise={8}
               cascade={20}
-              autoFocus={true}
+              autoFocus={false}
             />
 
             {/* Inline Error Message */}
@@ -293,7 +293,7 @@ export function OtpVerificationView() {
                   className="px-4 py-2 rounded-xl bg-[#111312] hover:bg-black text-[#B8F45A] font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-sm transition-all"
                 >
                   <Refresh size={13} />
-                  <span>Resend code (1 min)</span>
+                  <span>Resend code</span>
                 </button>
               ) : (
                 <>
@@ -319,7 +319,29 @@ export function OtpVerificationView() {
         </div>
 
         {/* 3. Bottom Action: React Bits <SlideCommit /> Animation (Slide to continue) */}
-        <div className="w-full flex flex-col items-center justify-center gap-2 pt-6 mt-auto">
+        <div className="w-full flex flex-col items-center justify-center gap-2.5 pt-5 mt-auto">
+          {/* Quick 1-Tap Verify Button (Primary on touchscreens) */}
+          <motion.button
+            whileTap={{ scale: 0.98 }}
+            type="button"
+            onClick={async () => {
+              if (code.length < 6 || isVerifying || isLocked || isExpired) return;
+              try {
+                await handleVerifyCommit();
+                setShowSuccessTick(true);
+              } catch {}
+            }}
+            disabled={code.length < 6 || isVerifying || isLocked || isExpired}
+            className="w-full max-w-[310px] h-[48px] rounded-2xl bg-[#111312] hover:bg-black disabled:bg-[#111312]/20 text-white disabled:text-white/40 font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer select-none active:scale-98"
+          >
+            {isVerifying ? (
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <span>Verify & Continue →</span>
+            )}
+          </motion.button>
+
+          {/* Alternative: SlideCommit */}
           <div className="w-full flex justify-center">
             <SlideCommit
               label="Slide to continue"

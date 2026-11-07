@@ -10,9 +10,9 @@ interface PhoneSimulatorProps {
 
 export function PhoneSimulator({ children, bottomNav, topToast }: PhoneSimulatorProps) {
   return (
-    <div className="w-full min-h-[100dvh] bg-[#F8F8F6] sm:bg-[#07080B] flex flex-col items-center justify-center p-0 sm:p-4 selection:bg-[#B8F45A] selection:text-[#111111]">
+    <div className="w-full min-h-screen bg-[#F8F8F6] sm:bg-[#07080B] flex flex-col items-center justify-center p-0 sm:p-4 selection:bg-[#B8F45A] selection:text-[#111111] overflow-x-hidden">
       {/* Outer Phone Wrapper: On mobile it is 100% full-screen edge-to-edge; on desktop it simulates a titanium phone */}
-      <div className="relative w-full h-[100dvh] sm:h-auto flex items-center justify-center sm:my-auto">
+      <div className="relative w-full h-full min-h-screen sm:min-h-0 sm:h-auto flex items-center justify-center sm:my-auto">
         {/* Left Side Hardware Buttons (Desktop Only) */}
         <div className="hidden sm:block absolute -left-[3.5px] top-[148px] w-[3.5px] h-[34px] bg-[#3B3E48] rounded-l-full shadow-sm pointer-events-none" />
         <div className="hidden sm:block absolute -left-[3.5px] top-[198px] w-[3.5px] h-[58px] bg-[#3B3E48] rounded-l-full shadow-sm pointer-events-none" />
