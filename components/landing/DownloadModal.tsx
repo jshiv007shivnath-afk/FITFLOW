@@ -235,16 +235,7 @@ export function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
               </div>
             </div>
 
-            {/* Alternative Direct Web App Option */}
-            <div className="text-center mt-2">
-              <button
-                type="button"
-                onClick={handlePwaInstall}
-                className="text-xs text-neutral-400 hover:text-white underline underline-offset-4 transition-colors"
-              >
-                Or launch instant web app in browser (/app) →
-              </button>
-            </div>
+
 
             {/* Bottom Status bar */}
             <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-xs text-neutral-400">

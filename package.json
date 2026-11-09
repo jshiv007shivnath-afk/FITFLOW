@@ -18,6 +18,7 @@
     "@capgo/capacitor-health": "^8.11.9",
     "@hugeicons/core-free-icons": "^4.3.5",
     "@hugeicons/react": "^1.1.10",
+    "@supabase/supabase-js": "^2.119.0",
     "better-auth": "^1.7.11",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
